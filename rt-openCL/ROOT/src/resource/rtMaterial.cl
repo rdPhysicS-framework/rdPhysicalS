@@ -18,9 +18,11 @@ RT_Vec3f GlossySpecular_F(const RT_Result *r,
 	float nDotWo = dot(refl, *wo);
 
 	if(nDotWo > 0.0f)
+	{ 
 		l = r->material.specular.color * 
 			r->material.specular.k *
 			(float)pow(nDotWo, r->material.specular.index);
+	}
 
 	return l;
 }
@@ -30,7 +32,7 @@ RT_Vec3f PerfectSpecular_SampleF(const RT_Result *r,
 								 const RT_Vec3f *wo)
 { 
 	*wi = reflect(wo, &r->normal);
-	return r->material.refl.color * r->material.refl.k / absf(dot(r->normal, *wi));
+	return r->material.refl.color * r->material.refl.k / fabs(dot(r->normal, *wi));
 }
 
 /*RT_Vec3f BRDF_F(const RT_BRDF *brdf,

@@ -54,6 +54,11 @@ inline RT_Vec3f Normalize(const RT_Vec3f &v)
 	return{ v.x * invSize, v.y * invSize, v.z * invSize };
 }
 
+inline float clamp(double x, double min, double max)
+{
+	return (x < min) ? min : (x > max) ? max : x;
+}
+
 /*std::ostream &operator<<(std::ostream &out, const RT_Vec3f &v)
 {
 	out << "(" << v.x << " - " << v.y << " - " << v.z << ")" << std::endl;
@@ -89,28 +94,41 @@ struct Program {
 		{
 			std::cerr << "Error during conpilation OpenCl code: "
 					  << status << std::endl;
+
+			size_t log_size;
+			clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+
+			// Allocate memory for the log
+			char *log = new char[log_size];
+
+			// Get the log
+			clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
+
+			// Print the log
+			std::cerr << log << std::endl;
+			delete log;
 		}
 		/*caso houver tratar erro*/
 	}
 };
 
-typedef enum
+enum RT_TypeBRDF
 {
 	RT_GLOSSY_SPECULAR,
 	RT_LAMBERTIAN,
 	RT_PERFECT_SPECULAR
-} RT_TypeBRDF;
+};
 
-typedef struct
+struct RT_BRDF
 {
 	RT_Vec3f color;
 	float k;
 	float ex;
 
 	RT_TypeBRDF type;
-}	RT_BRDF;
+};
 
-typedef struct
+struct RT_Material
 {
 	//RT_Vec3f color;
 	/*float ambient;
@@ -122,16 +140,22 @@ typedef struct
 	RT_BRDF diffuse;
 	RT_BRDF specular;
 	RT_BRDF refl;
-} RT_Material;
+};
 
-typedef enum
+enum RT_TypeObject
 {
 	RT_BOX,
 	RT_PLANE,
 	RT_SPHERE
-} RT_TypeObject;
+};
 
-typedef struct
+struct RT_BBox
+{
+	float x0, y0, z0;
+	float x1, y1, z1;
+};
+
+struct RT_Primitive
 {
 	RT_Vec3f p;
 	//RT_Vec3f p1, p2;
@@ -144,16 +168,19 @@ typedef struct
 	RT_TypeObject type;
 
 	/*transform*/
-	float invMatrix[4][4];
-} RT_Primitive;
+	//float invMatrix[4][4];
+	RT::Mat4f invMatrix;
 
-typedef enum
+	RT_BBox bbox;
+};
+
+enum RT_TypeLight
 {
 	RT_AREA_LIGHT,
 	RT_POINT_LIGHT
-} RT_TypeLight;
+};
 
-typedef struct
+struct RT_Light
 {
 	RT_Vec3f position;
 	RT_Vec3f color;
@@ -161,17 +188,17 @@ typedef struct
 	float ex;
 
 	RT_TypeLight type;
-} RT_Light;
+};
 
-typedef struct
+struct RT_ViewPlane
 {
 	int width;
 	int height;
 	RT_Vec2f sp;
 	//RT_SScoord coord;
-} RT_ViewPlane;
+};
 
-typedef struct
+struct RT_Camera
 {
 	/*position*/
 	RT_Vec3f eye;
@@ -209,15 +236,15 @@ typedef struct
 		u = Normalize(Cross(up, w));
 		v = Normalize(Cross(w, u));
 	}
-} RT_Camera;
+};
 
-typedef struct
+struct RT_DataScene
 {
 	/*data of the canvas*/
 	RT_ViewPlane vp;
 
 	/*data of the camera(point of origin of the ray)*/
-	RT_Camera camera;
+	//RT_Camera camera;
 
 	/*background-color*/
 	RT_Vec3f background;
@@ -236,7 +263,7 @@ typedef struct
 	ulong numShuffledIndices;
 	/*seed random*/
 	/*ulong seed;*/
-} RT_DataScene;
+};
 
 /*struct RT_Program {
 	cl::Device device;

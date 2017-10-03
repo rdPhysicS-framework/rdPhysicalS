@@ -3,11 +3,35 @@
  * Camera
  *
  *----------------------------------------------------------------------------------------------*/
-inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, const RT_Camera *camera)
+inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, __constant RT_Camera *camera)
 { 
-	return normalize(camera->u * point->x +
-					 camera->v * point->y +
+	return normalize(camera->u * (*point).x +
+					 camera->v * (*point).y +
 					 camera->w * -camera->viewPlaneDistance);
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Ray
+ *
+ *----------------------------------------------------------------------------------------------*/
+/*
+	Creates the ray
+*/
+inline RT_Ray CreateRay(const RT_Vec3f o, const RT_Vec3f d)
+{
+	RT_Ray r;
+	r.o = o;
+	r.d = d;
+	return r;
+}
+
+/*
+	The intersection point returns
+*/
+inline RT_Vec3f HitPoint(const RT_Ray *r, const float t)
+{
+	return (r->o + (r->d * t));
 }
 
 RT_Result Hit(__constant RT_Primitive *objects, 
@@ -85,7 +109,9 @@ bool ShadowHit(__constant RT_Primitive *objects,
 	{
 		RT_Primitive o = objects[i];
 		if(Instance_ShadowHit(&o, ray, &t) && t < tmin)
+		{
 			return true;
+		}
 		/*switch(o.type)
 		{ 
 			case RT_BOX:

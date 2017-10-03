@@ -160,10 +160,12 @@
     <ClInclude Include="src\assets\Info.h" />
     <ClInclude Include="src\assets\RT_Util.h" />
     <ClInclude Include="src\Transform.h" />
+    <ClInclude Include="src\Tringles\Grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\Tringles\Grid.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

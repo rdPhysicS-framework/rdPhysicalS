@@ -12,6 +12,92 @@ inline RT_Result CreateResult()
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Bounding Box
+ * 
+ *----------------------------------------------------------------------------------------------*/
+bool BBox_Hit(const RT_BBox *bb, const RT_Ray *ray)
+{ 
+	float txMin, tyMin, tzMin;
+	float txMax, tyMax, tzMax;
+
+	float a = 1.0f / ray->d.x;
+	if(a >= 0)
+	{ 
+		txMin = (bb->x0 - ray->o.x) * a;
+		txMax = (bb->x1 - ray->o.x) * a;
+	}
+	else
+	{ 
+		txMin = (bb->x1 - ray->o.x) * a;
+		txMax = (bb->x0 - ray->o.x) * a;
+	}
+
+	float b = 1.0f / ray->d.y;
+	if(b >= 0)
+	{ 
+		tyMin = (bb->y0 - ray->o.y) * b;
+		tyMax = (bb->y1 - ray->o.y) * b;
+	}
+	else
+	{ 
+		tyMin = (bb->y1 - ray->o.y) * b;
+		tyMax = (bb->y0 - ray->o.y) * b;
+	}
+
+	float c = 1.0f / ray->d.z;
+	if(c >= 0)
+	{ 
+		tzMin = (bb->z0 - ray->o.z) * c;
+		tzMax = (bb->z1 - ray->o.z) * c;
+	}
+	else
+	{ 
+		tzMin = (bb->z1 - ray->o.z) * c;
+		tzMax = (bb->z0 - ray->o.z) * c;
+	}
+
+	float t0, t1;
+	//find largest entering t value
+	if(txMin > tyMin)
+	{ 
+		t0 = txMin;
+	}
+	else
+	{
+		t0 = tyMin;
+	}
+
+	if(tzMin > t0)
+	{
+		t0 = tzMin;
+	}
+	//find smallest exiting t value
+	if(txMax < tyMax)
+	{ 
+		t1 = txMax;
+	}
+	else
+	{ 
+		t1 = tyMax;
+	}
+
+	if(tzMax < t1)
+	{
+		t1 = tzMax;
+	}
+
+	return (t0 < t1 && t1 > 0.0001f);
+}
+
+inline bool Inside(const RT_BBox *bb, const RT_Vec3f *p)
+{ 
+	return (((*p).x > (*bb).x0 && (*p).x < (*bb).x1) &&
+			((*p).y > (*bb).y0 && (*p).y < (*bb).y1) &&
+			((*p).z > (*bb).z0 && (*p).z < (*bb).z1)   );
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
  * Methods to verify intercession with the sphere
  *
  *----------------------------------------------------------------------------------------------*/
@@ -31,17 +117,20 @@ bool Sphere_Hit(const RT_Primitive *s, const RT_Ray *ray, float *tmin, RT_Result
 
 bool Sphere_ShadowHit(const RT_Primitive *s, const RT_Ray *ray, float *tmin)
 {
+	/*if(!BBox_Hit(&s->bbox, ray))
+		return false;*/
+
 	RT_Vec3f temp = ray->o - s->p;
 	float a = dot(ray->d, ray->d);
-	float b = 2.0 * dot(temp, ray->d);
+	float b = 2.0f * dot(temp, ray->d);
 	float c = dot(temp, temp) - (s->r * s->r);
-	float disc = b * b - 4.0 * a * c;
+	float disc = b * b - 4.0f * a * c;
 
-	if(disc < 0.0)
+	if(disc < 0)
 		return false;
 
 	float e = sqrt(disc);
-	float denom = 2.0 * a;
+	float denom = 2.0f * a;
 	float t = (-b - e) / denom;
 
 	if(t > EPSILON)
@@ -233,14 +322,16 @@ bool Instance_Hit(const RT_Primitive *object,
 	else
 	{ 
 		if(Plane_Hit(object, ray, tmin, r))
+		{
 			return true;
+		}
 	}
 	return false;
 }
 
- bool Instance_ShadowHit(const RT_Primitive *object, 
-						 const RT_Ray *ray, 
-						 float *tmin)
+bool Instance_ShadowHit(const RT_Primitive *object, 
+						const RT_Ray *ray, 
+						float *tmin)
 { 
 	if(object->type == RT_BOX || object->type == RT_SPHERE)
 	{
@@ -255,5 +346,31 @@ bool Instance_Hit(const RT_Primitive *object,
 		if(Plane_ShadowHit(object, ray, tmin))
 			return true;
 	}
+	return false;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method of collision verification with the Grid
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Grid_Hit(const RT_Grid *grid,
+			  __constant RT_Primitive *objects,
+			  __constant int *cells,
+			  __constant int *count,
+			  const RT_Ray *ray,
+			  float *tmin,
+			  RT_Result *r)
+{ 
+	return false;
+}
+
+bool Grid_ShadowHit(const RT_Grid *grid,
+					__constant RT_Primitive *objects,
+					__constant int *cells,
+					__constant int *count, 
+					const RT_Ray *ray, 
+					float *tmin)
+{ 
 	return false;
 }

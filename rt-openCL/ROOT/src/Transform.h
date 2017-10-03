@@ -1,22 +1,22 @@
-#ifndef	 __RT_TRANSFORM_H__
-#define	 __RT_TRANSFORM_H__
+#ifndef	 __RDPHS_TRANSFORM_H__
+#define	 __RDPHS_TRANSFORM_H__
 
 #include <RTmath.h>
 #include "assets\Config.h"
 
-namespace RT
+namespace rdPhs
 {
 	class Transform
 	{
 	private:
 		RT::Mat4f invMatrix;
-		//static Transform *instance;
+		static Transform *instance;
 
 	public:
 		Transform();
 		~Transform();
 
-		//static Transform *Get();
+		static Transform *Get();
 		Transform &Translate(const float x, const float y, const float z);
 		Transform &Translate(const RT::Vec3f &pos);
 		Transform &RotateX(const float angle);
@@ -25,8 +25,8 @@ namespace RT
 		Transform &Scale(const float x, const float y, const float z);
 		Transform &Scale(const RT::Vec3f &scale);
 		Transform &Scale(const float scale);
-		void ThisObject(RT_Primitive &object);
+		void CopyTransformMatrix(RT::Mat4f &matrix);//float *matrix);
 	};
 }
 
-#endif //__RT_TRANSFORM_H__
+#endif //__RDPHS_TRANSFORM_H__

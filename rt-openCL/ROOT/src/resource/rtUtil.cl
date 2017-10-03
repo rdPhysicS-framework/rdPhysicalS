@@ -1,12 +1,12 @@
-#define ANGLE 180.0
+#define ANGLE 180.0f
 
-#define PI 3.14159265358979323846
+#define PI 3.14159265358979f
 #define PI2 (PI * 2)
 #define INVPI 1 / PI
 
 #define RANDMAX 0x7FFF
 #define RAND_MASK 4294883355U
-#define INFINITE 10000000.0
+#define INFINITE 10000000.0f
 
 #define MULTIPLIER 0x5DEECE66DU
 #define ADDEND 0xBL
@@ -56,20 +56,36 @@ typedef enum
 	RT_PERFECT_TRANSMITTER
 } RT_TypeBTDF;
 
-static inline float toRadians(const float degrees)
+typedef enum
+{ 
+	RT_HAMMERSLEY,
+	RT_MULTIJITTERED,
+	RT_NROOKS,
+	RT_REGULAR
+} RT_TypeSampler;
+
+
+inline float toRadians(const float d)
 {
-	return (float)(degrees * TO_RAD);
+	return (float)(d * TO_RAD);
 }
 
-static inline float toDegrees(const float radians)
+inline float toDegrees(const float r)
 {
-	return (float)(radians * TO_DEG);
+	return (float)(r * TO_DEG);
 }
+
+inline float _absf(float x)
+{ 
+	return (x < 0)? (x * -1) : x;
+}
+
 
 uint rand(uint2 *state)
 { 
 	enum { A=4294883355U };
-	uint x = state->x, c = state->y;
+	uint x = (*state).x;
+	uint c = (*state).y;
 	uint r = x ^ c;
 	uint hi = mul_hi(x, A);
 	x = x * A + c;
@@ -96,12 +112,14 @@ int nextInt(uint *seed, int bound)
 	int m = bound == 0? 0 : bound - 1;
 
 	if ((bound & m) == 0)
+	{
 		r = (int)((bound * (uint)r) >> 31);
+	}
 	else
 	{
 		for (int i = r; 
 			 i - (r = i % bound) + m < 0;
-			  i = next(seed, 31));
+			  i = next(seed, 31)){ }
 	}
 
 	return r;
@@ -135,6 +153,12 @@ inline int randInt2(uint *seed, int l, int h)
 typedef float2 RT_Vec2f;
 typedef float3 RT_Vec3f;
 typedef float4 RT_Vec4f;
+
+typedef union
+{ 
+	struct{ float x; float y; };
+	float s[2];
+} RT_Point2f;
 
 typedef struct
 {
@@ -180,8 +204,12 @@ inline RT_Mat4f copy(const RT_Mat4f *a)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{ 
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{
 			r.m[i][j] = a->m[i][j];
+		}
+	}
 
 	return r;
 }
@@ -254,18 +282,18 @@ inline RT_Mat4f inverse(const RT_Mat4f *m)
 
 inline RT_Mat4f affTranslation(const RT_Vec3f *v)
 {
-	return create(1, 0, 0, v->x,
-					 0, 1, 0, v->y,
-					 0, 0, 1, v->z,
-					 0, 0, 0, 1    );
+	return create(1, 0, 0, (*v).x,
+				  0, 1, 0, (*v).y,
+				  0, 0, 1, (*v).z,
+				  0, 0, 0, 1    );
 }
 
 inline RT_Mat4f affTranslationF(const float x, const float y, const float z)
 {
 	return create(1, 0, 0, x,
-					 0, 1, 0, y,
-					 0, 0, 1, z,
-					 0, 0, 0, 1 );
+				  0, 1, 0, y,
+				  0, 0, 1, z,
+				  0, 0, 0, 1 );
 }
 
 inline RT_Mat4f affRotationX(const float a)
@@ -319,12 +347,12 @@ inline RT_Mat4f affScalingF(const float x, const float y, const float z)
 
 inline RT_Mat4f affScalingV(const RT_Vec3f *v)
 {
-	return affScalingF(v->x, v->y, v->z);
+	return affScalingF((*v).x, (*v).y, (*v).z);
 }
 
 inline RT_Mat4f affInvTranslation(const RT_Vec3f *v)
 {
-	return affTranslationF(-v->x, -v->y, -v->z);
+	return affTranslationF(-(*v).x, -(*v).y, -(*v).z);
 }
 
 inline RT_Mat4f affInvTranslationF(const float x, const float y, const float z)
@@ -367,18 +395,18 @@ inline RT_Mat4f affInvRotationZ(const float a)
 
 inline RT_Mat4f affInvScaling(const float s)
 {
-	return affScaling(1.0/s);
+	return affScaling(1.0f/s);
 }
 
 inline RT_Mat4f affInvScalingV(const RT_Vec3f *v)
 {
-	return affScalingF(1.0/v->x, 1.0/v->y, 1.0/v->z);
+	return affScalingF(1.0f/(*v).x, 1.0f/(*v).y, 1.0f/(*v).z);
 }
 
 
 inline RT_Mat4f affInvScalingF(const float x, const float y, const float z)
 {
-	return affScalingF(1.0/x, 1.0/y, 1.0/z);
+	return affScalingF(1.0f/x, 1.0f/y, 1.0f/z);
 }
 
 
@@ -386,8 +414,12 @@ inline RT_Mat4f add(const RT_Mat4f *a, const RT_Mat4f *b)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{
 			r.m[i][j] = a->m[i][j] + b->m[i][j];
+		}
+	}
 
 	return r;
 }
@@ -396,8 +428,12 @@ inline RT_Mat4f addS(const RT_Mat4f *a, const float s)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{
 			r.m[i][j] = a->m[i][j] + s;
+		}
+	}
 
 	return r;
 }
@@ -406,8 +442,12 @@ inline RT_Mat4f sub(const RT_Mat4f *a, const RT_Mat4f *b)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{
 			r.m[i][j] = a->m[i][j] - b->m[i][j];
+		}
+	}
 
 	return r;
 }
@@ -416,8 +456,12 @@ inline RT_Mat4f subS(const RT_Mat4f *a, const float s)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{
 			r.m[i][j] = a->m[i][j] - s;
+		}
+	}
 
 	return r;
 }
@@ -427,9 +471,15 @@ inline RT_Mat4f mul(const RT_Mat4f *a, const RT_Mat4f *b)
 	RT_Mat4f r = null();
 
 	for(int c = 0; c < SIZE_MATRIX; c++)
+	{ 
 		for(int i = 0; i < SIZE_MATRIX; i++)
+		{
 			for(int j = 0; j < SIZE_MATRIX; j++)
+			{
 				r.m[c][i] += a->m[c][j] * b->m[j][i];
+			}
+		}
+	}
 
 	return r;
 }
@@ -438,8 +488,12 @@ inline RT_Mat4f mulS(const RT_Mat4f *a, const float s)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{ 
 			r.m[i][j] = a->m[i][j] * s;
+		}
+	}
 
 	return r;
 }
@@ -448,9 +502,12 @@ inline RT_Mat4f div(const RT_Mat4f *a, const float s)
 {
 	RT_Mat4f r;
 	for(int i = 0; i < SIZE_MATRIX; i++)
+	{ 
 		for(int j = 0; j < SIZE_MATRIX; j++)
+		{ 
 			r.m[i][j] = a->m[i][j] / s;
-
+		}
+	}
 	return r;
 }
 
@@ -462,23 +519,23 @@ inline RT_Mat4f div(const RT_Mat4f *a, const float s)
 
 inline RT_Vec3f TransformPoint(const RT_Mat4f *m, const RT_Vec3f *p)
 {
-	return (RT_Vec3f)(m->m[0][0] * p->x + m->m[0][1] * p->y + m->m[0][2] * p->z + m->m[0][3],
-					  m->m[1][0] * p->x + m->m[1][1] * p->y + m->m[1][2] * p->z + m->m[1][3],
-					  m->m[2][0] * p->x + m->m[2][1] * p->y + m->m[2][2] * p->z + m->m[2][3] );
+	return (RT_Vec3f)(m->m[0][0] * (*p).x + m->m[0][1] * (*p).y + m->m[0][2] * (*p).z + m->m[0][3],
+					  m->m[1][0] * (*p).x + m->m[1][1] * (*p).y + m->m[1][2] * (*p).z + m->m[1][3],
+					  m->m[2][0] * (*p).x + m->m[2][1] * (*p).y + m->m[2][2] * (*p).z + m->m[2][3] );
 }
 
 inline RT_Vec3f TransformDirection(const RT_Mat4f *m, const RT_Vec3f *d)
 {
-	return (RT_Vec3f)(m->m[0][0] * d->x + m->m[0][1] * d->y + m->m[0][2] * d->z,
-					  m->m[1][0] * d->x + m->m[1][1] * d->y + m->m[1][2] * d->z,
-					  m->m[2][0] * d->x + m->m[2][1] * d->y + m->m[2][2] * d->z );
+	return (RT_Vec3f)(m->m[0][0] * (*d).x + m->m[0][1] * (*d).y + m->m[0][2] * (*d).z,
+					  m->m[1][0] * (*d).x + m->m[1][1] * (*d).y + m->m[1][2] * (*d).z,
+					  m->m[2][0] * (*d).x + m->m[2][1] * (*d).y + m->m[2][2] * (*d).z );
 }
 
 inline RT_Vec3f TransformNormal(const RT_Mat4f *m, const RT_Vec3f *n)
 {
-	RT_Vec3f r = (RT_Vec3f)(m->m[0][0] * n->x + m->m[1][0] * n->y + m->m[2][0] * n->z,
-						    m->m[0][1] * n->x + m->m[1][1] * n->y + m->m[2][1] * n->z,
-						    m->m[0][2] * n->x + m->m[1][2] * n->y + m->m[2][2] * n->z );
+	RT_Vec3f r = (RT_Vec3f)(m->m[0][0] * (*n).x + m->m[1][0] * (*n).y + m->m[2][0] * (*n).z,
+						    m->m[0][1] * (*n).x + m->m[1][1] * (*n).y + m->m[2][1] * (*n).z,
+						    m->m[0][2] * (*n).x + m->m[1][2] * (*n).y + m->m[2][2] * (*n).z );
 	return normalize(r);
 				   
 }
@@ -487,45 +544,52 @@ inline RT_Vec3f reflect(const RT_Vec3f *v, const RT_Vec3f *n)
 {
 	float d = dot(*v, *n);
 
-	return (RT_Vec3f)(v->x - 2.0 * d * n->x,
-					  v->y - 2.0 * d * n->y,
-					  v->z - 2.0 * d * n->z );
+	return (RT_Vec3f)((*v).x - 2.0f * d * (*n).x,
+					  (*v).y - 2.0f * d * (*n).y,
+					  (*v).z - 2.0f * d * (*n).z );
 }
 
 inline RT_Vec3f refract(const RT_Vec3f *v, const RT_Vec3f *n, const float i)
 {
 	float d = dot(*v, *n);
-	float k = 1.0 - pow(i, 2) * (1.0 - pow(d, 2));
+	float k = 1.0f - pow(i, 2) * (1.0f - pow(d, 2));
 
-	if(k < 0.0)
+	if(k < 0.0f)
+	{
 		return *v;
+	}
 
 	float sr = sqrt(k);
 
-	return (RT_Vec3f)(i * v->x - n->x * (i * d + sr),
-					  i * v->y - n->y * (i * d + sr),
-					  i * v->z - n->z * (i * d + sr) );
+	return (RT_Vec3f)(i * (*v).x - (*n).x * (i * d + sr),
+					  i * (*v).y - (*n).y * (i * d + sr),
+					  i * (*v).z - (*n).z * (i * d + sr) );
 }
 
 inline RT_Vec3f lerp(const RT_Vec3f *a, const RT_Vec3f *b, const float t)
 {
-	return (RT_Vec3f)(a->x + (b->x - a->x) * t,
-					  a->y + (b->y - a->y) * t,
-					  a->z + (b->z - a->z) * t );
+	return (RT_Vec3f)((*a).x + ((*b).x - (*a).x) * t,
+					  (*a).y + ((*b).y - (*a).y) * t,
+					  (*a).z + ((*b).z - (*a).z) * t );
 }
 
 inline void swap(__global RT_Vec3f *a, const RT_Vec3f *b)
 {
-	a->x = b->x;
-	a->y = b->y;
-	a->z = b->z;
+	(*a).x = (*b).x;
+	(*a).y = (*b).y;
+	(*a).z = (*b).z;
 }
 
-inline RT_Vec3f _clamp(const RT_Vec3f *v, const float min, const float max)
+inline RT_Vec3f _clamp(const RT_Vec3f *v, const float minimum, const float maximum)
 {
-	return (RT_Vec3f)((v->x < min)? min : (v->x > max)? max : v->x,
-					  (v->y < min)? min : (v->y > max)? max : v->y,
-					  (v->z < min)? min : (v->z > max)? max : v->z );	
+	return (RT_Vec3f)(((*v).x < minimum)? minimum : ((*v).x > maximum)? maximum : (*v).x,
+					  ((*v).y < minimum)? minimum : ((*v).y > maximum)? maximum : (*v).y,
+					  ((*v).z < minimum)? minimum : ((*v).z > maximum)? maximum : (*v).z );	
+}
+
+inline void Saturate(RT_Vec3f *c)
+{ 
+	*c = _clamp(c, 0, 1);
 }
 
 /*----------------------------------------------------------------------------------------------
@@ -536,24 +600,24 @@ inline RT_Vec3f _clamp(const RT_Vec3f *v, const float min, const float max)
 
  typedef struct
  {
-	float rf, gf, bf, af;
-	int ri, gi, bi, ai;
+	//float rf, gf, bf, af;
+	int r, g, b, a;
 	int rgba;
 
  } RT_Color;
 
- inline RT_Color CreatePixelColori(int r, int g, int b, int a)
+ inline RT_Color CreatePixelColor(int r, int g, int b, int a)
  {
 	RT_Color c;
-	c.ri = r;
-	c.gi = g;
-	c.bi = b;
-	c.ai = a;
+	c.r = r;
+	c.g = g;
+	c.b = b;
+	c.a = a;
 
-	c.rf = r/255.f;
+	/*c.rf = r/255.f;
 	c.gf = g/255.f;
 	c.bf = b/255.f;
-	c.af = a/255.f;
+	c.af = a/255.f;*/
 
 	c.rgba = (((r & 0xFF) << RSHIFT) |
 			  ((g & 0xFF) << GSHIFT) |
@@ -565,78 +629,30 @@ inline RT_Vec3f _clamp(const RT_Vec3f *v, const float min, const float max)
 
  inline RT_Color CreatePixelColorf(float r, float g, float b, float a)
  {
-	return CreatePixelColori(r*255, g*255, b*255, a*255);
+	return CreatePixelColor(r*255, g*255, b*255, a*255);
  }
 
  inline RT_Color CreatePixelColorv4(const RT_Vec4f c)
  {
-	return CreatePixelColori(c.x*255, c.y*255, c.z*255, c.w*255);
+	return CreatePixelColor(c.x*255, c.y*255, c.z*255, c.w*255);
  }
 
  inline RT_Color CreatePixelColorv3(const RT_Vec3f c)
  {
-	return CreatePixelColori(c.x*255, c.y*255, c.z*255, 255);
+	return CreatePixelColor(c.x*255, c.y*255, c.z*255, 255);
  }
 
- inline RT_Color CreatePixelColori32(const int rgba)
+ inline RT_Color CreatePixelColor32(const int rgba)
  {
 	RT_Color c;
-	c.ri = (rgba & RMASK) >> RSHIFT;
-	c.gi = (rgba & GMASK) >> GSHIFT;
-	c.bi = (rgba & BMASK) >> BSHIFT;
-	c.ai = (rgba & AMASK) >> ASHIFT;
-
-	c.rf = c.ri/255.0f;
-	c.gf = c.gi/255.0f;
-	c.bf = c.bi/255.0f;
-	c.af = c.ai/255.0f;
+	c.r = (rgba & RMASK) >> RSHIFT;
+	c.g = (rgba & GMASK) >> GSHIFT;
+	c.b = (rgba & BMASK) >> BSHIFT;
+	c.a = (rgba & AMASK) >> ASHIFT;
 
 	c.rgba = rgba;
 
 	return c;
- }
-
- inline void Saturate(RT_Color *c)
- {
-	c->ri = (c->ri < 0)? 0 : (c->ri > 255)? 255 : c->ri;
-	c->gi = (c->gi < 0)? 0 : (c->gi > 255)? 255 : c->gi;
-	c->bi = (c->bi < 0)? 0 : (c->bi > 255)? 255 : c->bi;
-	c->ai = (c->ai < 0)? 0 : (c->ai > 255)? 255 : c->ai;
-
-	c->rf = (c->rf < 0.0f)? 0.0f : (c->rf > 1.0f)? 1.0f : c->rf;
-	c->gf = (c->gf < 0.0f)? 0.0f : (c->gf > 1.0f)? 1.0f : c->gf;
-	c->bf = (c->bf < 0.0f)? 0.0f : (c->bf > 1.0f)? 1.0f : c->bf;
-	c->af = (c->af < 0.0f)? 0.0f : (c->af > 1.0f)? 1.0f : c->af;
-
-	c->rgba = (((c->ri & 0xFF) << RSHIFT) |
-			   ((c->gi & 0xFF) << GSHIFT) |
-			   ((c->bi & 0xFF) << BSHIFT) |
-			   ((c->ai & 0xFF) << ASHIFT)  );
- }
-
-/*----------------------------------------------------------------------------------------------
- *
- * Ray
- *
- *----------------------------------------------------------------------------------------------*/
-
- typedef struct
- {
-	RT_Vec3f o;
-	RT_Vec3f d;
- } RT_Ray;
-
- inline RT_Ray CreateRay(const RT_Vec3f o, const RT_Vec3f d)
- {
-	RT_Ray r;
-	r.o = o;
-	r.d = d;
-	return r;
- }
-
- inline RT_Vec3f HitPoint(const RT_Ray *r, const float t)
- {
-	return (r->o + (r->d * t));
  }
 
 

@@ -10,12 +10,12 @@ inline void DisplayPixel(const int x,
 }
 
 __kernel void render(__constant RT_DataScene *world,
+					 __constant RT_Camera *camera,
 					 __global const RT_Light *lights,
 				     __constant RT_Primitive *objects, 
 					 __global int *bufferImage)
 {
-	RT_Camera camera = world->camera;
-	RT_Vec2f s = world->vp.sp / camera.zoom;
+	RT_Vec2f s = world->vp.sp / camera->zoom;
 	uint id = get_global_id(0);
 
 	uint x = id % world->vp.width;
@@ -23,13 +23,13 @@ __kernel void render(__constant RT_DataScene *world,
 	
 	RT_Vec2f pp = (RT_Vec2f)( s.x * (x - 0.5f * world->vp.width),
 							 -s.y * (y - 0.5f * world->vp.height));
-	RT_Ray ray = CreateRay(camera.eye, 
-						   GetDirectionRayCam(&pp, &camera));
+	RT_Ray ray = CreateRay(camera->eye, 
+						   GetDirectionRayCam(&pp, camera));
 
-	RT_Color pc = CreatePixelColorv3(
-						TraceRay(lights, objects, world, &ray));
+	RT_Vec3f pc = TraceRay(lights, objects, world, &ray);
 	Saturate(&pc);
-	DisplayPixel(x, y, world->vp.width, &pc, bufferImage);
+	RT_Color color = CreatePixelColorv3(pc);
+	DisplayPixel(x, y, world->vp.width, &color, bufferImage);
 	
 	/*uint2 seed = (uint2)((world->vp.width * (y + 1) + x),
 						 83 + (world->vp.width * (y + 1) + x));*/

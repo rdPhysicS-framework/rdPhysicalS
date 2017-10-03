@@ -219,10 +219,10 @@ namespace RT
 			float Cos = cos(angle);
 			float Sin = sin(angle);
 
-			return Mat4f(1, 0, 0, 0,
+			return Mat4f(1, 0,    0,   0,
 						 0, Cos, -Sin, 0,
 						 0, Sin,  Cos, 0,
-						 0, 0, 0, 1);
+						 0, 0,    0,   1);
 		}
 
 		inline Mat4f AffRotationY(float angle)
@@ -230,10 +230,10 @@ namespace RT
 			float Cos = cos(angle);
 			float Sin = sin(angle);
 
-			return Mat4f(Cos, 0, Sin, 0,
-						 0, 1, 0, 0,
-						-Sin, 0, Cos, 0,
-						 0, 0, 0, 1);
+			return Mat4f( Cos, 0, Sin, 0,
+						  0,   1, 0,   0,
+						 -Sin, 0, Cos, 0,
+						  0,   0, 0,   1);
 		}
 
 		inline Mat4f AffRotationZ(float angle)
@@ -243,8 +243,8 @@ namespace RT
 
 			return Mat4f(Cos, -Sin, 0, 0,
 						 Sin,  Cos, 0, 0,
-						 0, 0, 1, 0,
-						 0, 0, 0, 1);
+						 0,    0,   1, 0,
+						 0,    0,   0, 1);
 		}
 
 		inline Mat4f AffScaling(const Vec3f &scales)

@@ -1,13 +1,10 @@
-#ifndef	 __RT_STRUCTS_CL
-#define	 __RT_STRUCTS_CL
-
 /*----------------------------------------------------------------------------------------------
  *
  * RT_BRDF
  * data for material Phong
  * Lambertian(ambient), Lambertian(diffuse), GlossySpecular(specular)
  *----------------------------------------------------------------------------------------------*/
-typedef struct __attribute__((package))
+typedef struct
 { 
 	RT_Vec3f color;
 	float k;
@@ -16,7 +13,7 @@ typedef struct __attribute__((package))
 	RT_TypeBRDF type;
 }	RT_BRDF;
 
-typedef struct __attribute__((package))
+typedef struct
 { 
 	float k;
 	float ior;
@@ -24,7 +21,7 @@ typedef struct __attribute__((package))
 	RT_TypeBTDF type;
 } RT_BTDF;
 
-typedef struct __attribute__((package))
+typedef struct
 {
 	//RT_Vec3f color;
 	/*float ambient;
@@ -40,10 +37,22 @@ typedef struct __attribute__((package))
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Bounding Box
+ * 
+ *----------------------------------------------------------------------------------------------*/
+
+typedef struct
+{ 
+	float x0, y0, z0;
+	float x1, y1, z1;
+} RT_BBox;
+
+/*----------------------------------------------------------------------------------------------
+ *
  * RT_Primitives
  * Box, Plane, Sphere
  *----------------------------------------------------------------------------------------------*/
-typedef struct __attribute__((package))
+typedef struct
 { 
 	RT_Vec3f p;
 	//RT_Vec3f p1, p2;
@@ -57,14 +66,24 @@ typedef struct __attribute__((package))
 
 	/*transform*/
 	RT_Mat4f invMatrix;
+
+	RT_BBox bbox;
 } RT_Primitive;
+
+typedef struct
+{ 
+	int v0, v1, v2;
+	int normal;/*0 and 1(0 and 255)*/
+	RT_Material material;
+	RT_BBox bbox;
+} RT_Triangle;
 
 /*----------------------------------------------------------------------------------------------
  *
  * RT_Result
  * data of the results of the collisions
  *----------------------------------------------------------------------------------------------*/
-typedef struct __attribute__((package))
+typedef struct
 {
 	bool hit;
 	float t;
@@ -76,10 +95,25 @@ typedef struct __attribute__((package))
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Grid
+ * 
+ *----------------------------------------------------------------------------------------------*/
+typedef struct
+{
+	RT_BBox bbox;
+	int nx, ny, nz;
+	int numTriangles;
+	int numCells;
+	/*transform*/
+	RT_Mat4f invMatrix;
+} RT_Grid;
+
+/*----------------------------------------------------------------------------------------------
+ *
  * RT_Light
  * data of the lights PointLight
  *----------------------------------------------------------------------------------------------*/
-typedef struct __attribute__((package))
+typedef struct
 {
 	RT_Vec3f position;
 	RT_Vec3f color;
@@ -95,7 +129,7 @@ typedef struct __attribute__((package))
  * data of the world
  *----------------------------------------------------------------------------------------------*/
 /*Data of Canvas*/
-typedef struct __attribute__((package))
+typedef struct
 {
 	int width;
 	int height;
@@ -107,7 +141,7 @@ typedef struct __attribute__((package))
  *Data of camera.
  *Pinhole
 */
-typedef struct __attribute__((package))
+typedef struct
 { 
 	/*position*/
 	RT_Vec3f eye;
@@ -124,13 +158,10 @@ typedef struct __attribute__((package))
 } RT_Camera;
 
 
-typedef struct __attribute__((package))
+typedef struct
 {	
 	/*data of the canvas*/
 	RT_ViewPlane vp;
-
-	/*data of the camera(point of origin of the ray)*/
-	RT_Camera camera;
 
 	/*background-color*/
 	RT_Vec3f background;
@@ -147,9 +178,21 @@ typedef struct __attribute__((package))
 	int jump;
 	ulong count;
 	ulong numShuffledIndices;
-	/*seed random*/
-	/*ulong seed;*/
+	seed random
+	ulong seed;*/
 } RT_DataScene;
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Ray
+ *
+ *----------------------------------------------------------------------------------------------*/
+
+ typedef struct
+ {
+	RT_Vec3f o;
+	RT_Vec3f d;
+ } RT_Ray;
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -183,6 +226,14 @@ RT_Vec3f Shade(__global const RT_Light *lights,
 			   __constant RT_DataScene *world,
 			   const RT_Ray *ray,
 			   const RT_Result *r);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Bounding Box
+ * 
+ *----------------------------------------------------------------------------------------------*/
+bool BBox_Hit(const RT_BBox *bb, const RT_Ray *ray);
+inline bool Inside(const RT_BBox *bb, const RT_Vec3f *p);
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -236,6 +287,25 @@ bool Sphere_ShadowHit(const RT_Primitive *s,
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Method of collision verification with the Grid
+ *
+ *----------------------------------------------------------------------------------------------*/
+ bool Grid_Hit(const RT_Grid *grid,
+			   __constant RT_Primitive *objects,
+			   __constant int *cells,
+			   __constant int *count,
+			   const RT_Ray *ray,
+			   float *tmin,
+			   RT_Result *r); 
+ bool Grid_ShadowHit(const RT_Grid *grid,
+					 __constant RT_Primitive *objects,
+					 __constant int *cells,
+					 __constant int *count, 
+					 const RT_Ray *ray, 
+					 float *tmin);
+
+/*----------------------------------------------------------------------------------------------
+ *
  * Methods for the lights
  *
  *----------------------------------------------------------------------------------------------*/
@@ -256,7 +326,15 @@ bool InShadow(const RT_Light *l,
  * The direction of the ray returns based on the camera
  *
  *----------------------------------------------------------------------------------------------*/
-inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, const RT_Camera *camera);
+inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, __constant RT_Camera *camera);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for Ray
+ *
+ *----------------------------------------------------------------------------------------------*/
+inline RT_Ray CreateRay(const RT_Vec3f o, const RT_Vec3f d);
+inline RT_Vec3f HitPoint(const RT_Ray *r, const float t);
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -269,7 +347,14 @@ bool ShadowHit(__constant RT_Primitive *objects,
 			   const int numObj, const RT_Ray *ray, 
 			   float tmin);
 
+			   
 /*----------------------------------------------------------------------------------------------
+ *
+ * Method for super sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Point2f GenerateSamples();
+ /*----------------------------------------------------------------------------------------------
  *
  * Method for the Tracer
  *
@@ -278,4 +363,3 @@ RT_Vec3f TraceRay(__global const RT_Light *lights,
 				  __constant RT_Primitive *objects,
 				  __constant RT_DataScene *world, 
 				  const RT_Ray *ray);
-#endif //__RT_STRUCTS_CL
