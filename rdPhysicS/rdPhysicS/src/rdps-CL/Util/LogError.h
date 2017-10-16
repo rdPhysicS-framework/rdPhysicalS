@@ -4,9 +4,11 @@
 #include <stdexcept>
 #include <string>
 
-namespace rdps
-{
-	class LogError : public std::logic_error
+
+#include "../../GlobalDefs.h"
+
+RDPS_BEGIN
+	class LogError : public std::exception
 	{
 	public:
 		explicit LogError(const std::string &message);
@@ -15,11 +17,15 @@ namespace rdps
 
 	class Logger
 	{
+	private:
+		static void GetErrorPlatformComponent(const int error, std::string msg);
+		static void GetErrorDeviceComponent(const int error, std::string msg);
+		static void GetErrorContextComponent(const int error, std::string msg);
+
 	public:
 		static void Log(const std::string message);
 		static void Log(const int status, const std::string message);
 	};
-
-}
+RDPS_END
 
 #endif//__LOG_ERROR_H__

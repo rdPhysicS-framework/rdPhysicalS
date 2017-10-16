@@ -16,7 +16,23 @@
 #define PKG pkg::
 #define USING_PKG using namespace pkg;
 
-typedef unsigned int uint;
+#define CLPATH "src/resource/"
+#define IMAGE_PATH "results/"
+
+#define EMPTY_BUFFER 1
+#define FREE_LOCATION 0
+#define BUSY_LOCATION -1
+
+enum InfoComponenteCL
+{
+	PLATFORM_COMPOENETE,
+	DEVICE_COMPONENTE,
+	CONTEXT_COMPONENETE,
+	COMMAND_QUEUE_COMPONENETE,
+	PROGRAM_COMPONENETE,
+	KERNEL_COMPONENETE,
+	ALL_COMPONENTES
+};
 
 enum ActionFile
 {
@@ -25,5 +41,6 @@ enum ActionFile
 	//RETURN_DATA_COPY
 };
 
+typedef unsigned int uint;
 
 #endif//__GLOBAL_DEFS_H__

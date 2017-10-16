@@ -12,7 +12,7 @@ KernelComponente::KernelComponente() :
 }
 
 KernelComponente::KernelComponente(const ProgramComponente &program, 
-										   const std::string &name            ) :
+								   const std::string &name            ) :
 	      BaseClComponente<Type>()
 {
 	int status = 0;
@@ -74,7 +74,7 @@ KernelComponente &KernelComponente::SetArgument(int index, const void *data, con
 	if (int status = clSetKernelArg(object, index, bytes, data))
 	{
 		Logger::Log("ERROR when setting the argument " + std::to_string(index)
-			+ "\nERROR: " + std::to_string(status));
+					+ "\nERROR: " + std::to_string(status));
 
 	}
 

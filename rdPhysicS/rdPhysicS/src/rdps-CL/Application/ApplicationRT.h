@@ -154,8 +154,8 @@ RDPS_BEGIN
 			int id = GetBuffer(bf.GetId()); 
 			if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 			{
-				Logger::Log("ERROR requested index invalidates " 
-							(id? EMPTY_BUFFER)? "empty array." : "busy location.")
+				Logger::Log("ERROR requested index invalidates "
+					(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 			}
 
 			buffers[id] = MemObjectComponente(context, bf.GetTypeAction(), bf.GetBytes());
@@ -172,7 +172,7 @@ RDPS_BEGIN
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
 					Logger::Log("ERROR requested index invalidates "
-								(id ? EMPTY_BUFFER) ? "empty array." : "busy location.")
+						(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
 				queue.WriteBuffer(buffers[id], bf.GetBytes(), bf.GetElement());
@@ -183,7 +183,7 @@ RDPS_BEGIN
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
 					Logger::Log("ERROR requested index invalidates "
-						(id ? EMPTY_BUFFER) ? "empty array." : "busy location.")
+						(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
 				queue.ReadBuffer(buffers[id], bf.GetBytes(), bf.GetElement());
