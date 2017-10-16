@@ -1,0 +1,102 @@
+#ifndef	__KERNEL_COMPONENTE_H__
+#define	__KERNEL_COMPONENTE_H__
+
+#include "BaseClComponent.h"
+#include "ClConfig.h"
+#include "../Util/LogError.h"
+
+RDPS_BEGIN
+	CL_BEGIN
+		class DeviceComponente;
+		class ProgramComponente;
+		/************************************************************************************************
+		 *
+		 * Classe que contem o kernel referente a função principal(main) que será executada
+		 * na DISPOSITIVO
+		 *
+		 ************************************************************************************************/
+		class KernelComponente : public BaseClComponente<cl_kernel>
+		{
+		public:
+			/*-------------------------------------------------------------------------------------------
+			 * Construtor
+			 * Adiciona a referencia do pai nullptr
+			 *--------------------------------------------------------------------------------------------*/
+			KernelComponente();
+			/*------------------------------------------------------------------------------------------
+			 * Construtor
+			 * Ocorre a construção do kernel utilizando um  programa já criado.
+			 * O parametro name, é o nome da função principal(main) que será excutada na DISPOSITIVO.
+			 *------------------------------------------------------------------------------------------*/
+			KernelComponente(const ProgramComponente &program,
+							 const std::string &name          );
+			/*--------------------------------------------------------------------------------------------
+			 * Construtor
+			 * Adiciona a referencia do pai um cl_kernel já construido fora.
+			 *--------------------------------------------------------------------------------------------*/
+			KernelComponente(const cl_kernel &kernel);
+			/*--------------------------------------------------------------------------------------------
+			 * Construtor de cópia
+			 *--------------------------------------------------------------------------------------------*/
+			KernelComponente(const KernelComponente &other);
+			/*--------------------------------------------------------------------------------------------
+			 * Destrutor
+			 * Destroi chamando a função Release();
+			 *--------------------------------------------------------------------------------------------*/
+			~KernelComponente();
+			/*--------------------------------------------------------------------------------------------
+			 * Destroi o kernel.
+			 *--------------------------------------------------------------------------------------------*/
+			virtual void Release();
+			virtual void Retain();
+
+			/*--------------------------------------------------------------------------------------------
+			 * Função que retorna uma string contendo as informações do Kernel.
+			 *--------------------------------------------------------------------------------------------*/
+			std::string GetInfo(const cl_kernel_info paramName);
+			/*--------------------------------------------------------------------------------------------
+			 * Função que retorna uma string contendo as informações de grupos de trabalhos do kernel.
+			 *--------------------------------------------------------------------------------------------*/
+			std::string GetInfo(const DeviceComponente &device,
+								const cl_kernel_work_group_info paramName);
+			/*--------------------------------------------------------------------------------------------
+			 * Função auxiliar, que adiciona todos os argumentos da função
+			 * principal, que será executada na DISPOSITIVO.
+			 * O parametro index é o indice referente na lista de argumentos da
+			 * função kernel. O template T, é o objeto de memório(MemObjectComponent) referente ao dado
+			 * que será passado. Genérico por que na função kernel poder conter um parametro
+			 * cópia, neste caso ao inves de passar o objeto referencia(MemObjectComponent), passa-se
+			 * a variável do próprio dado.
+			 *--------------------------------------------------------------------------------------------*/
+			template<class T>
+			inline KernelComponente &SetArgument(int index, T &obj);
+
+			KernelComponente &SetArgument(int index, const void *data, const size_t bytes);
+
+			/*--------------------------------------------------------------------------------------------
+			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
+			 *--------------------------------------------------------------------------------------------*/
+			inline KernelComponente &operator=(const KernelComponente &other)
+			{
+				if (this != &other)
+					object = other.object;
+
+				return (*this);
+			}
+		};
+
+		template<class T>
+		inline KernelComponente &KernelComponente::SetArgument(int index, T &obj)
+		{
+			if (int status = clSetKernelArg(object, index, sizeof(T), (void*)&obj))
+			{
+				Logger::Log("ERROR when setting the argument " + std::to_string(index)
+							+ "\nERROR: " + std::to_string(status));
+				
+			}
+
+			return (*this);
+		}
+	RDPS_END
+CL_END
+#endif//__KERNEL_COMPONENTE_H__
