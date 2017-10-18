@@ -1,34 +1,34 @@
-#include "MemObjectComponente.h"
-#include "ContextComponente.h"
+#include "MemObjectComponent.h"
+#include "ContextComponent.h"
 #include "../Util/LogError.h"
 
 USING_RDPS
 USING_CL
 
-MemObjectComponente::MemObjectComponente() :
-					 BaseClComponente<Type>()
+MemObjectComponent::MemObjectComponent() :
+					 BaseClComponent<Type>()
 {}
 
-MemObjectComponente::MemObjectComponente(const ContextComponente &context,
+MemObjectComponent::MemObjectComponent(const ContextComponent &context,
 										 const  ActionFile typeAction,
 										 const size_t size               ) :
-					 BaseClComponente<Type>(Create(context, typeAction, size))
+					 BaseClComponent<Type>(Create(context, typeAction, size))
 {}
 
-MemObjectComponente::MemObjectComponente(const cl_mem &memObj) :
-					 BaseClComponente<Type>(memObj)
+MemObjectComponent::MemObjectComponent(const cl_mem &memObj) :
+					 BaseClComponent<Type>(memObj)
 {}
 
-MemObjectComponente::MemObjectComponente(const MemObjectComponente &other) :
-					 BaseClComponente<Type>(other)
+MemObjectComponent::MemObjectComponent(const MemObjectComponent &other) :
+					 BaseClComponent<Type>(other)
 {}
 
-MemObjectComponente::~MemObjectComponente()
+MemObjectComponent::~MemObjectComponent()
 {
 	Release();
 }
 
-void MemObjectComponente::Release()
+void MemObjectComponent::Release()
 {
 	if (object)
 	{
@@ -41,7 +41,7 @@ void MemObjectComponente::Release()
 	}
 }
 
-void MemObjectComponente::Retain()
+void MemObjectComponent::Retain()
 {
 	if (object)
 	{
@@ -51,7 +51,7 @@ void MemObjectComponente::Retain()
 	}
 }
 
-cl_mem MemObjectComponente::Create(const ContextComponente &context, 
+cl_mem MemObjectComponent::Create(const ContextComponent &context, 
 								   const  ActionFile typeAction,
 								   const size_t size)
 {

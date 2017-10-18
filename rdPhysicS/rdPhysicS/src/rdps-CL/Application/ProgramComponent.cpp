@@ -1,26 +1,26 @@
-#include "ProgramComponente.h"
-#include "ContextComponente.h"
-#include "DeviceComponente.h"
+#include "ProgramComponent.h"
+#include "ContextComponent.h"
+#include "DeviceComponent.h"
 #include "..\Util\Details.h"
 #include "..\Util\LogError.h"
 
 USING_RDPS
 USING_CL
 
-std::string ProgramComponente::GetBuidInfo(const DeviceComponente &device, 
+std::string ProgramComponent::GetBuidInfo(const DeviceComponent &device, 
 													const cl_program_build_info paramName)
 {
 	return Details::DisplayBuildInfo(*this, device, paramName);
 }
 
-ProgramComponente::ProgramComponente() :
-		  BaseClComponente<Type>()
+ProgramComponent::ProgramComponent() :
+		  BaseClComponent<Type>()
 {}
 
-ProgramComponente::ProgramComponente(const ContextComponente &context, 
+ProgramComponent::ProgramComponent(const ContextComponent &context, 
 											 const std::string source, 
 											 const std::string options) :
-		  BaseClComponente<Type>()
+		  BaseClComponent<Type>()
 {
 	int status = 0;
 	const char *s = source.c_str();
@@ -29,20 +29,20 @@ ProgramComponente::ProgramComponente(const ContextComponente &context,
 	/*importante tratar erro*/
 }
 
-ProgramComponente::ProgramComponente(const cl_program &program) :
-				   BaseClComponente<Type>(program)
+ProgramComponent::ProgramComponent(const cl_program &program) :
+				   BaseClComponent<Type>(program)
 {}
 
-ProgramComponente::ProgramComponente(const ProgramComponente &other) :
-				   BaseClComponente<Type>(other)
+ProgramComponent::ProgramComponent(const ProgramComponent &other) :
+				   BaseClComponent<Type>(other)
 {}
 
-ProgramComponente::~ProgramComponente()
+ProgramComponent::~ProgramComponent()
 {
 	Release();
 }
 
-void ProgramComponente::Release()
+void ProgramComponent::Release()
 {
 	if (object)
 	{
@@ -55,7 +55,7 @@ void ProgramComponente::Release()
 	}
 }
 
-void ProgramComponente::Retain()
+void ProgramComponent::Retain()
 {
 	if (object)
 	{
@@ -66,12 +66,12 @@ void ProgramComponente::Retain()
 	}
 }
 
-std::string ProgramComponente::GetInfo(const cl_program_info paramName)
+std::string ProgramComponent::GetInfo(const cl_program_info paramName)
 {
 	return std::string();
 }
 
-ProgramComponente &ProgramComponente::BuildProgram(const DeviceComponente &device,
+ProgramComponent &ProgramComponent::BuildProgram(const DeviceComponent &device,
 												   const std::string &options)
 {
 	cl_device_id id = device();

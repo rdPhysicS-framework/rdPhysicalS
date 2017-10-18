@@ -12,7 +12,7 @@ RDPS_BEGIN
 		 *
 		 *************************************************************************************************/
 		template<class Type>
-		class BaseClComponente
+		class BaseClComponent
 		{
 		protected:
 			typedef Type Type;
@@ -23,15 +23,15 @@ RDPS_BEGIN
 			 * Construtor
 			 * adiciona a referencia genéria para nulo
 			 *---------------------------------------------------------------------------------------------*/
-			BaseClComponente() : object(nullptr){}
+			BaseClComponent() : object(nullptr){}
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
-			BaseClComponente(const Type &_object) : object(_object){}
+			BaseClComponent(const Type &_object) : object(_object){}
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 *--------------------------------------------------------------------------------------------*/
-			virtual ~BaseClComponente(){}
+			virtual ~BaseClComponent(){}
 
 			virtual void Release() = 0;
 			virtual void Retain() = 0;
@@ -51,8 +51,8 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia
 			 *--------------------------------------------------------------------------------------------*/
-			inline BaseClComponente<Type> &operator=
-				(const BaseClComponente<Type> &other) 
+			inline BaseClComponent<Type> &operator=
+				(const BaseClComponent<Type> &other) 
 			{
 				if (object)
 					Release();
@@ -62,7 +62,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			* Função de sobrecar de operador para cópia
 			*--------------------------------------------------------------------------------------------*/
-			inline BaseClComponente<Type> &operator=
+			inline BaseClComponent<Type> &operator=
 				(const Type &other)
 			{
 				if (object)

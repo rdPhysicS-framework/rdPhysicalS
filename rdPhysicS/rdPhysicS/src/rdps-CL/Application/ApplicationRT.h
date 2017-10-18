@@ -24,14 +24,14 @@ RDPS_BEGIN
 			friend class ApplicationRTBuilder;
 
 		private:
-			PlatformComponente platform;
-			DeviceComponente device;
-			ContextComponente context;
-			CommmandQueueComponente queue;
-			ProgramComponente program;
-			KernelComponente kernel;
-			std::vector<MemObjectComponente> buffers;
-			ItensWorkGroupComponente itens;
+			PlatformComponent platform;
+			DeviceComponent device;
+			ContextComponent context;
+			CommmandQueueComponent queue;
+			ProgramComponent program;
+			KernelComponent kernel;
+			std::vector<MemObjectComponent> buffers;
+			ItensWorkGroupComponent itens;
 
 		private:
 			/*-------------------------------------------------------------------------------------------------------------------------------------
@@ -44,11 +44,11 @@ RDPS_BEGIN
 			 * Recebe a platform e device para a criação do programa
 			 * o restante inicializa seus conteudos em nullptr
 			 *--------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRT(const PlatformComponente &_platform,
-						  const DeviceComponente &_device);
+			ApplicationRT(const PlatformComponent &_platform,
+						  const DeviceComponent &_device);
 
-			inline void CreateContext() { context = ContextComponente(device); }
-			inline void CreateCommandQueue() { queue = CommmandQueueComponente(context, device); }
+			inline ApplicationRT &CreateContext();
+			inline ApplicationRT &CreateCommandQueue();
 	
 		public:
 
@@ -66,7 +66,7 @@ RDPS_BEGIN
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
 			ApplicationRT &CreateKernel(const std::string &name);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
-			 * Cria o buffer (MemObjectComponente) e adiciona na lista de memObjects,
+			 * Cria o buffer (MemObjectComponent) e adiciona na lista de memObjects,
 			 * retornando o id do objeto na lista, para que posteriormente seja adicionado novamente
 			 * os dados na lista.
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
@@ -79,7 +79,7 @@ RDPS_BEGIN
 			 * GetInfo(KERNEL_COMPONENETE) returna as informações do kernel
 			 * GetInfo(ALL_COMPONENTES) retorna as informações de todos os componenetes
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			std::string GetInfo(const InfoComponenteCL type) const;
+			std::string GetInfo(const InfoComponentCL type) const;
 			int GetBuffer();
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que verifica se no local desejado (lacation) na lista se está disponivel, se estiver
@@ -89,15 +89,15 @@ RDPS_BEGIN
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que adiciona a platforma
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRT &SetPlatform(const PlatformComponente &_platform);
+			ApplicationRT &SetPlatform(const PlatformComponent &_platform);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que adiona o device
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRT &SetDevice(const DeviceComponente &_device);
+			ApplicationRT &SetDevice(const DeviceComponent &_device);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que adiciona os itens de trabalho
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRT &SetItensWorkGroup(const ItensWorkGroupComponente &itens);
+			ApplicationRT &SetItensWorkGroup(const ItensWorkGroupComponent &itens);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que destroy todos os buffer, chama a função Release() de cada um,
 			 * mas não limpa a lista de buffers para posteriormente serem injetados novos dados.
@@ -138,7 +138,7 @@ RDPS_BEGIN
 			 * Função Respossavel em dar o comando para o processamento de dados no dispositivo.
 			 * recebe um bool como parametro, se for true renveia todos os argumentos
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			void Process(const bool applyEverything = false);
+			ApplicationRT &Process(const bool applyEverything = false);
 		};
 
 		template<class T>
@@ -146,7 +146,7 @@ RDPS_BEGIN
 		{
 			if (bf.GetId() <= ARRAY_WITHOUT_INDEX)
 			{
-				MemObjectComponente mem = MemObjectComponente(context, bf.GetTypeAction(), bf.GetBytes());
+				MemObjectComponent mem = MemObjectComponent(context, bf.GetTypeAction(), bf.GetBytes());
 				buffers.push_back(mem);
 				return buffers.size() - 1;
 			}
@@ -155,10 +155,10 @@ RDPS_BEGIN
 			if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 			{
 				Logger::Log("ERROR requested index invalidates "
-					(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+							(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 			}
 
-			buffers[id] = MemObjectComponente(context, bf.GetTypeAction(), bf.GetBytes());
+			buffers[id] = MemObjectComponent(context, bf.GetTypeAction(), bf.GetBytes());
 			
 			return id;
 		}
@@ -172,7 +172,7 @@ RDPS_BEGIN
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
 					Logger::Log("ERROR requested index invalidates "
-						(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
 				queue.WriteBuffer(buffers[id], bf.GetBytes(), bf.GetElement());
@@ -183,7 +183,7 @@ RDPS_BEGIN
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
 					Logger::Log("ERROR requested index invalidates "
-						(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
 				queue.ReadBuffer(buffers[id], bf.GetBytes(), bf.GetElement());

@@ -12,7 +12,7 @@ RDPS_BEGIN
 		 * dados sejam processados em paralelo
 		 *
 		 ***************************************************************************************************************/
-		class ItensWorkGroupComponente
+		class ItensWorkGroupComponent
 		{
 		private:
 			std::vector<size_t> globalItemSize;
@@ -45,7 +45,7 @@ RDPS_BEGIN
 			 * ---IMPORTANTE---
 			 * Dimeções erradas pode não funcionar corretamente a aplicação. O mesmo pros valores.
 			 *----------------------------------------------------------------------------------------------------------*/
-			ItensWorkGroupComponente(const std::initializer_list<size_t> gItemSize,
+			ItensWorkGroupComponent(const std::initializer_list<size_t> gItemSize,
 								    const std::initializer_list<size_t> lwItemSize = {},
 									const std::initializer_list<size_t> _offSet = {});
 

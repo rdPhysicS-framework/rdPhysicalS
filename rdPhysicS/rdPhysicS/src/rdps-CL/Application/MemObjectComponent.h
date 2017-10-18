@@ -6,21 +6,21 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class ContextComponente;
+		class ContextComponent;
 		/************************************************************************************************
 		*
 		* Classe que contem a referencia ao objeto de memória
 		* para leitura e escrita da HOST para DISPOSITIVO/ DISPOSITIVO para HOST
 		*
 		************************************************************************************************/
-		class MemObjectComponente : public BaseClComponente<cl_mem>
+		class MemObjectComponent : public BaseClComponent<cl_mem>
 		{
 		public:
 			/*-------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *--------------------------------------------------------------------------------------------*/
-			MemObjectComponente();
+			MemObjectComponent();
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Ocorre a construção do objeto de memória utilizando um contexto
@@ -29,23 +29,23 @@ RDPS_BEGIN
 			 * size é o tamanho do buffer de dados.
 			 * cl_mem faz a o meio campo entre a referencia dos dados na CPU com a DISPOSITIVO.
 			 *------------------------------------------------------------------------------------------*/
-			MemObjectComponente(const ContextComponente &context,
+			MemObjectComponent(const ContextComponent &context,
 							    const  ActionFile typeAction,
 							    const size_t size);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_mem já contruido fora.
 			 *--------------------------------------------------------------------------------------------*/
-			MemObjectComponente(const cl_mem &memObj);
+			MemObjectComponent(const cl_mem &memObj);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
-			MemObjectComponente(const MemObjectComponente &other);
+			MemObjectComponent(const MemObjectComponent &other);
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *--------------------------------------------------------------------------------------------*/
-			~MemObjectComponente();
+			~MemObjectComponent();
 			/*--------------------------------------------------------------------------------------------
 			 * Destroi o objeto de memória.
 			 *--------------------------------------------------------------------------------------------*/
@@ -62,17 +62,17 @@ RDPS_BEGIN
 			 * memObj = MemObjectComponent::Create(context, CL_MEM_WRITE_ONLY, size);
 			 * --memObj já existe--
 			 *--------------------------------------------------------------------------------------------*/
-			static cl_mem Create(const ContextComponente &context,
+			static cl_mem Create(const ContextComponent &context,
 								 const  ActionFile typeAction,
 							     const size_t size);
 			
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecarga de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline MemObjectComponente &operator=(const MemObjectComponente &other)
+			inline MemObjectComponent &operator=(const MemObjectComponent &other)
 			{
 				if (this != &other)
-					BaseClComponente<Type>::operator=(other);
+					BaseClComponent<Type>::operator=(other);
 				return (*this);
 			}
 		};

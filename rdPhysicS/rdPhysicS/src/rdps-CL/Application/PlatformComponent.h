@@ -6,7 +6,7 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class DeviceComponente;
+		class DeviceComponent;
 
 		/*************************************************************************************************
 		 *
@@ -14,27 +14,27 @@ RDPS_BEGIN
 		 * e lista os devices disponiveis.
 		 *
 		 *************************************************************************************************/
-		class PlatformComponente : public BaseClComponente<cl_platform_id>
+		class PlatformComponent : public BaseClComponent<cl_platform_id>
 		{
 		public:
 			/*---------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona no a referencia nullptr
 			 *--------------------------------------------------------------------------------------------*/
-			PlatformComponente();
+			PlatformComponent();
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona no a referencia um cl_platform_id já contruido fora.
 			 *--------------------------------------------------------------------------------------------*/
-			PlatformComponente(const cl_platform_id &_id);
+			PlatformComponent(const cl_platform_id &_id);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
-			PlatformComponente(const PlatformComponente &other);
+			PlatformComponent(const PlatformComponent &other);
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor padrão vazio, não faz nada.
 			 *--------------------------------------------------------------------------------------------*/
-			~PlatformComponente();
+			~PlatformComponent();
 
 			/*--------------------------------------------------------------------------------------------
 			 * Função padrão, não faz nada.
@@ -54,18 +54,18 @@ RDPS_BEGIN
 			 * Exemplo:
 			 * std::vector<PlatformComponent> platforms = PlatformComponent::GetPlatforms();
 			 *--------------------------------------------------------------------------------------------*/
-			static std::vector<PlatformComponente> GetPlatforms();
+			static std::vector<PlatformComponent> GetPlatforms();
 			/*--------------------------------------------------------------------------------------------
 			* Função que retorna um vector contendo tadas os dispositivos.
 			* Cada plataforma retorna sua lista de dispositivos.
 			* Exemplo:
 			* std::vector<DeviceComponent> divices = platfor.GetPlatforms();
 			*--------------------------------------------------------------------------------------------*/
-			std::vector<DeviceComponente> GetDevices(const cl_device_type type);
+			std::vector<DeviceComponent> GetDevices(const cl_device_type type);
 			/*--------------------------------------------------------------------------------------------
 			* Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			*--------------------------------------------------------------------------------------------*/
-			inline PlatformComponente &operator=(const PlatformComponente &other)
+			inline PlatformComponent &operator=(const PlatformComponent &other)
 			{
 				if (this != &other)
 					object = other.object;

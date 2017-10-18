@@ -7,43 +7,43 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class DeviceComponente;
-		class ProgramComponente;
+		class DeviceComponent;
+		class ProgramComponent;
 		/************************************************************************************************
 		 *
 		 * Classe que contem o kernel referente a função principal(main) que será executada
 		 * na DISPOSITIVO
 		 *
 		 ************************************************************************************************/
-		class KernelComponente : public BaseClComponente<cl_kernel>
+		class KernelComponent : public BaseClComponent<cl_kernel>
 		{
 		public:
 			/*-------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *--------------------------------------------------------------------------------------------*/
-			KernelComponente();
+			KernelComponent();
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Ocorre a construção do kernel utilizando um  programa já criado.
 			 * O parametro name, é o nome da função principal(main) que será excutada na DISPOSITIVO.
 			 *------------------------------------------------------------------------------------------*/
-			KernelComponente(const ProgramComponente &program,
+			KernelComponent(const ProgramComponent &program,
 							 const std::string &name          );
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_kernel já construido fora.
 			 *--------------------------------------------------------------------------------------------*/
-			KernelComponente(const cl_kernel &kernel);
+			KernelComponent(const cl_kernel &kernel);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
-			KernelComponente(const KernelComponente &other);
+			KernelComponent(const KernelComponent &other);
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *--------------------------------------------------------------------------------------------*/
-			~KernelComponente();
+			~KernelComponent();
 			/*--------------------------------------------------------------------------------------------
 			 * Destroi o kernel.
 			 *--------------------------------------------------------------------------------------------*/
@@ -57,7 +57,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função que retorna uma string contendo as informações de grupos de trabalhos do kernel.
 			 *--------------------------------------------------------------------------------------------*/
-			std::string GetInfo(const DeviceComponente &device,
+			std::string GetInfo(const DeviceComponent &device,
 								const cl_kernel_work_group_info paramName);
 			/*--------------------------------------------------------------------------------------------
 			 * Função auxiliar, que adiciona todos os argumentos da função
@@ -69,14 +69,14 @@ RDPS_BEGIN
 			 * a variável do próprio dado.
 			 *--------------------------------------------------------------------------------------------*/
 			template<class T>
-			inline KernelComponente &SetArgument(int index, T &obj);
+			inline KernelComponent &SetArgument(int index, T &obj);
 
-			KernelComponente &SetArgument(int index, const void *data, const size_t bytes);
+			KernelComponent &SetArgument(int index, const void *data, const size_t bytes);
 
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline KernelComponente &operator=(const KernelComponente &other)
+			inline KernelComponent &operator=(const KernelComponent &other)
 			{
 				if (this != &other)
 					object = other.object;
@@ -86,7 +86,7 @@ RDPS_BEGIN
 		};
 
 		template<class T>
-		inline KernelComponente &KernelComponente::SetArgument(int index, T &obj)
+		inline KernelComponent &KernelComponent::SetArgument(int index, T &obj)
 		{
 			if (int status = clSetKernelArg(object, index, sizeof(T), (void*)&obj))
 			{

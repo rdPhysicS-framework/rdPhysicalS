@@ -14,8 +14,8 @@ ApplicationRT::ApplicationRT() :
 			   itens({})
 {}
 
-ApplicationRT::ApplicationRT(const PlatformComponente &_platform, 
-							 const DeviceComponente   &_device   ) :
+ApplicationRT::ApplicationRT(const PlatformComponent &_platform, 
+							 const DeviceComponent   &_device   ) :
 			   platform(_platform), 
 			   device(_device), 
 			   context(),
@@ -25,6 +25,18 @@ ApplicationRT::ApplicationRT(const PlatformComponente &_platform,
 			   itens({})
 {}
 
+inline ApplicationRT &ApplicationRT::CreateContext()
+{ 
+	context = ContextComponent(device);
+	return (*this);
+}
+
+inline ApplicationRT &ApplicationRT::CreateCommandQueue()
+{
+	queue = CommmandQueueComponent(context, device);
+	return (*this);
+}
+
 ApplicationRT::~ApplicationRT()
 {}
 
@@ -32,40 +44,40 @@ ApplicationRT &ApplicationRT::CreateProgram(const std::string &source)
 {
 	CreateContext();
 	CreateCommandQueue();
-	program = ProgramComponente(context, source);
+	program = ProgramComponent(context, source);
 	program.BuildProgram(device);
 	return (*this);
 }
 
 ApplicationRT &ApplicationRT::CreateKernel(const std::string &name)
 {
-	kernel = KernelComponente(program, name);
+	kernel = KernelComponent(program, name);
 	return (*this);
 }
 
-std::string ApplicationRT::GetInfo(const InfoComponenteCL type) const
+std::string ApplicationRT::GetInfo(const InfoComponentCL type) const
 {
 	switch (type)
 	{
-	case PLATFORM_COMPOENETE:
+	case PLATFORM_COMPONENT:
 		
 		break;
-	case DEVICE_COMPONENTE:
+	case DEVICE_COMPONENT:
 
 		break;
-	case CONTEXT_COMPONENETE:
+	case CONTEXT_COMPONENT:
 
 		break;
-	case COMMAND_QUEUE_COMPONENETE:
+	case COMMAND_QUEUE_COMPONENT:
 
 		break;
-	case PROGRAM_COMPONENETE:
+	case PROGRAM_COMPONENT:
 
 		break;
-	case KERNEL_COMPONENETE:
+	case KERNEL_COMPONENT:
 
 		break;
-	case ALL_COMPONENTES:
+	case ALL_COMPONENTS:
 
 		break;
 	}
@@ -75,7 +87,7 @@ std::string ApplicationRT::GetInfo(const InfoComponenteCL type) const
 
 int ApplicationRT::GetBuffer()
 {
-	buffers.push_back(MemObjectComponente());
+	buffers.push_back(MemObjectComponent());
 	return buffers.size() - 1;
 }
 
@@ -90,19 +102,19 @@ int ApplicationRT::GetBuffer(const int location)
 	return location;
 }
 
-ApplicationRT &ApplicationRT::SetPlatform(const PlatformComponente &_platform)
+ApplicationRT &ApplicationRT::SetPlatform(const PlatformComponent &_platform)
 {
 	platform = _platform;
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::SetDevice(const DeviceComponente &_device)
+ApplicationRT &ApplicationRT::SetDevice(const DeviceComponent &_device)
 {
 	device = _device;
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::SetItensWorkGroup(const ItensWorkGroupComponente &_itens)
+ApplicationRT &ApplicationRT::SetItensWorkGroup(const ItensWorkGroupComponent &_itens)
 {
 	itens = _itens;
 	return (*this);
@@ -150,7 +162,7 @@ ApplicationRT &ApplicationRT::ApplyArguments(const std::initializer_list<uint> i
 	return (*this);
 }
 
-void ApplicationRT::Process(const bool applyEverything)
+ApplicationRT &ApplicationRT::Process(const bool applyEverything)
 {
 	if (applyEverything)
 		ApplyArguments();

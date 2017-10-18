@@ -3,11 +3,10 @@
 
 #include <stdexcept>
 #include <string>
-
-
 #include "../../GlobalDefs.h"
 
-RDPS_BEGIN
+namespace rdps
+{
 	class LogError : public std::exception
 	{
 	public:
@@ -18,14 +17,21 @@ RDPS_BEGIN
 	class Logger
 	{
 	private:
-		static void GetErrorPlatformComponent(const int error, std::string msg);
-		static void GetErrorDeviceComponent(const int error, std::string msg);
-		static void GetErrorContextComponent(const int error, std::string msg);
+		static std::string GetErrorMessage(const InfoComponentCL componenet, const int codeError);
+		static std::string GetErrorPlatformComponent(const int codeError);
+		static std::string GetErrorPlatformInfo(const int codeError);
+		static std::string GetErrorDeviceComponent(const int codeError);
+		static std::string GetErrorDeviceInfo(const int codeError);
+		static std::string GetErrorContextComponent(const int codeError);
+		static std::string GetErrorContextInfo(const int codeError);
+		static std::string GetErrorCommandQueueComponent(const int codeError);
+		static std::string GetErrorCommandQueueInfo(const int codeError);
 
 	public:
 		static void Log(const std::string message);
-		static void Log(const int status, const std::string message);
+		static void Log(const InfoComponentCL componenet, const int codeError, const std::string message);
 	};
-RDPS_END
+
+}
 
 #endif//__LOG_ERROR_H__

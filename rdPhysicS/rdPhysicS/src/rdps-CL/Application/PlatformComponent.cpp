@@ -1,32 +1,32 @@
-#include "PlatformComponente.h"
-#include "DeviceComponente.h"
+#include "PlatformComponent.h"
+#include "DeviceComponent.h"
 #include "../Util/Details.h"
 #include "../Util/LogError.h"
 
 USING_RDPS
 USING_CL
 
-PlatformComponente::PlatformComponente() : 
-					BaseClComponente<Type>()
+PlatformComponent::PlatformComponent() : 
+					BaseClComponent<Type>()
 {}
 
-PlatformComponente::PlatformComponente(const cl_platform_id &_id) :
-					BaseClComponente<Type>(_id)
+PlatformComponent::PlatformComponent(const cl_platform_id &_id) :
+					BaseClComponent<Type>(_id)
 {}
 
-PlatformComponente::PlatformComponente(const PlatformComponente &other) :
-					BaseClComponente<Type>(other)
+PlatformComponent::PlatformComponent(const PlatformComponent &other) :
+					BaseClComponent<Type>(other)
 {}
 
-PlatformComponente::~PlatformComponente()
+PlatformComponent::~PlatformComponent()
 {}
 
-std::string PlatformComponente::GetInfo(const cl_platform_info paramName)
+std::string PlatformComponent::GetInfo(const cl_platform_info paramName)
 {
 	return Details::DisplayPlatformInfo(object, paramName);
 }
 
-std::vector<PlatformComponente> PlatformComponente::GetPlatforms()
+std::vector<PlatformComponent> PlatformComponent::GetPlatforms()
 {
 	cl_uint size = 0;
 	cl_int status = clGetPlatformIDs(0, nullptr, &size);
@@ -40,10 +40,10 @@ std::vector<PlatformComponente> PlatformComponente::GetPlatforms()
 		Logger::Log("Unable to capture the platforms. ERROR: "
 					+ std::to_string(status));
 
-	return std::vector<PlatformComponente>(&p[0], &p[size]);
+	return std::vector<PlatformComponent>(&p[0], &p[size]);
 }
 
-std::vector<DeviceComponente> PlatformComponente::GetDevices(const cl_device_type type)
+std::vector<DeviceComponent> PlatformComponent::GetDevices(const cl_device_type type)
 {
 	cl_uint size = 0;
 	cl_int status = clGetDeviceIDs(object, type, 0, nullptr, &size);
@@ -57,5 +57,5 @@ std::vector<DeviceComponente> PlatformComponente::GetDevices(const cl_device_typ
 		Logger::Log("Unable to capture the devices. ERROR: "
 					+ std::to_string(status));
 
-	return std::vector<DeviceComponente>(&d[0], &d[size]);
+	return std::vector<DeviceComponent>(&d[0], &d[size]);
 }

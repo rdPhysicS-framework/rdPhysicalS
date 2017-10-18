@@ -7,9 +7,9 @@ namespace rdps
 {
 	namespace Cl
 	{
-		class ProgramComponente;
-		class DeviceComponente;
-		class KernelComponente;
+		class ProgramComponent;
+		class DeviceComponent;
+		class KernelComponent;
 		/******************************************************************************
 		 *
 		 * Classe auxiliar para verificar as informações dos dispositivos
@@ -39,12 +39,12 @@ namespace rdps
 			static std::string DisplayDeviceDetails(cl_device_id device,
 													cl_device_info paramName);
 
-			static std::string DisplayBuildInfo(const ProgramComponente &program, 
-												const DeviceComponente &device, 
+			static std::string DisplayBuildInfo(const ProgramComponent &program, 
+												const DeviceComponent &device, 
 												const cl_program_build_info paramName);
 			//clGetKernelWorkGroupInfo()
-			static std::string DisplayKernelWorkGroupInfo(const KernelComponente &kernel,
-														  const DeviceComponente &device, 
+			static std::string DisplayKernelWorkGroupInfo(const KernelComponent &kernel,
+														  const DeviceComponent &device, 
 														  const cl_kernel_work_group_info paramName);
 		};
 	}

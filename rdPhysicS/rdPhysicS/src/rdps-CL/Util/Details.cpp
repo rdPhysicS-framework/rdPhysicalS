@@ -1,6 +1,6 @@
 #include "Details.h"
-#include "..\Application\ProgramComponente.h"
-#include "..\Application\DeviceComponente.h"
+#include "..\Application\ProgramComponent.h"
+#include "..\Application\DeviceComponent.h"
 #include "..\Util\LogError.h"
 
 std::string rdps::Cl::Details::DisplayPlatformInfo(cl_platform_id platform, 
@@ -218,8 +218,8 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 	return std::string();
 }
 
-std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponente &program, 
-												const DeviceComponente &device, 
+std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponent &program, 
+												const DeviceComponent &device, 
 												const cl_program_build_info paramName)
 {
 	size_t size;

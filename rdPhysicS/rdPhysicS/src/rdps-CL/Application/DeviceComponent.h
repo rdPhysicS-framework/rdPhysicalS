@@ -6,35 +6,35 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class PlatformComponente;
+		class PlatformComponent;
 		/*************************************************************************************************
 		 *
 		 * Classe que contem o id do device openCL selecionado.
 		 * Referente dispositivo onde será executado o programa OpenCL
 		 *
 		 *************************************************************************************************/
-		class DeviceComponente : public BaseClComponente<cl_device_id>
+		class DeviceComponent : public BaseClComponent<cl_device_id>
 		{
 		public:
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *---------------------------------------------------------------------------------------------*/
-			DeviceComponente();
+			DeviceComponent();
 			/*---------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_device_id já construido fora.
 			 *---------------------------------------------------------------------------------------------*/
-			DeviceComponente(const cl_device_id &device);
+			DeviceComponent(const cl_device_id &device);
 			/*---------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *----------------------------------------------------------------------------------------------*/
-			DeviceComponente(const DeviceComponente &other);
+			DeviceComponent(const DeviceComponent &other);
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *--------------------------------------------------------------------------------------------*/
-			~DeviceComponente();
+			~DeviceComponent();
 
 			virtual void Release();
 			virtual void Retain();
@@ -46,7 +46,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operadorga para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline DeviceComponente &operator=(const DeviceComponente &other)
+			inline DeviceComponent &operator=(const DeviceComponent &other)
 			{
 				if (this != &other)
 					object = other.object;

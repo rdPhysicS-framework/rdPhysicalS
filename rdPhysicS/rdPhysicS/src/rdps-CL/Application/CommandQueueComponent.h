@@ -3,15 +3,15 @@
 
 #include "BaseClComponent.h"
 #include "ClConfig.h"
-#include "MemObjectComponente.h"
+#include "MemObjectComponent.h"
 #include "../Util/LogError.h"
 
 RDPS_BEGIN
 	CL_BEGIN
-		class ContextComponente;
-		class DeviceComponente;
-		class ItensWorkGroupComponente;
-		class KernelComponente;
+		class ContextComponent;
+		class DeviceComponent;
+		class ItensWorkGroupComponent;
+		class KernelComponent;
 
 		/********************************************************************************************************************************************
 		 *
@@ -19,34 +19,34 @@ RDPS_BEGIN
 		 * do kernel 
 		 *
 		 ********************************************************************************************************************************************/
-		class CommmandQueueComponente : BaseClComponente<cl_command_queue>
+		class CommmandQueueComponent : BaseClComponent<cl_command_queue>
 		{
 		public:
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente();
+			CommmandQueueComponent();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Ocorre a construção da Fila utilizando um  Contexto e um device já criado.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente(const ContextComponente &context, 
-								    const DeviceComponente &device);
+			CommmandQueueComponent(const ContextComponent &context, 
+								    const DeviceComponent &device);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_command_queue já construido fora.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente(const cl_command_queue &queue);
+			CommmandQueueComponent(const cl_command_queue &queue);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente(const CommmandQueueComponente &other);
+			CommmandQueueComponent(const CommmandQueueComponent &other);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			~CommmandQueueComponente();
+			~CommmandQueueComponent();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Destroi o Contexto.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ RDPS_BEGIN
 			 * Generico por que pode ser retornado qualquer tipo de dados validos.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			template<class T>
-			inline CommmandQueueComponente &ReadBuffer(const MemObjectComponente &memObj, const size_t size, T *data);
+			inline CommmandQueueComponent &ReadBuffer(const MemObjectComponent &memObj, const size_t size, T *data);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar para a Escrita dos dados da função kernel no DISPOSITIVO.
 			 * Recebe o Objeto de memória referente ao buffer na CPU/DISPOSITIVO,
@@ -71,26 +71,26 @@ RDPS_BEGIN
 			 * Generico por que pode ser lido qualquer tipo de dados validos.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			template<class T>
-			inline CommmandQueueComponente &WriteBuffer(const MemObjectComponente &memObj, const size_t size, T *data);
+			inline CommmandQueueComponent &WriteBuffer(const MemObjectComponent &memObj, const size_t size, T *data);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que dá o comando para ocorrer o processamento dos dados no DISPOSITIVO.
 			 * Recebe como parametro a referência da kernel que será executado, Referência ao número de
 			 * dimenções dos grupos de trabalho, números de itens globais e itens locais em cada grupo.
 			 * os itens de trabalho são necessários para a execução com sucesso.
 			 *--------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente &EnqueueNDRangeKernel(const KernelComponente &kernel, const ItensWorkGroupComponente &itens);
+			CommmandQueueComponent &EnqueueNDRangeKernel(const KernelComponent &kernel, const ItensWorkGroupComponent &itens);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que dá o comando para ocorrer o processamento dos dados no DISPOSITIVO.
 			 * Recebe como parametro a referência da kernel que será executado.
 			 *--------------------------------------------------------------------------------------------------------------------------------------*/
-			CommmandQueueComponente &EnqueueTask(const KernelComponente &kernel);
+			CommmandQueueComponent &EnqueueTask(const KernelComponent &kernel);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			inline CommmandQueueComponente &operator=(const CommmandQueueComponente &other)
+			inline CommmandQueueComponent &operator=(const CommmandQueueComponent &other)
 			{
 				if (this != &other)
-					BaseClComponente<Type>::operator=(other);
+					BaseClComponent<Type>::operator=(other);
 				return (*this);
 			}
 		};
@@ -99,8 +99,8 @@ RDPS_BEGIN
 		//os dados do do buffer, tamanho do buffer em bytes e quantidade de elementos 
 		//no buffer.
 		template<class T>
-		inline CommmandQueueComponente 
-					&CommmandQueueComponente::ReadBuffer(const MemObjectComponente &memObj,
+		inline CommmandQueueComponent 
+					&CommmandQueueComponent::ReadBuffer(const MemObjectComponent &memObj,
 														const size_t size, T *data)
 		{
 			/*adicionar mem_obj para funcionar*/
@@ -115,8 +115,8 @@ RDPS_BEGIN
 		}
 
 		template<class T>
-		inline CommmandQueueComponente 
-				&CommmandQueueComponente::WriteBuffer(const MemObjectComponente &memObj, 
+		inline CommmandQueueComponent 
+				&CommmandQueueComponent::WriteBuffer(const MemObjectComponent &memObj, 
 													 const size_t size, T *data)
 		{
 			/*adicionar mem_obj para funcionar*/

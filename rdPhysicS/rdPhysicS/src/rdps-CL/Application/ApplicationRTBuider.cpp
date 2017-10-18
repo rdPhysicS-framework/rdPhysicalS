@@ -1,8 +1,8 @@
 #include "ApplicationRTBuider.h"
 #include "ApplicationRT.h"
-#include "PlatformComponente.h"
-#include "DeviceComponente.h"
-#include "ItensWorkGroupComponente.h"
+#include "PlatformComponent.h"
+#include "DeviceComponent.h"
+#include "ItensWorkGroupComponent.h"
 #include "../Util/UtilGlobalDef.h"
 
 USING_RDPS
@@ -15,19 +15,19 @@ ApplicationRTBuilder::ApplicationRTBuilder() :
 ApplicationRTBuilder::~ApplicationRTBuilder()
 {}
 
-ApplicationRTBuilder &ApplicationRTBuilder::AddPlatform(const PlatformComponente &platform)
+ApplicationRTBuilder &ApplicationRTBuilder::AddPlatform(const PlatformComponent &platform)
 {
 	app->SetPlatform(platform);
 	return (*this);
 }
 
-ApplicationRTBuilder &ApplicationRTBuilder::AddDevice(const DeviceComponente &device)
+ApplicationRTBuilder &ApplicationRTBuilder::AddDevice(const DeviceComponent &device)
 {
 	app->SetDevice(device);
 	return (*this);
 }
 
-ApplicationRTBuilder &ApplicationRTBuilder::AddItensWorkGroup(const ItensWorkGroupComponente &itens)
+ApplicationRTBuilder &ApplicationRTBuilder::AddItensWorkGroup(const ItensWorkGroupComponent &itens)
 {
 	app->SetItensWorkGroup(itens);
 	return (*this);

@@ -6,40 +6,40 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class DeviceComponente;
+		class DeviceComponent;
 
 		/************************************************************************************************
 		 *
 		 * Classe que contem o componenet de contexto openCl
 		 *
 		 ************************************************************************************************/
-		class ContextComponente : public BaseClComponente<cl_context>
+		class ContextComponent : public BaseClComponent<cl_context>
 		{
 		public:
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *---------------------------------------------------------------------------------------------*/
-			ContextComponente();
+			ContextComponent();
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Ocorre a construção do Contexto OpenCL utilizando um  Device já criado.
 			 *------------------------------------------------------------------------------------------*/
-			ContextComponente(const DeviceComponente &device, const cl_context_properties *prop = nullptr);
+			ContextComponent(const DeviceComponent &device, const cl_context_properties *prop = nullptr);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_context já construido fora.
 			 *--------------------------------------------------------------------------------------------*/
-			ContextComponente(const cl_context &context);
+			ContextComponent(const cl_context &context);
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
-			ContextComponente(const ContextComponente &other);
+			ContextComponent(const ContextComponent &other);
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *--------------------------------------------------------------------------------------------*/
-			~ContextComponente();
+			~ContextComponent();
 			/*--------------------------------------------------------------------------------------------
 			 * Destroi o Contexto.
 			 *--------------------------------------------------------------------------------------------*/
@@ -52,10 +52,10 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline ContextComponente &operator=(const ContextComponente &other)
+			inline ContextComponent &operator=(const ContextComponent &other)
 			{
 				if (this != &other)
-					BaseClComponente<Type>::operator=(other);
+					BaseClComponent<Type>::operator=(other);
 				return (*this);
 			}
 		};

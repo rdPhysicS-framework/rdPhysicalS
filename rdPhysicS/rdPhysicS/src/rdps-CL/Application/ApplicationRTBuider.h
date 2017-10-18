@@ -7,9 +7,9 @@
 RDPS_BEGIN
 	CL_BEGIN
 		class ApplicationRT;
-		class PlatformComponente;
-		class DeviceComponente;
-		class ItensWorkGroupComponente;
+		class PlatformComponent;
+		class DeviceComponent;
+		class ItensWorkGroupComponent;
 
 		/*******************************************************************************************************************************************
 		 *
@@ -37,16 +37,16 @@ RDPS_BEGIN
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona a plataform na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddPlatform(const PlatformComponente &platform);
+			ApplicationRTBuilder &AddPlatform(const PlatformComponent &platform);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona o device na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddDevice(const DeviceComponente &device);
+			ApplicationRTBuilder &AddDevice(const DeviceComponent &device);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona os valores referentes aos itens de 
 			 * trabalho na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddItensWorkGroup(const ItensWorkGroupComponente &itens);
+			ApplicationRTBuilder &AddItensWorkGroup(const ItensWorkGroupComponent &itens);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que dá o comando para a aplicação de criar o kernel atraves 
 			 * de uma string que contem o nome da função.

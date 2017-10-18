@@ -7,16 +7,16 @@
 
 RDPS_BEGIN
 CL_BEGIN
-		class ContextComponente;
-		class DeviceComponente;
-		class KernelComponente;
+		class ContextComponent;
+		class DeviceComponent;
+		class KernelComponent;
 		/*************************************************************************************************
 		*
 		* Classe que contem a referencia do programa openCL,
 		* para compilação do código que será executado no DISPOSITIVO
 		*
 		*************************************************************************************************/
-		class ProgramComponente : public BaseClComponente<cl_program>
+		class ProgramComponent : public BaseClComponent<cl_program>
 		{
 		private:
 			/*------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ CL_BEGIN
 			 * no código openCL. Informação do erro -11 do OpenCL, quando
 			 * ocorrer este erro, utiliza-se essa função para mostrar os erros.
 			 *------------------------------------------------------------------------------------------*/
-			std::string GetBuidInfo(const DeviceComponente &device,
+			std::string GetBuidInfo(const DeviceComponent &device,
 								    const cl_program_build_info paramName);
 
 		public:
@@ -32,7 +32,7 @@ CL_BEGIN
 			 * Construtor
 			 * Adiciona a referencia do pai nullptr
 			 *------------------------------------------------------------------------------------------*/
-			ProgramComponente();
+			ProgramComponent();
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Ocorre a construção do programa utilizando um contexto
@@ -40,23 +40,23 @@ CL_BEGIN
 			 * O parametro source é o código do arquivo.cl que será executado
 			 * na DISPOSITIVO.   
 			 *------------------------------------------------------------------------------------------*/
-			ProgramComponente(const ContextComponente &context,
+			ProgramComponent(const ContextComponent &context,
 							 const std::string source       , 
 							 const std::string options = ""  );
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona no a referencia um programa já contruido fora.
 			 *------------------------------------------------------------------------------------------*/
-			ProgramComponente(const cl_program &program);
+			ProgramComponent(const cl_program &program);
 			/*------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *------------------------------------------------------------------------------------------*/
-			ProgramComponente(const ProgramComponente &other);
+			ProgramComponent(const ProgramComponent &other);
 			/*------------------------------------------------------------------------------------------
 			 * Destrutor
 			 * Destroi chamando a função Release();
 			 *------------------------------------------------------------------------------------------*/
-			~ProgramComponente();
+			~ProgramComponent();
 			/*------------------------------------------------------------------------------------------
 			 * Destroi o programa
 			 *------------------------------------------------------------------------------------------*/
@@ -73,15 +73,15 @@ CL_BEGIN
 			 * O parametro options é para otimização no processo de bild para deixar um pouco
 			 * mais leve.
 			 *------------------------------------------------------------------------------------------*/
-			ProgramComponente &BuildProgram(const DeviceComponente &device,
+			ProgramComponent &BuildProgram(const DeviceComponent &device,
 										   const std::string &options = "");
 			/*------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operadorga para cópia, chama a função de cópia do pai.
 			 *------------------------------------------------------------------------------------------*/
-			inline ProgramComponente &operator=(const ProgramComponente &other)
+			inline ProgramComponent &operator=(const ProgramComponent &other)
 			{
 				if (this != &other)
-					BaseClComponente<Type>::operator=(other);
+					BaseClComponent<Type>::operator=(other);
 				return (*this);
 			}
 			//KernelComponent *CreateKernel(const std::string nameFunction);
