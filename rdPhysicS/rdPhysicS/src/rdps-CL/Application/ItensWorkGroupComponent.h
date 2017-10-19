@@ -53,7 +53,7 @@ RDPS_BEGIN
 			 * Construtor
 			 * Retorna o número de dimenções do grupo de trabalho
 			 *----------------------------------------------------------------------------------------------------------*/
-			const size_t  GetDimensions()  const;
+			const cl_uint  GetDimensions()  const;
 			/*----------------------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Retorna um ponteiro contendo os itens globais 

@@ -31,14 +31,12 @@ std::vector<PlatformComponent> PlatformComponent::GetPlatforms()
 	cl_uint size = 0;
 	cl_int status = clGetPlatformIDs(0, nullptr, &size);
 	if (status != CL_SUCCESS)
-		Logger::Log("Unable to verify the platforms. ERROR: "
-					+ std::to_string(status));
+		Logger::Log(PLATFORM_COMPONENT_CREATE, status, "Unable to verify the Platforms");
 
 	cl_platform_id *p = new cl_platform_id[size];
 	status = clGetPlatformIDs(size, p, nullptr);
 	if (status != CL_SUCCESS)
-		Logger::Log("Unable to capture the platforms. ERROR: "
-					+ std::to_string(status));
+		Logger::Log(PLATFORM_COMPONENT_CREATE, status, "Unable to capture the Platforms.");
 
 	return std::vector<PlatformComponent>(&p[0], &p[size]);
 }
@@ -48,14 +46,12 @@ std::vector<DeviceComponent> PlatformComponent::GetDevices(const cl_device_type 
 	cl_uint size = 0;
 	cl_int status = clGetDeviceIDs(object, type, 0, nullptr, &size);
 	if (status != CL_SUCCESS)
-		Logger::Log("Unable to verify the devices. ERROR: "
-					+ std::to_string(status));
+		Logger::Log(DEVICE_COMPONENT_CREATE, status, "Unable to verify the Devices.");
 
 	cl_device_id *d = new cl_device_id[size];
 	status = clGetDeviceIDs(object, type, size, d, nullptr);
 	if (status != CL_SUCCESS)
-		Logger::Log("Unable to capture the devices. ERROR: "
-					+ std::to_string(status));
+		Logger::Log(DEVICE_COMPONENT_CREATE, status, "Unable to capture the Devices.");
 
 	return std::vector<DeviceComponent>(&d[0], &d[size]);
 }

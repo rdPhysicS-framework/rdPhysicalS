@@ -6,17 +6,17 @@
 std::string rdps::Cl::Details::DisplayPlatformInfo(cl_platform_id platform, 
 												   cl_platform_info paramName)
 {
-	cl_int error = 0;
+	cl_int status = 0;
 	size_t paramSize = 0;
 
-	error = clGetPlatformInfo(platform, paramName, 0, nullptr, &paramSize);
-	if (error != CL_SUCCESS)
-		Logger::Log("Unable to find any OpenCL platform information");
+	status = clGetPlatformInfo(platform, paramName, 0, nullptr, &paramSize);
+	if (status != CL_SUCCESS)
+		Logger::Log(PLATFORM_COMPONENT_INFO, status, "Unable to find any OpenCL platform information");
 
 	char *moreInfo = new char[paramSize];
-	error = clGetPlatformInfo(platform, paramName, paramSize, moreInfo, nullptr);
-	if (error != CL_SUCCESS)
-		Logger::Log("Unable to find any OpenCL platform information");
+	status = clGetPlatformInfo(platform, paramName, paramSize, moreInfo, nullptr);
+	if (status != CL_SUCCESS)
+		Logger::Log(PLATFORM_COMPONENT_INFO, status, "Unable to find any OpenCL platform information");
 
 	return std::string(moreInfo);
 }
@@ -24,12 +24,12 @@ std::string rdps::Cl::Details::DisplayPlatformInfo(cl_platform_id platform,
 std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 												    cl_device_info paramName)
 {
-	cl_int error = 0;
+	cl_int status = 0;
 	size_t paramSize = 0;
 
-	error = clGetDeviceInfo(device, paramName, 0, nullptr, &paramSize);
-	if (error != CL_SUCCESS)
-		Logger::Log("Unable to obtain devices info for param\n");
+	status = clGetDeviceInfo(device, paramName, 0, nullptr, &paramSize);
+	if (status != CL_SUCCESS)
+		Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 	std::string info;
 
@@ -39,9 +39,9 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		{
 			cl_device_type *type = new cl_device_type[paramSize];
 
-			error = clGetDeviceInfo(device, paramName, paramSize, type, nullptr);
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			status = clGetDeviceInfo(device, paramName, paramSize, type, nullptr);
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 			switch (*type)
 			{
@@ -66,10 +66,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		case CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS:
 		{
 			cl_uint *ret = new cl_uint[paramSize];
-			error = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
+			status = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
 
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 			switch (paramName)
 			{
@@ -96,13 +96,15 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 			cl_uint maxWIDimensions;
 			size_t *ret = new size_t[paramSize];
 
-			error = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
-			error |= clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(cl_uint), &maxWIDimensions, nullptr);
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			status = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
+			status = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(cl_uint), &maxWIDimensions, nullptr);
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 			info = "Maximum number of work-items in each dimension: (  ";
-			for (int i = 0; i < maxWIDimensions; i++)
+			for (cl_uint i = 0; i < maxWIDimensions; i++)
 				info += std::to_string(ret[i]) + " ";
 
 			info += ")";
@@ -115,10 +117,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		case CL_DEVICE_MAX_WORK_GROUP_SIZE:
 		{
 			size_t *ret = new size_t[paramSize];
-			error = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
+			status = clGetDeviceInfo(device, paramName, paramSize, ret, nullptr);
 
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 
 			info = "Maximum number of work-items in a work-group: " +
@@ -133,10 +135,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		case CL_DEVICE_VENDOR:
 		{
 			char data[48];
-			error = clGetDeviceInfo(device, paramName, paramSize, data, nullptr);
+			status = clGetDeviceInfo(device, paramName, paramSize, data, nullptr);
 
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 
 			switch (paramName)
@@ -161,10 +163,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		{
 			cl_uint *size = new cl_uint[paramSize];
 
-			error = clGetDeviceInfo(device, paramName, paramSize, size, nullptr);
+			status = clGetDeviceInfo(device, paramName, paramSize, size, nullptr);
 
-			if (error != CL_SUCCESS)
-				Logger::Log("Unable to obtain devices info for param\n");
+			if (status != CL_SUCCESS)
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain devices info for param\n");
 
 			info = "Device global cacheline size: " + 
 					std::to_string(*size) + " bytes";
@@ -177,10 +179,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		case CL_DEVICE_MAX_MEM_ALLOC_SIZE:
 		{
 			cl_ulong *size = new cl_ulong[paramSize];
-			error = clGetDeviceInfo(device, paramName, paramSize, size, NULL);
+			status = clGetDeviceInfo(device, paramName, paramSize, size, NULL);
 
-			if (error != CL_SUCCESS) 
-				Logger::Log("Unable to obtain device name/vendor info for param\n");
+			if (status != CL_SUCCESS) 
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain device name/vendor info for param\n");
 
 			switch (paramName) {
 			case CL_DEVICE_GLOBAL_MEM_SIZE:
@@ -203,10 +205,10 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 		case CL_DEVICE_LOCAL_MEM_SIZE:
 		{
 			cl_ulong size = 0;
-			error = clGetDeviceInfo(device, paramName, paramSize, &size, NULL);
+			status = clGetDeviceInfo(device, paramName, paramSize, &size, NULL);
 
-			if (error != CL_SUCCESS) 
-				Logger::Log("Unable to obtain device name/vendor info for param\n");
+			if (status != CL_SUCCESS) 
+				Logger::Log(DEVICE_COMPONENT_INFO, status, "Unable to obtain device name/vendor info for param\n");
 
 			info = "Local memory: " + std::to_string(size) + " bits";
 
@@ -227,9 +229,9 @@ std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponent &program,
 									   paramName, 0, nullptr, &size);
 	if (status != CL_SUCCESS)
 	{
-		Logger::Log("Error when verifying the information"
-					  "of the build of the program. \nERROR" 
-					  + std::to_string(status));
+		Logger::Log(PROGRAM_BUILD_INFO, status, 
+					"Error when verifying the information"
+					"of the build of the program. ");
 	}
 
 	char *log = new char[size];
@@ -237,9 +239,9 @@ std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponent &program,
 								   paramName, size, log, 0);
 	if (status != CL_SUCCESS)
 	{
-		Logger::Log("Error when verifying the information"
-					  "of the build of the program. \nERROR"
-					  + std::to_string(status));
+		Logger::Log(PROGRAM_BUILD_INFO, status,
+				    "Error when verifying the information"
+				    "of the build of the program. ");
 	}
 
 	std::string info = log;

@@ -1,4 +1,5 @@
 #include "LoaderFiles.h"
+#include "LogError.h"
 #include <vector>
 #include <ostream>
 #include <sstream>
@@ -8,7 +9,7 @@ std::string rdps::Cl::LoaderFiles::LoadSource(std::initializer_list<std::string>
 {
 	/*verifica se a lista é nula. se for lança um exceção*/
 	if (files.size() == 0)
-		throw std::exception("You must provide kernel names!");
+		Logger::Log("You must provide kernel names!");
 
 	std::string code;
 	/*captura o array de endereços*/
@@ -42,7 +43,7 @@ std::string rdps::Cl::LoaderFiles::ReadInputStream(std::string name)
 	}
 	catch (std::ifstream::failure &e)
 	{
-		throw std::out_of_range(e.what());
+		Logger::Log(e.what());
 	}
 
 	return code;

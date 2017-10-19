@@ -1,4 +1,5 @@
 #include "ItensWorkGroupComponent.h"
+#include "../Util/LogError.h"
 #include <string>
 
 USING_RDPS
@@ -12,11 +13,13 @@ ItensWorkGroupComponent::ItensWorkGroupComponent(const std::initializer_list<siz
 		  offSet(_offSet)
 {}
 
-const size_t ItensWorkGroupComponent::GetDimensions() const
+const cl_uint ItensWorkGroupComponent::GetDimensions() const
 {
-	int size = globalItemSize.size();
-	return (size > 0 && size <= 3) ? size :
-			throw std::out_of_range("ERROR numbers of incorrect indexes of "
-								    "items of works. (min 1 max 3).\n Input size: " 
-									+ std::to_string(size));
+	cl_uint size = static_cast<cl_uint>(globalItemSize.size());
+	if(size == 0 && size > 3)
+		Logger::Log("ERROR numbers of incorrect indexes of "
+					"items of works. (min 1 max 3).\n Input size: "
+					+ std::to_string(size));
+	return size;
+			
 }

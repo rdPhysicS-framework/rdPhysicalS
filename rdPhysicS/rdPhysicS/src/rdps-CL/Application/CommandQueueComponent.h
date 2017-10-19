@@ -21,6 +21,13 @@ RDPS_BEGIN
 		 ********************************************************************************************************************************************/
 		class CommmandQueueComponent : BaseClComponent<cl_command_queue>
 		{
+		private:
+			/*----------------------------------------------------------------------------------------------------------------------------------------
+			* Função auxiliar que cria o CommandQueue baseado no contexto e no dispositivo e o retorna.
+			*-----------------------------------------------------------------------------------------------------------------------------------------*/
+			cl_command_queue Create(const ContextComponent &context,
+							  const DeviceComponent &device);
+
 		public:
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor
@@ -124,7 +131,7 @@ RDPS_BEGIN
 												  0, sizeof(T) * size, data, 
 												  0, nullptr, nullptr))
 			{
-				/****Tratar erro****/
+				Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));
 			}
 			return (*this);
 		}

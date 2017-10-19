@@ -17,16 +17,18 @@ namespace rdps
 	class Logger
 	{
 	private:
-		static std::string GetErrorMessage(const InfoComponentCL componenet, const int codeError);
-		static std::string GetErrorPlatformComponent(const int codeError);
-		static std::string GetErrorPlatformInfo(const int codeError);
-		static std::string GetErrorDeviceComponent(const int codeError);
-		static std::string GetErrorDeviceInfo(const int codeError);
-		static std::string GetErrorContextComponent(const int codeError);
-		static std::string GetErrorContextInfo(const int codeError);
-		static std::string GetErrorCommandQueueComponent(const int codeError);
-		static std::string GetErrorCommandQueueInfo(const int codeError);
-
+		static char *GetErrorMessage(const InfoComponentCL componenet, const int codeError);
+		static char *GetErrorPlatformComponent(const int codeError);
+		static char *GetErrorPlatformInfo(const int codeError);
+		static char *GetErrorDeviceComponent(const int codeError);
+		static char *GetErrorDeviceInfo(const int codeError);
+		static char *GetErrorContextComponent(const int codeError);
+		static char *GetErrorContextInfo(const int codeError);
+		static char *GetErrorCommandQueueComponent(const int codeError);
+		static char *GetErrorCommandQueueInfo(const int codeError);
+		static char *GetErrorProgramComponent(const int codeError);
+		static char *GetErrorProgramInfo(const int codeError);
+		static char *GetErrorProgramBuildInfo(const int codeError);
 	public:
 		static void Log(const std::string message);
 		static void Log(const InfoComponentCL componenet, const int codeError, const std::string message);

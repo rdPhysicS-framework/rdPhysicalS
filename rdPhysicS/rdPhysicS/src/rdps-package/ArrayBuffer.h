@@ -36,9 +36,9 @@ RDPS_BEGIN
 			 * recebe um ponteiro para os dados que serão enviados,
 			 * e tambem a quantidade que será enviado para o calculo dos bytes.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			ArrayBuffer(const T *data, 
+			ArrayBuffer(T *data, 
 						const size_t size, 
-						const ActionFile _typeAction = RETURN_DATA_COPY);
+						const ActionFile _typeAction = RETURN_DATA_WRITING_READING);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -75,7 +75,7 @@ RDPS_BEGIN
 		};
 
 		template<class T>
-		inline ArrayBuffer<T>::ArrayBuffer(const T *data, 
+		inline ArrayBuffer<T>::ArrayBuffer(T *data, 
 										   const size_t size, 
 										   const ActionFile _typeAction) :
 							   id(ARRAY_WITHOUT_INDEX),

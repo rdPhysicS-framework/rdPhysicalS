@@ -6,19 +6,28 @@
 USING_RDPS
 USING_CL
 
+cl_kernel KernelComponent::Create(const ProgramComponent &program, 
+								  const std::string &name)
+{
+	int status = 0;
+	cl_kernel kernel = clCreateKernel(program(), name.c_str(), &status);
+	if (status != CL_SUCCESS)
+	{
+		Logger::Log("ERROR when creating the kernel function.");
+	}
+
+	return kernel;
+}
+
 KernelComponent::KernelComponent() :
 		  BaseClComponent<Type>()
 {
 }
 
-KernelComponent::KernelComponent(const ProgramComponent &program, 
-										   const std::string &name            ) :
-	      BaseClComponent<Type>()
-{
-	int status = 0;
-	object = clCreateKernel(program(), name.c_str(), &status);
-	/*Importante tratar erro*/
-}
+KernelComponent::KernelComponent(const ProgramComponent &program,
+								 const std::string &name         ) :
+	      BaseClComponent<Type>(Create(program, name))
+{}
 
 KernelComponent::KernelComponent(const cl_kernel &kernel) :
 		  BaseClComponent<Type>(kernel)
@@ -40,7 +49,7 @@ void KernelComponent::Release()
 		if (int status = clReleaseKernel(object) !=
 			CL_SUCCESS)
 		{
-			/*Tratar erro*/
+			Logger::Log("ERROR when destroying the kernel.");
 		}
 
 		object = nullptr;
@@ -54,7 +63,7 @@ void KernelComponent::Retain()
 		if (int status = clRetainKernel(object) !=
 			CL_SUCCESS)
 		{
-			/*Tratar erro*/
+			Logger::Log("clRetainKernel ERROR: " + std::to_string(status));
 		}
 	}
 }
@@ -74,7 +83,7 @@ KernelComponent &KernelComponent::SetArgument(int index, const void *data, const
 	if (int status = clSetKernelArg(object, index, bytes, data))
 	{
 		Logger::Log("ERROR when setting the argument " + std::to_string(index)
-			+ "\nERROR: " + std::to_string(status));
+					+ "\nERROR: " + std::to_string(status));
 
 	}
 

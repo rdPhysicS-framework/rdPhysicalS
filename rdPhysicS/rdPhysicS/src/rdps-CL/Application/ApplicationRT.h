@@ -1,6 +1,7 @@
 #ifndef	__APPLICATION_RT_H__
 #define	__APPLICATION_RT_H__
 
+#include "../../GlobalDefs.h"
 #include "../ClGlobalDef.h"
 #include "../../rdps-package/ArrayBuffer.h"
 
@@ -24,16 +25,16 @@ RDPS_BEGIN
 			friend class ApplicationRTBuilder;
 
 		private:
-			PlatformComponent platform;
-			DeviceComponent device;
-			ContextComponent context;
-			CommmandQueueComponent queue;
-			ProgramComponent program;
-			KernelComponent kernel;
-			std::vector<MemObjectComponent> buffers;
+			PlatformComponent *platform;
+			DeviceComponent *device;
+			ContextComponent *context;
+			CommmandQueueComponent *queue;
+			ProgramComponent *program;
+			KernelComponent *kernel;
 			ItensWorkGroupComponent itens;
 
 		private:
+			std::vector<MemObjectComponent*> buffers;
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor Padrão
 			 * Inicializa todos os conteudos dos componentes em nullptr
@@ -65,6 +66,16 @@ RDPS_BEGIN
 			 * Dá o comando de criação da referencia da fução kernel kernel.CreateKernel(name)
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
 			ApplicationRT &CreateKernel(const std::string &name);
+
+			inline PlatformComponent *GetPlatform() const		 { return platform; }
+			inline DeviceComponent *GetDevice() const			 { return device;   }
+			inline ContextComponent *GetContext() const			 { return context;  }
+			inline CommmandQueueComponent *GetQueue() const		 { return queue;    }
+			inline ProgramComponent *GetProgram() const			 { return program;  }
+			inline KernelComponent *GetKernel() const			 { return kernel;   }
+			inline std::vector<MemObjectComponent*> &GetBuffers() { return buffers;  }
+			const ItensWorkGroupComponent &GetItens() const		 { return itens;    }
+
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Cria o buffer (MemObjectComponent) e adiciona na lista de memObjects,
 			 * retornando o id do objeto na lista, para que posteriormente seja adicionado novamente
@@ -79,7 +90,7 @@ RDPS_BEGIN
 			 * GetInfo(KERNEL_COMPONENETE) returna as informações do kernel
 			 * GetInfo(ALL_COMPONENTES) retorna as informações de todos os componenetes
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			std::string GetInfo(const InfoComponentCL type) const;
+			std::string GetInfo(const ComponentCL type) const;
 			int GetBuffer();
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função que verifica se no local desejado (lacation) na lista se está disponivel, se estiver
@@ -146,19 +157,19 @@ RDPS_BEGIN
 		{
 			if (bf.GetId() <= ARRAY_WITHOUT_INDEX)
 			{
-				MemObjectComponent mem = MemObjectComponent(context, bf.GetTypeAction(), bf.GetBytes());
+				MemObjectComponent *mem = new MemObjectComponent(*context, bf.GetTypeAction(), bf.GetBytes());
 				buffers.push_back(mem);
-				return buffers.size() - 1;
+				return (buffers.size() - 1);
 			}
 			
 			int id = GetBuffer(bf.GetId()); 
 			if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 			{
-				Logger::Log("ERROR requested index invalidates "
+				Logger::Log("ERROR requested index invalidates " +
 							(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 			}
 
-			buffers[id] = MemObjectComponent(context, bf.GetTypeAction(), bf.GetBytes());
+			*buffers[id] = MemObjectComponent(*context, bf.GetTypeAction(), bf.GetBytes());
 			
 			return id;
 		}
@@ -168,25 +179,26 @@ RDPS_BEGIN
 		{
 			if (bf.GetTypeAction() == RETURN_DATA_WRITING)
 			{
-				int id = GetBuffer(bf.GetId());
+				int id = bf.GetId();// GetBuffer(bf.GetId());
+				
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
-					Logger::Log("ERROR requested index invalidates "
+					Logger::Log("ERROR requested index invalidates " +
 								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
-				queue.WriteBuffer(buffers[id], bf.GetBytes(), bf.GetElement());
+				queue->WriteBuffer((*buffers[id]), bf.GetBytes(), bf.GetElement());
 			}
-			else if(bf.GetTypeAction() == RETURN_DATA_WRITING)
+			else if(bf.GetTypeAction() == RETURN_DATA_READING)
 			{
-				int id = GetBuffer(bf.GetId());
+				int id = bf.GetId();//GetBuffer(bf.GetId());
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
-					Logger::Log("ERROR requested index invalidates "
+					Logger::Log("ERROR requested index invalidates " +
 								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 				}
 
-				queue.ReadBuffer(buffers[id], bf.GetBytes(), bf.GetElement());
+				queue->ReadBuffer((*buffers[id]), bf.GetBytes(), bf.GetElement());
 			}
 
 			return (*this);

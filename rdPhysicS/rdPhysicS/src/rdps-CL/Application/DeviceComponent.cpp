@@ -1,5 +1,6 @@
 #include "DeviceComponent.h"
 #include "../Util/Details.h"
+#include "../Util/LogError.h"
 
 USING_RDPS
 USING_CL
@@ -27,7 +28,7 @@ void DeviceComponent::Release()
 	{
 		int status = clReleaseDevice(object);
 		if (status != CL_SUCCESS)
-			throw std::out_of_range("ERROR: " + std::to_string(status));
+			Logger::Log("clReleaseDevice ERROR: " + std::to_string(status));
 
 		object = nullptr;
 	}
@@ -39,7 +40,7 @@ void DeviceComponent::Retain()
 	{
 		int status = clRetainDevice(object);
 		if (status != CL_SUCCESS)
-			throw std::out_of_range("ERROR: " + std::to_string(status));
+			Logger::Log("clRetainDevice ERROR: " + std::to_string(status));
 	}
 }
 

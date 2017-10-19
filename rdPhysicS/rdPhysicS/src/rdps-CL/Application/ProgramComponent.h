@@ -6,7 +6,7 @@
 #include "../../GlobalDefs.h"
 
 RDPS_BEGIN
-CL_BEGIN
+	CL_BEGIN
 		class ContextComponent;
 		class DeviceComponent;
 		class KernelComponent;
@@ -26,6 +26,12 @@ CL_BEGIN
 			 *------------------------------------------------------------------------------------------*/
 			std::string GetBuidInfo(const DeviceComponent &device,
 								    const cl_program_build_info paramName);
+
+			/*--------------------------------------------------------------------------------------------
+			 * Função auxiliar que cria o Programa OpenCL baseado no contexto e o retorna.
+			 *--------------------------------------------------------------------------------------------*/
+			cl_program Create(const ContextComponent &context,
+							  const std::string source);
 
 		public:
 			/*------------------------------------------------------------------------------------------
@@ -88,7 +94,7 @@ CL_BEGIN
 			//void CreateKernels(std::vector<KernelComponent> &kernels);
 		};
 
-CL_END
+	CL_END
 RDPS_END
 
 #endif//__PROGRAM_COMPONENETE_H__

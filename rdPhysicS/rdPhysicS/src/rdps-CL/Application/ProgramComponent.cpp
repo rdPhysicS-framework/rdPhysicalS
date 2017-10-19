@@ -13,21 +13,31 @@ std::string ProgramComponent::GetBuidInfo(const DeviceComponent &device,
 	return Details::DisplayBuildInfo(*this, device, paramName);
 }
 
+cl_program ProgramComponent::Create(const ContextComponent &context, 
+								    const std::string source)
+{
+	int status = 0;
+	const char *s = source.c_str();
+	size_t size = source.size();
+	cl_program program = clCreateProgramWithSource(context(), 1, (const char**)&s, (const size_t*)&size, &status);
+	if (status != CL_SUCCESS)
+	{
+		Logger::Log(PROGRAM_COMPONENT_CREATE, status,
+			"ERROR when creating the program.");
+	}
+
+	return program;
+}
+
 ProgramComponent::ProgramComponent() :
 		  BaseClComponent<Type>()
 {}
 
 ProgramComponent::ProgramComponent(const ContextComponent &context, 
-											 const std::string source, 
-											 const std::string options) :
-		  BaseClComponent<Type>()
-{
-	int status = 0;
-	const char *s = source.c_str();
-	size_t size = source.size();
-	object = clCreateProgramWithSource(context(), 1, (const char**)&s, (const size_t*)&size, &status);
-	/*importante tratar erro*/
-}
+								   const std::string source, 
+								   const std::string options) :
+		  BaseClComponent<Type>(Create(context, source))
+{}
 
 ProgramComponent::ProgramComponent(const cl_program &program) :
 				   BaseClComponent<Type>(program)
@@ -48,7 +58,7 @@ void ProgramComponent::Release()
 	{
 		if (int status = clReleaseProgram(object) != CL_SUCCESS)
 		{
-			Logger::Log("ERROR: " + std::to_string(status));
+			Logger::Log("clReleaseProgram ERROR: " + std::to_string(status));
 		}
 
 		object = nullptr;
@@ -61,7 +71,7 @@ void ProgramComponent::Retain()
 	{
 		if (int status = clRetainProgram(object) != CL_SUCCESS)
 		{
-			Logger::Log("ERROR: " + std::to_string(status));
+			Logger::Log("clRetainProgram ERROR: " + std::to_string(status));
 		}
 	}
 }
@@ -82,7 +92,7 @@ ProgramComponent &ProgramComponent::BuildProgram(const DeviceComponent &device,
 									nullptr         ) 
 		!= CL_SUCCESS                               )
 	{
-		Logger::Log("ERROR when building the program. \nERROR: "
+		Logger::Log( "ERROR when building the program. \nERROR: "
 					+ std::to_string(status) + "\n\n" 
 					"Information of the ERROR in the openCl" +
 					GetBuidInfo(device, CL_PROGRAM_BUILD_LOG));

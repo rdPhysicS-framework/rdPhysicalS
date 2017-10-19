@@ -15,6 +15,12 @@ RDPS_BEGIN
 		 ************************************************************************************************/
 		class ContextComponent : public BaseClComponent<cl_context>
 		{
+		private:
+			/*--------------------------------------------------------------------------------------------
+			 * Função auxiliar que cria o contexto baseado no dispositivo e o retorna.
+			 *--------------------------------------------------------------------------------------------*/
+			cl_context Create(const DeviceComponent &device, const cl_context_properties *prop = nullptr);
+
 		public:
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor

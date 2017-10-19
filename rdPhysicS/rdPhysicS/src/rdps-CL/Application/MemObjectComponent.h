@@ -15,6 +15,7 @@ RDPS_BEGIN
 		************************************************************************************************/
 		class MemObjectComponent : public BaseClComponent<cl_mem>
 		{
+		
 		public:
 			/*-------------------------------------------------------------------------------------------
 			 * Construtor
@@ -55,7 +56,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função auxiliar do tipo cl_mem que cria  um objeto de memória e o retorna. 
 			 * Função static não necessita de um instancia para ser chamada.
-			 * Toda vez que um for alterado algum dado do buffer que o objeto de meméria
+			 * Toda vez que for alterado algum dado do buffer que o objeto de meméria
 			 * está referenciado, deve-se criar outro destruido o anterior com Release(), 
 			 * e utilizando a função de cópia operator=.
 			 * Exemplo:

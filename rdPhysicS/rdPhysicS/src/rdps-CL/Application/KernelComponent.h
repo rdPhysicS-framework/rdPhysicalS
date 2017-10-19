@@ -17,6 +17,13 @@ RDPS_BEGIN
 		 ************************************************************************************************/
 		class KernelComponent : public BaseClComponent<cl_kernel>
 		{
+		private:
+			/*--------------------------------------------------------------------------------------------
+			* Função auxiliar que cria o Kernel baseado no programa OpenCL e o retorna.
+			*--------------------------------------------------------------------------------------------*/
+			cl_kernel Create(const ProgramComponent &program,
+							const std::string &name);
+
 		public:
 			/*-------------------------------------------------------------------------------------------
 			 * Construtor
@@ -29,7 +36,7 @@ RDPS_BEGIN
 			 * O parametro name, é o nome da função principal(main) que será excutada na DISPOSITIVO.
 			 *------------------------------------------------------------------------------------------*/
 			KernelComponent(const ProgramComponent &program,
-							 const std::string &name          );
+							const std::string &name          );
 			/*--------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona a referencia do pai um cl_kernel já construido fora.

@@ -52,11 +52,14 @@ void MemObjectComponent::Retain()
 }
 
 cl_mem MemObjectComponent::Create(const ContextComponent &context, 
-								   const  ActionFile typeAction,
-								   const size_t size)
+								  const  ActionFile typeAction,
+								  const size_t size)
 {
 	int status = 0;
-	Type mem = clCreateBuffer(context(), typeAction, size, nullptr, &status);
-	/*tratar erro*/
+	cl_mem mem = clCreateBuffer(context(), typeAction, size, nullptr, &status);
+	if (status != CL_SUCCESS)
+	{
+		Logger::Log("ERROR when creating the memory object.\n");
+	}
 	return mem;
 }
