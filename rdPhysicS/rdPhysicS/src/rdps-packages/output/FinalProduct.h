@@ -3,6 +3,7 @@
 
 #include "..\..\GlobalDefs.h"
 #include "..\ArrayBuffer.h"
+#include "..\..\rdps-CL\Util\LogError.h"
 
 RDPS_BEGIN
 	PKG_BEGIN
@@ -25,6 +26,7 @@ RDPS_BEGIN
 
 			FinalProduct<T> &CreateData(const size_t _size);
 			inline T *GetData() const;
+			inline ArrayBuffer<T> *GetBuffer() const;
 			FinalProduct<T> &Update();
 			FinalProduct<T> &ToSend();
 			FinalProduct<T> &ApplyBuffer();
@@ -85,6 +87,11 @@ RDPS_BEGIN
 				size = _size;
 				Update();
 			}
+			else
+			{
+				Logger::Log("The final array has already been created. To create new data destroy it.");
+			}
+
 			return (*this);
 		}
 
@@ -92,6 +99,12 @@ RDPS_BEGIN
 		inline T *FinalProduct<T>::GetData() const
 		{
 			return data;
+		}
+
+		template<class T>
+		inline ArrayBuffer<T>* FinalProduct<T>::GetBuffer() const
+		{
+			return buffer;
 		}
 
 		template<class T>
@@ -127,8 +140,6 @@ RDPS_BEGIN
 
 			return (*this);
 		}
-
-
 
 	PKG_END
 RDPS_END
