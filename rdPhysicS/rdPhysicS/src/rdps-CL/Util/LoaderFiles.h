@@ -2,11 +2,10 @@
 #define	__LOADER_FILES__
 
 #include <string>
+#include ".././ClGlobalDef.h"
 
-namespace rdps 
-{
-	namespace Cl
-	{
+RDPS_BEGIN
+	CL_BEGIN
 	   /********************************************************************************
 		*
 		*Classe para auxiliar na carga de arquivos openCl
@@ -30,7 +29,7 @@ namespace rdps
 			 *---------------------------------------------------------------------------*/
 			static std::string ReadInputStream(std::string name);
 		};
-	}
-}
+	CL_END
+RDPS_END
 
 #endif//__LOADER_FILES__

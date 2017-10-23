@@ -16,7 +16,12 @@
 #define PKG pkg::
 #define USING_PKG using namespace pkg;
 
-#define CLPATH "src/resource/"
+#define RT_BEGIN namespace rt{
+#define RT_END }
+#define RT rt::
+#define USING_RT using namespace rt;
+
+#define CLPATH "resource/"
 #define IMAGE_PATH "results/"
 
 #define EMPTY_BUFFER 1
@@ -63,6 +68,9 @@
 #define ERROR_MSG_INVALID_DEVICE_PROGRAM     "CL_INVALID_DEVICE: device is not in the associated with program"
 //#define TO_STRING(x) std::to_string(x)
 
+#define WORLD_GET World::Get()
+#define WORLD_GET_APP World::Get()->GetApp()
+
 enum ComponentCL
 {
 	PLATFORM_COMPONENT,
@@ -101,5 +109,5 @@ enum ActionFile
 };
 
 typedef unsigned int uint;
-
+typedef unsigned __int64 ulong;
 #endif//__GLOBAL_DEFS_H__

@@ -1,9 +1,13 @@
 #include "Details.h"
 #include "..\Application\ProgramComponent.h"
 #include "..\Application\DeviceComponent.h"
+#include "..\Application\KernelComponent.h"
 #include "..\Util\LogError.h"
 
-std::string rdps::Cl::Details::DisplayPlatformInfo(cl_platform_id platform, 
+USING_RDPS
+USING_CL
+
+std::string Details::DisplayPlatformInfo(cl_platform_id platform, 
 												   cl_platform_info paramName)
 {
 	cl_int status = 0;
@@ -21,7 +25,7 @@ std::string rdps::Cl::Details::DisplayPlatformInfo(cl_platform_id platform,
 	return std::string(moreInfo);
 }
 
-std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
+std::string Details::DisplayDeviceDetails(cl_device_id device,
 												    cl_device_info paramName)
 {
 	cl_int status = 0;
@@ -220,7 +224,7 @@ std::string rdps::Cl::Details::DisplayDeviceDetails(cl_device_id device,
 	return std::string();
 }
 
-std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponent &program, 
+std::string Details::DisplayBuildInfo(const ProgramComponent &program, 
 												const DeviceComponent &device, 
 												const cl_program_build_info paramName)
 {
@@ -247,4 +251,104 @@ std::string rdps::Cl::Details::DisplayBuildInfo(const ProgramComponent &program,
 	std::string info = log;
 	delete log;
 	return info;
+}
+
+std::string Details::DisplayKernelInfo(const KernelComponent & kernel, const cl_kernel_info paramName)
+{
+	size_t size;
+	int status = clGetKernelInfo(kernel(), paramName, 0, nullptr, &size);
+	if (status != CL_SUCCESS)
+	{
+		Logger::Log(KERNEL_COMPONENT_INFO, status,
+					"Unable to obtain kernel info for param\n");
+	}
+
+	std::string info;
+	switch (paramName)
+	{
+	case CL_KERNEL_FUNCTION_NAME:
+	{
+		char *ret = new char[size];
+
+		status = clGetKernelInfo(kernel(), paramName, size, ret, nullptr);
+		if (status != CL_SUCCESS)
+		{
+			Logger::Log(KERNEL_COMPONENT_INFO, status,
+				"Unable to obtain kernel name/attributes info.\n");
+		}
+		info = ret;
+		info += "\n";
+		delete ret;
+		break;
+	}
+	case CL_KERNEL_NUM_ARGS:
+	case CL_KERNEL_REFERENCE_COUNT:
+	{
+		uint num;
+
+		status = clGetKernelInfo(kernel(), paramName, size, &num, nullptr);
+		if (status != CL_SUCCESS)
+		{
+			Logger::Log(KERNEL_COMPONENT_INFO, status,
+				"Unable to obtain kernel NUM_ARGS/REFERENCE_COUNT info.\n");
+		}
+		switch (paramName)
+		{
+		case CL_KERNEL_NUM_ARGS:
+			info = "Num argumnets: " + std::to_string(num) + ".\n";
+			break;
+		case CL_KERNEL_REFERENCE_COUNT:
+			info = "Refence count: " + std::to_string(num) + ".\n";
+			break;
+		}
+		break;
+	}
+	}
+	
+	return info;
+}
+
+size_t *Details::DisplayKernelWorkGroupInfo(const KernelComponent &kernel, 
+										    const DeviceComponent &device, 
+										    const cl_kernel_work_group_info paramName)
+{
+	size_t size;
+	int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, 0, nullptr, &size);
+	if (status != CL_SUCCESS)
+	{
+		Logger::Log(KERNEL_COMPONENT_INFO, status, 
+				    "Unable to obtain kernel Work Group info.\n");
+	}
+
+	switch (paramName)
+	{
+	case CL_KERNEL_GLOBAL_WORK_SIZE:
+	case CL_KERNEL_WORK_GROUP_SIZE:
+	case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
+	case CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE:
+	{
+		size_t *ret = new size_t[size];
+		int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
+		if (status != CL_SUCCESS)
+		{
+			Logger::Log(KERNEL_COMPONENT_INFO, status,
+				"Unable to obtain kernel Work Group info.\n");
+		}
+		return ret;
+	}
+	case CL_KERNEL_LOCAL_MEM_SIZE:
+	case CL_KERNEL_PRIVATE_MEM_SIZE:
+	{
+		ulong *ret = new ulong[size];
+		int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
+		if (status != CL_SUCCESS)
+		{
+			Logger::Log(KERNEL_COMPONENT_INFO, status,
+				"Unable to obtain kernel Work Group info.\n");
+		}
+		return static_cast<size_t*>(ret);
+	}
+	}
+
+	return nullptr;
 }

@@ -36,6 +36,7 @@ char *Logger::GetErrorMessage(const InfoComponentCL componenet,
 		return GetErrorCommandQueueInfo(codeError);
 	case PROGRAM_COMPONENT_INFO:
 	case KERNEL_COMPONENT_INFO:
+		return "ERROR: ";
 		break;
 	}
 

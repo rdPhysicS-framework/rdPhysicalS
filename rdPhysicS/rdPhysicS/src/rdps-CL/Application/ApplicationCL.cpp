@@ -1,55 +1,69 @@
-#include "ApplicationRT.h"
+#include "ApplicationCL.h"
+#include "PlatformComponent.h"
+#include "DeviceComponent.h"
+#include "ContextComponent.h"
+#include "CommandQueueComponent.h"
+#include "ProgramComponent.h"
+#include "KernelComponent.h"
+#include "MemObjectComponent.h"
+#include "ItensWorkGroupComponent.h"
 
 USING_RDPS
 USING_CL
 USING_PKG
 
-ApplicationRT::ApplicationRT() :
+ApplicationCL::ApplicationCL() :
 			   platform(nullptr), 
 			   device(nullptr),
 			   context(nullptr),
 			   queue(nullptr),
 			   program(nullptr),
 			   kernel(nullptr),
-			   itens({})
+			   itens(nullptr)
 {}
 
-ApplicationRT::ApplicationRT(const PlatformComponent &_platform, 
+ApplicationCL::ApplicationCL(const PlatformComponent &_platform, 
 							 const DeviceComponent   &_device   ) :
 			   platform(new PlatformComponent(_platform)), 
 			   device(new DeviceComponent(_device)), 
-			   context(),
-			   queue(), 
-			   program(), 
-			   kernel(), 
-			   itens({})
+			   context(nullptr),
+			   queue(nullptr), 
+			   program(nullptr), 
+			   kernel(nullptr), 
+			   itens(nullptr)
 {}
 
-inline ApplicationRT &ApplicationRT::CreateContext()
+inline ApplicationCL &ApplicationCL::CreateContext()
 { 
 	context = new ContextComponent(*device);
 	return (*this);
 }
 
-inline ApplicationRT &ApplicationRT::CreateCommandQueue()
+inline ApplicationCL &ApplicationCL::CreateCommandQueue()
 {
 	queue = new CommmandQueueComponent(*context, *device);
 	return (*this);
 }
 
-ApplicationRT::~ApplicationRT()
+ApplicationCL::~ApplicationCL()
 {
-	delete program;
-	delete device;
-	delete context;
-	delete queue;
-	delete kernel;
+	if(program)
+		delete program;
+	if(device)
+		delete device;
+	if(context)
+		delete context;
+	if(queue)
+		delete queue;
+	if(kernel)
+		delete kernel;
+
 	for (auto i : buffers)
 		i->Release();
 	buffers.clear();
 }
 
-ApplicationRT &ApplicationRT::CreateProgram(const std::string &source)
+ApplicationCL &ApplicationCL::CreateProgram(const std::string &source)
 {
 	CreateContext();
 	CreateCommandQueue();
@@ -58,13 +72,13 @@ ApplicationRT &ApplicationRT::CreateProgram(const std::string &source)
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::CreateKernel(const std::string &name)
+ApplicationCL &ApplicationCL::CreateKernel(const std::string &name)
 {
 	kernel = new KernelComponent(*program, name);
 	return (*this);
 }
 
-std::string ApplicationRT::GetInfo(const ComponentCL type) const
+std::string ApplicationCL::GetInfo(const ComponentCL type) const
 {
 	switch (type)
 	{
@@ -94,13 +108,13 @@ std::string ApplicationRT::GetInfo(const ComponentCL type) const
 	return std::string();
 }
 
-int ApplicationRT::GetBuffer()
+int ApplicationCL::GetBuffer()
 {
 	buffers.push_back(new MemObjectComponent());
 	return static_cast<int>(buffers.size() - 1);
 }
 
-int ApplicationRT::GetBuffer(const int location)
+int ApplicationCL::GetBuffer(const int location)
 {
 	if (buffers.size() == 0)
 		return EMPTY_BUFFER;
@@ -111,7 +125,7 @@ int ApplicationRT::GetBuffer(const int location)
 	return location;
 }
 
-ApplicationRT &ApplicationRT::SetPlatform(const PlatformComponent &_platform)
+ApplicationCL &ApplicationCL::SetPlatform(const PlatformComponent &_platform)
 {
 	if (!platform)
 	{
@@ -124,7 +138,7 @@ ApplicationRT &ApplicationRT::SetPlatform(const PlatformComponent &_platform)
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::SetDevice(const DeviceComponent &_device)
+ApplicationCL &ApplicationCL::SetDevice(const DeviceComponent &_device)
 {
 	if (!device)
 	{
@@ -137,20 +151,28 @@ ApplicationRT &ApplicationRT::SetDevice(const DeviceComponent &_device)
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::SetItensWorkGroup(const ItensWorkGroupComponent &_itens)
+ApplicationCL &ApplicationCL::SetItensWorkGroup(const ItensWorkGroupComponent &_itens)
 {
-	itens = _itens;
+	if (!itens)
+	{
+		itens = new ItensWorkGroupComponent(_itens);
+	}
+	else
+	{
+		*itens = _itens;
+	}
+
 	return (*this);
 }
 
-void rdps::Cl::ApplicationRT::DestroyBuffer(const int id)
+void rdps::Cl::ApplicationCL::DestroyBuffer(const int id)
 {
 	if (buffers.size() > 0)
 		if ((*buffers[id])())
 			buffers[id]->Release();
 }
 
-void ApplicationRT::DestroyApp()
+void ApplicationCL::DestroyApp()
 {
 	kernel->Release();
 	program->Release();
@@ -163,13 +185,13 @@ void ApplicationRT::DestroyApp()
 	context->Release();
 }
 
-ApplicationRT &ApplicationRT::ApplyArgument(const int id)
+ApplicationCL &ApplicationCL::ApplyArgument(const int id)
 {
 	kernel->SetArgument(id, (*buffers[id])());
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::ApplyArguments()
+ApplicationCL &ApplicationCL::ApplyArguments()
 {
 	int size = static_cast<int>(buffers.size());
 	for (int i = 0; i < size; i++)
@@ -177,7 +199,7 @@ ApplicationRT &ApplicationRT::ApplyArguments()
 	return(*this);
 }
 
-ApplicationRT &ApplicationRT::ApplyArguments(const std::initializer_list<uint> index)
+ApplicationCL &ApplicationCL::ApplyArguments(const std::initializer_list<uint> index)
 {
 	std::vector<uint> ids = index;
 	for (auto i : ids)
@@ -185,11 +207,11 @@ ApplicationRT &ApplicationRT::ApplyArguments(const std::initializer_list<uint> i
 	return (*this);
 }
 
-ApplicationRT &ApplicationRT::Process(const bool applyEverything)
+ApplicationCL &ApplicationCL::Process(const bool applyEverything)
 {
 	if (applyEverything)
 		ApplyArguments();
-	queue->EnqueueNDRangeKernel(*kernel, itens);
+	queue->EnqueueNDRangeKernel(*kernel, *itens);
 
 	return (*this);
 }

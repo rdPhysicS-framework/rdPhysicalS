@@ -5,7 +5,10 @@
 #include <sstream>
 #include <fstream>
 
-std::string rdps::Cl::LoaderFiles::LoadSource(std::initializer_list<std::string> files)
+USING_RDPS
+USING_CL
+
+std::string LoaderFiles::LoadSource(std::initializer_list<std::string> files)
 {
 	/*verifica se a lista é nula. se for lança um exceção*/
 	if (files.size() == 0)
@@ -22,7 +25,7 @@ std::string rdps::Cl::LoaderFiles::LoadSource(std::initializer_list<std::string>
 	return code;
 }
 
-std::string rdps::Cl::LoaderFiles::ReadInputStream(std::string name)
+std::string LoaderFiles::ReadInputStream(std::string name)
 {
 	std::string code;
 	std::ifstream fileKernel;

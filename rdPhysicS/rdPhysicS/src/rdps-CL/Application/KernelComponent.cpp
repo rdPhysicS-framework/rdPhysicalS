@@ -70,7 +70,13 @@ void KernelComponent::Retain()
 
 std::string KernelComponent::GetInfo(const cl_kernel_info paramName)
 {
-	return std::string();
+	return Details::DisplayKernelInfo(*this, paramName);
+}
+
+size_t *KernelComponent::GetKernelWorkGroupInfo(const DeviceComponent &device, 
+											    const cl_kernel_work_group_info paramName)
+{
+	return Details::DisplayKernelWorkGroupInfo(*this, device, paramName);
 }
 
 std::string KernelComponent::GetInfo(const DeviceComponent &device, const cl_kernel_work_group_info paramName)

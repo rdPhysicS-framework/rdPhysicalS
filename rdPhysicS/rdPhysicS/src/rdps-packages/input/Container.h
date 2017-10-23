@@ -1,144 +1,117 @@
-#ifndef	__ARRAY_BUFFER_H__
-#define	__ARRAY_BUFFER_H__
+#ifndef	__CONTAINER_H__
+#define	__CONTAINER_H__
 
-#include <iostream>
-#include "../GlobalDefs.h"
-
-#define ARRAY_WITHOUT_INDEX -1
+#include "..\..\GlobalDefs.h"
+#include <map>
+#include <string>
+#include <vector>
 
 RDPS_BEGIN
 	PKG_BEGIN
+
+		class PackageBase;
+		class ContainerBuilder;
 		/********************************************************************************************************************************************
-		 * 
-		 * Classe responsavel em armazenar os dados que serão enviados para
-		 * o dispositivo openCL. 
-		 * Nela Contem:
-		 * -> id: O id do objeto na função kernel para escrita, leitura;
-		 * -> element: O elemento que será enviado para o dispositivo;
-		 * -> butes : Quantos bytes ele possui para leitura ou escrita no dispositivo;
-		 * -> typeAction: E qual será a ação no dispositivo retorno para leitura (RETUR_DATA_READING),
-		 *    retorno para escrita(RETUR_DATA_WRITING), retorno para copia de dados
-		 *    na função kernel (RETURN_DATA_COPY);
+		 *
+		 * Classe que contem todos os pacotes de objetos que serao enviados para
+		 * serem processados. possui um std::map<string, PackageBase*> (packages) para facilitar
+		 * adicionar os elementos nos arrays pelo id, pois é um array de arrays. Alem de ser um
+		 * array generico.
+		 * exemplo:
+		 * packages[id]->AddElements(element);
 		 *
 		 ********************************************************************************************************************************************/
-		template<class T>
-		class ArrayBuffer 
+		class Container
 		{
+			friend ContainerBuilder;
 		private:
-			int id;
-			T *element;
-			size_t bytes;
-			ActionFile typeAction;
+			std::map<std::string, PackageBase*> pakages;
+
+		private:
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			* Construtor padrão
+			*---------------------------------------------------------------------------------------------------------------------------------------*/
+			Container();
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar de criacao de um pacote no id indicado.
+			 * Se já houver algo no local retorna uma excecao.
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
+			Container &CreatePackage(std::string id, 
+									 PackageBase *package);
+
 
 		public:
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Construtor
-			 * recebe um ponteiro para os dados que serão enviados,
-			 * e tambem a quantidade que será enviado para o calculo dos bytes.
+			 * Destrutor
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			ArrayBuffer(T *data, 
-						const size_t size, 
-						const ActionFile _typeAction = RETURN_DATA_WRITING_READING);
+			~Container();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Construtor de cópia
+			 * Funcao auxiliar que adiciona um elemento no id indicado
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			ArrayBuffer(const ArrayBuffer<T> &other);
+			template<class T>
+			inline Container &AddElement(std::string id,  T &element);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Destrutor padrão
+			 * Funcao auxiliar que adiciona varios elementos no id indicado
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			~ArrayBuffer();
-
+			template<class T>
+			inline Container &AddElements(std::string id, const std::vector<T> &element);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Retorna o id
+			 * Funcao auxiliar que remove um elemento do array de objetos
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline int GetId() const;
+			Container &RemoveElement(std::string id, const int element);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Retorna os bytes
+			 * Funcao auxiliar que remove todos os elementos de um pacote
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline size_t GetBytes() const;
+			Container &DestroyElements(std::string id);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Retorna o ponteiro com os elementos
+			 * Funcao auxiliar que remove todos os elementos de todos os pacotes
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline T *GetElement() const;
+			Container &DestroyElements();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Retorna o tipo da ação
+			 * Funcao auxiliar que atualiza os dados nos pacotes.
+			 * Obs:
+			 * Só é preciso dar este comando de no inicio do prodama, foram iniciados
+			 * os arrayBuffers como nullptr, ou se houve alguma alteracao nos dados
+			 * da cena.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ActionFile GetTypeAction() const;
+			Container &Update();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Retorna adiciona o id
+			 * Funcao auxiliar que da o comando de envio das dados
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline void SetId(const int _id);
-			/*---------------------------------------------------------------------------------------------------------------------------------------
-			 * Função de sobrecarga de operador para cópia de dados de outro arrayBuffer
-			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ArrayBuffer<T> &operator=(const ArrayBuffer<T> &other);
+			Container &ToSend();
+			/*só para teste*/
+			Container &ApplyBuffer();
 		};
 
 		template<class T>
-		inline ArrayBuffer<T>::ArrayBuffer(T *data, 
-										   const size_t size, 
-										   const ActionFile _typeAction) :
-							   id(ARRAY_WITHOUT_INDEX),
-							   element(data), 
-							   bytes(sizeof(T) * size),
-							   typeAction(_typeAction)
-		{}
-
-		template<class T>
-		inline ArrayBuffer<T>::ArrayBuffer(const ArrayBuffer<T> &other) :
-							   id(other.id),
-							   element(other.element),
-							   bytes(other.bytes),
-							   typeAction(other.typeAction)
-		{}
-
-		template<class T>
-		inline ArrayBuffer<T>::~ArrayBuffer()
-		{}
-
-		template<class T>
-		inline int ArrayBuffer<T>::GetId() const
+		inline Container &Container::AddElement(std::string id, T &element)
 		{
-			return id;
+			if (pakages.find(id) == pakages.end())
+			{
+				Logger::Log("Attribute no exists : " + id);
+			}
+
+			pakages[id]->AddElement(&element);
+
+			return (*this);
 		}
 
 		template<class T>
-		inline size_t ArrayBuffer<T>::GetBytes() const
+		inline Container &Container::AddElements(std::string id, const std::vector<T> &elements)
 		{
-			return bytes;
-		}
+			if (pakages.find(id) != pakages.end())
+			{
+				Logger::Log("Attribute no exists : " + id);
+			}
 
-		template<class T>
-		inline T *ArrayBuffer<T>::GetElement() const
-		{
-			return element;
-		}
+			pakages[id]->AddElements(&elements);
 
-		template<class T>
-		inline ActionFile ArrayBuffer<T>::GetTypeAction() const
-		{
-			return typeAction;
-		}
-
-		template<class T>
-		inline void ArrayBuffer<T>::SetId(const int _id)
-		{
-			id = _id;
-		}
-
-		template<class T>
-		inline ArrayBuffer<T> &ArrayBuffer<T>::operator=(const ArrayBuffer<T> &other)
-		{
-			id = other.id;
-			bytes = other.bytes;
-			typeAction = other.typeAction;
-			element = other.element;
-			/*int size = other.bytes / sizeof(T);
-			memcpy(element, (void*)other.element, size);*/
+			
 			return (*this);
 		}
 
 	PKG_END
 RDPS_END
 
-#endif//__ARRAY_BUFFER_H__
+#endif//__CONTAINER_H__
+

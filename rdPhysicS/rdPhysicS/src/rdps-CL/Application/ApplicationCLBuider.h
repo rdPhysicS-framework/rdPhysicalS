@@ -6,64 +6,64 @@
 
 RDPS_BEGIN
 	CL_BEGIN
-		class ApplicationRT;
+		class ApplicationCL;
 		class PlatformComponent;
 		class DeviceComponent;
 		class ItensWorkGroupComponent;
 
 		/*******************************************************************************************************************************************
 		 *
-		 * Classe responsavel em criar a Aplicação OpenCL (ApplicationRT).
+		 * Classe responsavel em criar a Aplicação OpenCL (ApplicationCL).
 		 * Carrega o codigo openCL no arquivo, Cria a aplicação, adiciona
 		 * a plataform, o device, adiciona a função kernel, e retorna a aplicação
 		 *
 		 *******************************************************************************************************************************************/
-		class ApplicationRTBuilder
+		class ApplicationCLBuilder
 		{
 		private:
-			ApplicationRT *app;
+			ApplicationCL *app;
 
 		public:
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor Padrão
 			 * Inicializa a aplicação com o contrutor padrão
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder();
+			ApplicationCLBuilder();
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Destrutor padrão 
 			 * Não faz nada
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			~ApplicationRTBuilder();
+			~ApplicationCLBuilder();
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona a plataform na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddPlatform(const PlatformComponent &platform);
+			ApplicationCLBuilder &AddPlatform(const PlatformComponent &platform);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona o device na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddDevice(const DeviceComponent &device);
+			ApplicationCLBuilder &AddDevice(const DeviceComponent &device);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que adiciona os valores referentes aos itens de 
 			 * trabalho na aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddItensWorkGroup(const ItensWorkGroupComponent &itens);
+			ApplicationCLBuilder &AddItensWorkGroup(const ItensWorkGroupComponent &itens);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que dá o comando para a aplicação de criar o kernel atraves 
 			 * de uma string que contem o nome da função.
 			 * Obs: O nome precisar ser o mesmo que está no código openCL do arquivo,
 			 * para que seja bem sucedido;
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &AddFunctionKernel(const std::string &name);
+			ApplicationCLBuilder &AddFunctionKernel(const std::string &name);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que carrega um ou mais arquivos para a aplicação
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			ApplicationRTBuilder &LoadProgram(const std::initializer_list<std::string> files);
+			ApplicationCLBuilder &LoadProgram(const std::initializer_list<std::string> &files);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar para retorno do aplicativo.
 			 * Exemplo:
-			 * ApplicationRT app = build.Create();
+			 * ApplicationCL app = build.Create();
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ApplicationRT *Create() const { return app; }
+			inline ApplicationCL *Create() const { return app; }
 		};
 
 	CL_END

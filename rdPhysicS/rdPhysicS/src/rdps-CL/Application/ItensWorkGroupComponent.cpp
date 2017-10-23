@@ -13,6 +13,13 @@ ItensWorkGroupComponent::ItensWorkGroupComponent(const std::initializer_list<siz
 		  offSet(_offSet)
 {}
 
+ItensWorkGroupComponent::~ItensWorkGroupComponent()
+{
+	globalItemSize.clear();
+	localWorkItemSize.clear();
+	offSet.clear();
+}
+
 const cl_uint ItensWorkGroupComponent::GetDimensions() const
 {
 	cl_uint size = static_cast<cl_uint>(globalItemSize.size());

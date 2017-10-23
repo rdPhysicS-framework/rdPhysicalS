@@ -61,6 +61,10 @@ RDPS_BEGIN
 			 * Função que retorna uma string contendo as informações do Kernel.
 			 *--------------------------------------------------------------------------------------------*/
 			std::string GetInfo(const cl_kernel_info paramName);
+			
+			size_t *GetKernelWorkGroupInfo(const DeviceComponent &device,
+										   const cl_kernel_work_group_info paramName);
+			
 			/*--------------------------------------------------------------------------------------------
 			 * Função que retorna uma string contendo as informações de grupos de trabalhos do kernel.
 			 *--------------------------------------------------------------------------------------------*/

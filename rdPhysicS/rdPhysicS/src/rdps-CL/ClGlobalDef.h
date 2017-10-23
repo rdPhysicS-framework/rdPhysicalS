@@ -10,5 +10,7 @@
 #include "Application\MemObjectComponent.h"
 #include "Application\ItensWorkGroupComponent.h"
 #include "Util\Details.h"
+#include "Application\ApplicationCL.h"
+#include "Application\ApplicationCLBuider.h"
 
 #endif//__CL_GLOBAL_DEF_H__

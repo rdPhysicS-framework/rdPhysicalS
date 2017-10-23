@@ -81,7 +81,7 @@ CommmandQueueComponent
 											itens.GetOffSet(), itens.GetGlobalItens(), 
 											itens.GetLocalItens(), 0, nullptr, nullptr) != CL_SUCCESS)
 	{
-		Logger::Log("Error when processing the data for parallel data.\nERROR: " + std::to_string(status));
+		//Logger::Log("Error when processing the data for parallel data.\nERROR: " + std::to_string(status));
 	}
 
 	return (*this);

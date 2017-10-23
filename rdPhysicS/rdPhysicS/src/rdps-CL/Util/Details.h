@@ -1,14 +1,14 @@
 #ifndef	__DETAILS_H__
 #define	__DETAILS_H__
 
+#include "../../GlobalDefs.h"
 #include "../Application/ClConfig.h"
 
-namespace rdps
-{
-	namespace Cl
-	{
+RDPS_BEGIN
+	CL_BEGIN
 		class ProgramComponent;
 		class DeviceComponent;
+		class ContextComponent;
 		class KernelComponent;
 		/******************************************************************************
 		 *
@@ -42,12 +42,16 @@ namespace rdps
 			static std::string DisplayBuildInfo(const ProgramComponent &program, 
 												const DeviceComponent &device, 
 												const cl_program_build_info paramName);
+			
+			static std::string DisplayKernelInfo(const KernelComponent &kernel,
+											     const cl_kernel_info paramName);
+			
 			//clGetKernelWorkGroupInfo()
-			static std::string DisplayKernelWorkGroupInfo(const KernelComponent &kernel,
-														  const DeviceComponent &device, 
-														  const cl_kernel_work_group_info paramName);
+			static size_t *DisplayKernelWorkGroupInfo(const KernelComponent &kernel,
+													  const DeviceComponent &device, 
+													  const cl_kernel_work_group_info paramName);
 		};
-	}
-}
+	CL_END
+RDPS_END
 
 #endif//__DETAILS_H__

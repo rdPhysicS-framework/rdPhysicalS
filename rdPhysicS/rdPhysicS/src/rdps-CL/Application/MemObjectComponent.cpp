@@ -25,7 +25,7 @@ MemObjectComponent::MemObjectComponent(const MemObjectComponent &other) :
 
 MemObjectComponent::~MemObjectComponent()
 {
-	Release();
+	//Release();
 }
 
 void MemObjectComponent::Release()
