@@ -37,16 +37,11 @@ __kernel void render(__constant RT_DataScene *world,
 	//outRand[id] = randFloat2(&seed, 0, 1.0f/100);// / (float)RANDMAX;
 }
 
-__kernel void test(__global char *out)
+__kernel void test(__constant float3 *in1, 
+				   __constant float3 *in2,
+				   __global   float3 *out )
 { 
-	out[0] = 'O';
-	out[1] = 'l';
-	out[2] = 'a';
-	out[3] = ' ';
-	out[4] = 'm';
-	out[5] = 'u';
-	out[6] = 'n';
-	out[7] = 'd';
-	out[8] = 'o';
-	out[9] = '\0';
+	(*out) = (float3)((*in1).x + (*in2).x, 
+					  (*in1).y - (*in2).y, 
+					  (*in1).z + (*in2).z );
 }

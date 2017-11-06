@@ -178,7 +178,10 @@ void ApplicationCL::DestroyApp()
 	program->Release();
 
 	for (auto i : buffers)
+	{
 		i->Release();
+		delete i;
+	}
 	buffers.clear();
 
 	queue->Release();

@@ -2,6 +2,7 @@
 #define	__DATA_COPY_H__
 
 #include "../GlobalDefs.h"
+#include "../World.h"
 
 RDPS_BEGIN
 	PKG_BEGIN
@@ -47,7 +48,7 @@ RDPS_BEGIN
 		};
 
 		template<class T>
-		inline DataCopy<T>::DataCopy(T & _data) :
+		inline DataCopy<T>::DataCopy(T &_data) :
 							data(_data), 
 							id(-1)
 		{}
@@ -75,6 +76,13 @@ RDPS_BEGIN
 		{
 			data = other.data;
 			id = other.id;
+			return (*this);
+		}
+
+		template<class T>
+		inline DataCopy<T> &DataCopy<T>::UpdateData(T &_data)
+		{
+			data = _data;
 			return (*this);
 		}
 

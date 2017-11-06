@@ -4,7 +4,7 @@
 #include "BaseClComponent.h"
 #include "ClConfig.h"
 #include "MemObjectComponent.h"
-#include "../Util/LogError.h"
+#include "..\..\Util\LogError.h"
 
 RDPS_BEGIN
 	CL_BEGIN
@@ -112,7 +112,7 @@ RDPS_BEGIN
 		{
 			/*adicionar mem_obj para funcionar*/
 			if (int status = clEnqueueReadBuffer(object, memObj(), CL_TRUE,
-												 0, sizeof(T) * size, data, 
+												 0, size, data, 
 												 0, nullptr, nullptr       ))
 			{
 				Logger::Log("ERROR when writing the data in the buffer."
@@ -128,7 +128,7 @@ RDPS_BEGIN
 		{
 			/*adicionar mem_obj para funcionar*/
 			if (int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE, 
-												  0, sizeof(T) * size, data, 
+												  0, size, data, 
 												  0, nullptr, nullptr))
 			{
 				Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));

@@ -1,7 +1,7 @@
 #ifndef	 __APPLICATION_CL_FACTOR_H__
 #define	 __APPLICATION_CL_FACTOR_H__
 
-#include "../../GlobalDefs.h"
+#include "..\..\GlobalDefs.h"
 #include <string>
 
 RDPS_BEGIN

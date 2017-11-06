@@ -1,5 +1,5 @@
 #include "ItensWorkGroupComponent.h"
-#include "../Util/LogError.h"
+#include "..\..\Util\LogError.h"
 #include <string>
 
 USING_RDPS

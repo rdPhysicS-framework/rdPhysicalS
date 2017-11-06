@@ -1,6 +1,6 @@
 #include "ContextComponent.h"
 #include "DeviceComponent.h"
-#include "../Util/LogError.h"
+#include "..\..\Util\LogError.h"
 
 USING_RDPS
 USING_CL

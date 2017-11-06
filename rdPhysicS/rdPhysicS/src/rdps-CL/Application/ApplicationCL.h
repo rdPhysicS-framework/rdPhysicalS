@@ -17,6 +17,7 @@ RDPS_BEGIN
 		class KernelComponent;
 		class MemObjectComponent;
 		class ItensWorkGroupComponent;
+		
 		/******************************************************************************************************************************************
 		 *
 		 * Classe que contem os componentes para para o Programa OpenCL.
@@ -155,7 +156,7 @@ RDPS_BEGIN
 			 * para nã precisão de ArrayBuffer.
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
 			template<class T>
-			inline ApplicationCL &PassDataCopy(const int id, T *data, const size_t size);
+			inline ApplicationCL &PassDataCopy(const int id, T *data);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função Respossavel em dar o comando para o processamento de dados no dispositivo.
 			 * recebe um bool como parametro, se for true renveia todos os argumentos
@@ -192,7 +193,6 @@ RDPS_BEGIN
 			if (bf.GetTypeAction() == RETURN_DATA_WRITING)
 			{
 				int id = bf.GetId();// GetBuffer(bf.GetId());
-				
 				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 				{
 					Logger::Log("ERROR requested index invalidates " +
@@ -217,12 +217,12 @@ RDPS_BEGIN
 		}
 
 		template<class T>
-		inline ApplicationCL &ApplicationCL::PassDataCopy(const int id, T *data, const size_t size)
+		inline ApplicationCL &ApplicationCL::PassDataCopy(const int id, T *data)
 		{
-			size_t bytes = sizeof(T) * size;
-			kernel.SetArgument(id, data, bytes);
+			kernel.SetArgument(id, data, sizeof(T));
 			return (*this);
 		}
+
 	CL_END
 RDPS_END
 

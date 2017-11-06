@@ -36,7 +36,7 @@ PKG_BEGIN
 			 * Construtor
 			 * recebe um parametro que diz qual será a sua acao de leitura ou escrita de dados.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			ArrayBuffer(const ActionFile _typeAction = RETURN_DATA_WRITING_READING);
+			ArrayBuffer(const ActionFile _typeAction = NONE);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor
 			 * recebe um ponteiro para os dados que serão enviados,
@@ -45,7 +45,7 @@ PKG_BEGIN
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			ArrayBuffer(T *data, 
 						const size_t size, 
-						const ActionFile _typeAction = RETURN_DATA_WRITING_READING);
+						const ActionFile _typeAction = NONE);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor de cópia
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -186,7 +186,6 @@ PKG_BEGIN
 		{
 			element = data;
 			bytes = sizeof(T) * size;
-			WORLD_GET_APP->GetBuffer(id);
 
 			if (WORLD_GET_APP->GetBuffer(id) == BUSY_LOCATION)
 			{

@@ -3,7 +3,7 @@
 
 #include "BaseClComponent.h"
 #include "ClConfig.h"
-#include "../Util/LogError.h"
+#include "..\..\Util\LogError.h"
 
 RDPS_BEGIN
 	CL_BEGIN

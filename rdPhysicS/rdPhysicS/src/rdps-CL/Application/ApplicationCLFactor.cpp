@@ -79,7 +79,7 @@ ApplicationCL *ApplicationCLFactor::CreateApplicationUsersInput()
 							  CLPATH"rtLights.cl" ,
 							  CLPATH"rtWorld.cl",
 							  CLPATH"rtKernel.cl"})
-				.AddFunctionKernel("test")
-				.AddItensWorkGroup(ItensWorkGroupComponent({1}))
+				.AddFunctionKernel("render")
+				.AddItensWorkGroup(ItensWorkGroupComponent({1920*1080}))
 				.Create();
 }

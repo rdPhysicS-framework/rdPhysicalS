@@ -1,5 +1,5 @@
 #include "LogError.h"
-#include "../Application/ClConfig.h"
+#include "..\rdps-CL\Application\ClConfig.h"
 
 USING_RDPS
 

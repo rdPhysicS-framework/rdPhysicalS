@@ -3,7 +3,7 @@
 #include "PlatformComponent.h"
 #include "DeviceComponent.h"
 #include "ItensWorkGroupComponent.h"
-#include "../Util/UtilGlobalDef.h"
+#include "..\..\Util\UtilGlobalDef.h"
 
 USING_RDPS
 USING_CL

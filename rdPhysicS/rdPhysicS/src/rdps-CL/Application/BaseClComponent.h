@@ -1,7 +1,7 @@
 #ifndef	__BASE_CL_COMPONENTE_H__
 #define	__BASE_CL_COMPONENTE_H__
 
-#include "../../GlobalDefs.h"
+#include "..\..\GlobalDefs.h"
 
 RDPS_BEGIN
 	CL_BEGIN

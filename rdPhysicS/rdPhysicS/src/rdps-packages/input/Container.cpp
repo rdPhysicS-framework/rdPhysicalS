@@ -1,6 +1,6 @@
 #include "Container.h"
 #include "base\PackageBase.h"
-#include "..\..\rdps-CL\Util\LogError.h"
+#include "..\..\Util\LogError.h"
 
 USING_RDPS
 USING_PKG

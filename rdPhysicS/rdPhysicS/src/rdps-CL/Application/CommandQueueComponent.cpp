@@ -3,7 +3,6 @@
 #include "DeviceComponent.h"
 #include "ItensWorkGroupComponent.h"
 #include "KernelComponent.h"
-#include "../Util/LogError.h"
 
 USING_RDPS
 USING_CL

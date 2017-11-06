@@ -16,15 +16,26 @@
 #define PKG pkg::
 #define USING_PKG using namespace pkg;
 
-#define RT_BEGIN namespace rt{
-#define RT_END }
-#define RT rt::
-#define USING_RT using namespace rt;
+#define FRWK_BEGIN namespace frwk{
+#define FRWK_END }
+#define FRWK frwk::
+#define USING_FRWK using namespace frwk;
+
+#define PDCT_BEGIN namespace pdct{
+#define PDCT_END }
+#define PDCT pdct::
+#define USING_PDCT using namespace pdct;
+
+
+//#define RT_BEGIN namespace rt{
+//#define RT_END }
+//#define RT rt::
+//#define USING_RT using namespace rt;
 
 #define CLPATH "resource/"
 #define IMAGE_PATH "results/"
 
-#define EMPTY_BUFFER 1
+#define EMPTY_BUFFER 0xFFFFFF
 #define FREE_LOCATION 0
 #define BUSY_LOCATION -1
 
@@ -71,6 +82,9 @@
 #define WORLD_GET World::Get()
 #define WORLD_GET_APP World::Get()->GetApp()
 
+#define BLACK RT::Vec3f(0.0f, 0.0f, 0.0f)
+#define WHITE RT::Vec3f(1.0f, 1.0f, 1.0f)
+
 enum ComponentCL
 {
 	PLATFORM_COMPONENT,
@@ -102,10 +116,44 @@ enum InfoComponentCL
 
 enum ActionFile
 {
-	RETURN_DATA_WRITING_READING = (1 << 0),
+	NONE,
 	RETURN_DATA_WRITING = (1 << 1),
 	RETURN_DATA_READING = (1 << 2)
 	//RETURN_DATA_COPY
+};
+
+enum TypeBRDF
+{
+	AMBIENT,
+	DIFFUSE,
+	GLOSSY_SPECULAR,
+	PERFECT_SPECULAR
+};
+
+enum TypeObject
+{
+	CUBE,
+	MESH,
+	PLANE,
+	RECTANGLE,
+	SPHERE
+};
+
+enum TypeMaterial
+{
+	EMISSIVE_MATERIAL,
+	SIMPLE_MATERIAL,
+	PHONG_MATERIAL,
+	REFLECT_MATERIAL,
+	TRANSPARENT_MATERIAL
+};
+
+enum TypeLight
+{
+	AMBIENT_LIGHT,
+	AMBIENT_OCLUDER_LIGHT,
+	AREA_LIGHT,
+	POINT_LIGHT
 };
 
 typedef unsigned int uint;

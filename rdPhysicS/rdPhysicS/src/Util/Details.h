@@ -1,8 +1,8 @@
 #ifndef	__DETAILS_H__
 #define	__DETAILS_H__
 
-#include "../../GlobalDefs.h"
-#include "../Application/ClConfig.h"
+#include "..\GlobalDefs.h"
+#include "..\rdps-CL\Application\ClConfig.h"
 
 RDPS_BEGIN
 	CL_BEGIN

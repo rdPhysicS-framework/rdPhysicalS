@@ -1,7 +1,7 @@
 #include "KernelComponent.h"
 #include "DeviceComponent.h"
 #include "ProgramComponent.h"
-#include "../Util/Details.h"
+#include "..\..\Util\Details.h"
 
 USING_RDPS
 USING_CL

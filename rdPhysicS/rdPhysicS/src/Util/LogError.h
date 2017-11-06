@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <string>
-#include "../../GlobalDefs.h"
+#include "..\GlobalDefs.h"
 
 namespace rdps
 {

@@ -1,8 +1,8 @@
 #include "Details.h"
-#include "..\Application\ProgramComponent.h"
-#include "..\Application\DeviceComponent.h"
-#include "..\Application\KernelComponent.h"
-#include "..\Util\LogError.h"
+#include "..\rdps-CL\Application\ProgramComponent.h"
+#include "..\rdps-CL\Application\DeviceComponent.h"
+#include "..\rdps-CL\Application\KernelComponent.h"
+#include "LogError.h"
 
 USING_RDPS
 USING_CL
@@ -266,43 +266,43 @@ std::string Details::DisplayKernelInfo(const KernelComponent & kernel, const cl_
 	std::string info;
 	switch (paramName)
 	{
-	case CL_KERNEL_FUNCTION_NAME:
-	{
-		char *ret = new char[size];
+		case CL_KERNEL_FUNCTION_NAME:
+		{
+			char *ret = new char[size];
 
-		status = clGetKernelInfo(kernel(), paramName, size, ret, nullptr);
-		if (status != CL_SUCCESS)
-		{
-			Logger::Log(KERNEL_COMPONENT_INFO, status,
-				"Unable to obtain kernel name/attributes info.\n");
+			status = clGetKernelInfo(kernel(), paramName, size, ret, nullptr);
+			if (status != CL_SUCCESS)
+			{
+				Logger::Log(KERNEL_COMPONENT_INFO, status,
+					"Unable to obtain kernel name/attributes info.\n");
+			}
+			info = ret;
+			info += "\n";
+			delete ret;
+			break;
 		}
-		info = ret;
-		info += "\n";
-		delete ret;
-		break;
-	}
-	case CL_KERNEL_NUM_ARGS:
-	case CL_KERNEL_REFERENCE_COUNT:
-	{
-		uint num;
-
-		status = clGetKernelInfo(kernel(), paramName, size, &num, nullptr);
-		if (status != CL_SUCCESS)
-		{
-			Logger::Log(KERNEL_COMPONENT_INFO, status,
-				"Unable to obtain kernel NUM_ARGS/REFERENCE_COUNT info.\n");
-		}
-		switch (paramName)
-		{
 		case CL_KERNEL_NUM_ARGS:
-			info = "Num argumnets: " + std::to_string(num) + ".\n";
-			break;
 		case CL_KERNEL_REFERENCE_COUNT:
-			info = "Refence count: " + std::to_string(num) + ".\n";
+		{
+			uint num;
+
+			status = clGetKernelInfo(kernel(), paramName, size, &num, nullptr);
+			if (status != CL_SUCCESS)
+			{
+				Logger::Log(KERNEL_COMPONENT_INFO, status,
+					"Unable to obtain kernel NUM_ARGS/REFERENCE_COUNT info.\n");
+			}
+			switch (paramName)
+			{
+			case CL_KERNEL_NUM_ARGS:
+				info = "Num argumnets: " + std::to_string(num) + ".\n";
+				break;
+			case CL_KERNEL_REFERENCE_COUNT:
+				info = "Refence count: " + std::to_string(num) + ".\n";
+				break;
+			}
 			break;
 		}
-		break;
-	}
 	}
 	
 	return info;
@@ -322,32 +322,32 @@ size_t *Details::DisplayKernelWorkGroupInfo(const KernelComponent &kernel,
 
 	switch (paramName)
 	{
-	case CL_KERNEL_GLOBAL_WORK_SIZE:
-	case CL_KERNEL_WORK_GROUP_SIZE:
-	case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
-	case CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE:
-	{
-		size_t *ret = new size_t[size];
-		int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
-		if (status != CL_SUCCESS)
+		case CL_KERNEL_GLOBAL_WORK_SIZE:
+		case CL_KERNEL_WORK_GROUP_SIZE:
+		case CL_KERNEL_COMPILE_WORK_GROUP_SIZE:
+		case CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE:
 		{
-			Logger::Log(KERNEL_COMPONENT_INFO, status,
-				"Unable to obtain kernel Work Group info.\n");
+			size_t *ret = new size_t[size];
+			int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
+			if (status != CL_SUCCESS)
+			{
+				Logger::Log(KERNEL_COMPONENT_INFO, status,
+					"Unable to obtain kernel Work Group info.\n");
+			}
+			return ret;
 		}
-		return ret;
-	}
-	case CL_KERNEL_LOCAL_MEM_SIZE:
-	case CL_KERNEL_PRIVATE_MEM_SIZE:
-	{
-		ulong *ret = new ulong[size];
-		int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
-		if (status != CL_SUCCESS)
+		case CL_KERNEL_LOCAL_MEM_SIZE:
+		case CL_KERNEL_PRIVATE_MEM_SIZE:
 		{
-			Logger::Log(KERNEL_COMPONENT_INFO, status,
-				"Unable to obtain kernel Work Group info.\n");
+			ulong *ret = new ulong[size];
+			int status = clGetKernelWorkGroupInfo(kernel(), device(), paramName, size, ret, nullptr);
+			if (status != CL_SUCCESS)
+			{
+				Logger::Log(KERNEL_COMPONENT_INFO, status,
+					"Unable to obtain kernel Work Group info.\n");
+			}
+			return static_cast<size_t*>(ret);
 		}
-		return static_cast<size_t*>(ret);
-	}
 	}
 
 	return nullptr;

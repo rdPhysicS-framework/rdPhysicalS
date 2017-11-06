@@ -9,7 +9,6 @@
 #include "Application\KernelComponent.h"
 #include "Application\MemObjectComponent.h"
 #include "Application\ItensWorkGroupComponent.h"
-#include "Util\Details.h"
 #include "Application\ApplicationCL.h"
 #include "Application\ApplicationCLBuider.h"
 
