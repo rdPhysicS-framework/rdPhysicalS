@@ -2,9 +2,9 @@
 #define	__WORLD_H__
 
 #include "GlobalDefs.h"
+#include "rdps-CL\Application\ApplicationCL.h"
 
 RDPS_BEGIN
-	CL_BEGIN class ApplicationCL; CL_END;
 
 	class World
 	{

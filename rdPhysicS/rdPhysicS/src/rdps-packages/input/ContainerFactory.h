@@ -27,7 +27,6 @@ RDPS_BEGIN
 			static Container *CreateContainer(std::initializer_list<std::string>  _ids,
 											  std::initializer_list<PackageBase*> _pkgs);
 			static Container *CreateContainer();
-			static Container *CreateTestContainer();
 		};
 
 	PKG_END

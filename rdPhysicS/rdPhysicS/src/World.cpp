@@ -1,10 +1,9 @@
 #include "World.h"
-#include "rdps-CL\Application\ApplicationCL.h"
 
 USING_RDPS
 USING_CL
 
-World *World::instance = nullptr;
+World *World::instance = new World();
 
 World::World(ApplicationCL *_app) :
 	   app(_app)
@@ -26,9 +25,6 @@ void World::Set(ApplicationCL *_app)
 
 World *World::Get()
 {
-	if (!instance)
-		instance = new World();
-
 	return instance;
 }
 

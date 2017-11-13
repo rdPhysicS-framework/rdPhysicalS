@@ -1,4 +1,6 @@
 #include "Camera.h"
+#include "..\base\SceneBase.h"
+#include "..\..\rdps-packages\output\Renderer.h"
 
 USING_RDPS
 USING_FRWK
@@ -89,4 +91,9 @@ Camera &Camera::ComputeUVW()
 	v = RT::vc3::Cross(w, u).Normalize();
 
 	return (*this);
+}
+
+void Camera::Render(SceneBase &scene)
+{
+	scene.GetRenderer()->Render();
 }

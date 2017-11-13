@@ -26,7 +26,7 @@ RDPS_BEGIN
 		{
 			friend ContainerBuilder;
 		private:
-			std::map<std::string, PackageBase*> pakages;
+			std::map<std::string, PackageBase*> packages;
 
 		private:
 			/*---------------------------------------------------------------------------------------------------------------------------------------
@@ -87,12 +87,12 @@ RDPS_BEGIN
 		template<class T>
 		inline Container &Container::AddElement(std::string id, T &element)
 		{
-			if (pakages.find(id) == pakages.end())
+			if (packages.find(id) == packages.end())
 			{
 				Logger::Log("Attribute no exists : " + id);
 			}
 
-			pakages[id]->AddElement(&element);
+			packages[id]->AddElement(&element);
 
 			return (*this);
 		}
@@ -100,12 +100,12 @@ RDPS_BEGIN
 		template<class T>
 		inline Container &Container::AddElements(std::string id, const std::vector<T> &elements)
 		{
-			if (pakages.find(id) != pakages.end())
+			if (packages.find(id) != packages.end())
 			{
 				Logger::Log("Attribute no exists : " + id);
 			}
 
-			pakages[id]->AddElements(&elements);
+			packages[id]->AddElements(&elements);
 
 			
 			return (*this);

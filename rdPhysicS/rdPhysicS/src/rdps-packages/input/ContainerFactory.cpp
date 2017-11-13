@@ -32,19 +32,17 @@ Container *ContainerFactory::CreateContainer(std::initializer_list<std::string> 
 	return cb.Create();
 }
 
-/*Container *ContainerFactory::CreateContainer()
+Container *ContainerFactory::CreateContainer()
 {
-	return CreateContainer({"world", 
-							"camera", 
-							"lights", 
-							"objects"}, 
-						   {new Package<RT_DataScene>(),
-							new Package<RT_DataScene>(),
-							new Package<RT_DataScene>(),
-							new Package<RT_DataScene>() });
+	return CreateContainer({ "world", "camera",
+							 "lights", "objects" },
+							 { new Package<RT_DataScene>(),
+							 new Package<RT_Camera>(),
+							 new Package<RT_Light>() ,
+							 new Package<RT_Primitive>() });
 }
 
-Container * ContainerFactory::CreateTestContainer()
-{
-	return nullptr;
-}*/
+//Container *ContainerFactory::CreateTestContainer()
+//{
+//	return nullptr;
+//}

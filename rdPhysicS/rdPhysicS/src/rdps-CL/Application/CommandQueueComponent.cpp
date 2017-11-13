@@ -72,6 +72,29 @@ std::string CommmandQueueComponent::GetInfo(const cl_command_queue_info paramNam
 	return std::string();
 }
 
+CommmandQueueComponent &CommmandQueueComponent::ReadBuffer(const MemObjectComponent &memObj, const size_t size, void *data)
+{
+	if (int status = clEnqueueReadBuffer(object, memObj(), CL_TRUE,
+										 0, size, data,
+										 0, nullptr, nullptr))
+	{
+		Logger::Log("ERROR when writing the data in the buffer."
+			"\nERROR: " + std::to_string(status));
+	}
+	return (*this);
+}
+
+CommmandQueueComponent &CommmandQueueComponent::WriteBuffer(const MemObjectComponent &memObj, const size_t size, void *data)
+{
+	if (int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE,
+										  0, size, data,
+										  0, nullptr, nullptr))
+	{
+		Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));
+	}
+	return (*this);
+}
+
 CommmandQueueComponent 
 	&CommmandQueueComponent::EnqueueNDRangeKernel(const KernelComponent &kernel, 
 												  const ItensWorkGroupComponent &itens)
@@ -80,7 +103,7 @@ CommmandQueueComponent
 											itens.GetOffSet(), itens.GetGlobalItens(), 
 											itens.GetLocalItens(), 0, nullptr, nullptr) != CL_SUCCESS)
 	{
-		//Logger::Log("Error when processing the data for parallel data.\nERROR: " + std::to_string(status));
+		Logger::Log("Error when processing the data for parallel data.\nERROR: " + std::to_string(status));
 	}
 
 	return (*this);

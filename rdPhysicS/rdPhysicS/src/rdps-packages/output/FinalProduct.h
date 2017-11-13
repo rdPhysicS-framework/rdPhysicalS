@@ -96,10 +96,10 @@ RDPS_BEGIN
 
 		template<class T>
 		inline FinalProduct<T>::FinalProduct(const size_t _size) :
-			data(new T[_size]),
-			size(_size),
-			buffer(new ArrayBuffer<T>(data, _size, 
-								RETURN_DATA_READING))
+								data(new T[_size]),
+								size(_size),
+								buffer(new ArrayBuffer<T>(data, _size, 
+												   RETURN_DATA_READING))
 		{}
 
 		template<class T>
@@ -122,11 +122,9 @@ RDPS_BEGIN
 		template<class T>
 		inline FinalProduct<T> &FinalProduct<T>::operator=(const FinalProduct<T> &other)
 		{
-			if (data)
-				delete data;
 			memcpy(data, (void*)other.data, sizeof(T)*other.size);
 			size = other.size;
-			buffer = other.buffer;
+			*buffer = *other.buffer;
 
 			return (*this);
 		}
@@ -194,6 +192,7 @@ RDPS_BEGIN
 			return (*this);
 		}
 
+		typedef FinalProduct<int> FrameProduct;
 	PKG_END
 RDPS_END
 

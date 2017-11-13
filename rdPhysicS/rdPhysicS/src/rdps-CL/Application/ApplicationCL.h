@@ -2,11 +2,9 @@
 #define	__APPLICATION_RT_H__
 
 #include "../../GlobalDefs.h"
-#include "../../rdps-packages/ArrayBuffer.h"
 #include <vector>
 
-RDPS_BEGIN
-
+RDPS_BEGIN	
 	CL_BEGIN
 
 		class PlatformComponent;
@@ -93,8 +91,7 @@ RDPS_BEGIN
 			 * retornando o id do objeto na lista, para que posteriormente seja adicionado novamente
 			 * os dados na lista.
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			template<class T>
-			int CreateBuffer(const PKG ArrayBuffer<T> &bf);
+			int CreateBuffer(const int id, const ActionFile typeAction, const size_t bytes);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * retorna uma string contendo as informações do componente desejado
 			 * ou de todos.
@@ -148,8 +145,7 @@ RDPS_BEGIN
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função responsavel em dar o comando de escrita de dados ou leitura de dados
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			template<class T>
-			ApplicationCL &ApplyBuffer(PKG ArrayBuffer<T> &bf);
+			ApplicationCL &ApplyBuffer(const int id, const ActionFile typeAction, const size_t bytes, void *data);
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Função responsavel em dar o comando de passar para o kernel os dados que serão 
 			 * copiados. Função generica pois, pode se dados de qualquer tipo. Esses tipos de dados
@@ -165,61 +161,9 @@ RDPS_BEGIN
 		};
 
 		template<class T>
-		inline int ApplicationCL::CreateBuffer(const PKG ArrayBuffer<T> &bf)
-		{
-			if (bf.GetId() <= ARRAY_WITHOUT_INDEX)
-			{
-				MemObjectComponent *mem = new MemObjectComponent(*context, bf.GetTypeAction(), bf.GetBytes());
-				buffers.push_back(mem);
-				return static_cast<int>(buffers.size() - 1);
-			}
-			
-			int id = GetBuffer(bf.GetId()); 
-			if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
-			{
-				Logger::Log((id == EMPTY_BUFFER) ? 
-							"ERROR: list of objects of memory empty.\n" : 
-							"ERROR requested index invalidates busy location.\n");
-			}
-
-			*buffers[id] = MemObjectComponent(*context, bf.GetTypeAction(), bf.GetBytes());
-			
-			return id;
-		}
-
-		template<class T>
-		inline ApplicationCL &ApplicationCL::ApplyBuffer(PKG ArrayBuffer<T> &bf)
-		{
-			if (bf.GetTypeAction() == RETURN_DATA_WRITING)
-			{
-				int id = bf.GetId();// GetBuffer(bf.GetId());
-				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
-				{
-					Logger::Log("ERROR requested index invalidates " +
-								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
-				}
-
-				queue->WriteBuffer((*buffers[id]), bf.GetBytes(), bf.GetElement());
-			}
-			else if(bf.GetTypeAction() == RETURN_DATA_READING)
-			{
-				int id = bf.GetId();//GetBuffer(bf.GetId());
-				if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
-				{
-					Logger::Log("ERROR requested index invalidates " +
-								(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
-				}
-
-				queue->ReadBuffer((*buffers[id]), bf.GetBytes(), bf.GetElement());
-			}
-
-			return (*this);
-		}
-
-		template<class T>
 		inline ApplicationCL &ApplicationCL::PassDataCopy(const int id, T *data)
 		{
-			kernel.SetArgument(id, data, sizeof(T));
+			kernel->SetArgument(id, data, sizeof(T));
 			return (*this);
 		}
 

@@ -10,7 +10,6 @@
 
 USING_RDPS
 USING_CL
-USING_PKG
 
 ApplicationCL::ApplicationCL() :
 			   platform(nullptr), 
@@ -76,6 +75,28 @@ ApplicationCL &ApplicationCL::CreateKernel(const std::string &name)
 {
 	kernel = new KernelComponent(*program, name);
 	return (*this);
+}
+
+int ApplicationCL::CreateBuffer(const int id, const ActionFile typeAction, const size_t bytes)
+{
+	if (id <= ARRAY_WITHOUT_INDEX)
+	{
+		MemObjectComponent *mem = new MemObjectComponent(*context, typeAction, bytes);
+		buffers.push_back(mem);
+		return static_cast<int>(buffers.size() - 1);
+	}
+
+	int _id = GetBuffer(id);
+	if (_id == EMPTY_BUFFER || _id == BUSY_LOCATION)
+	{
+		Logger::Log((_id == EMPTY_BUFFER) ?
+			"ERROR: list of objects of memory empty.\n" :
+			"ERROR requested index invalidates busy location.\n");
+	}
+
+	*buffers[_id] = MemObjectComponent(*context, typeAction, bytes);
+
+	return id;
 }
 
 std::string ApplicationCL::GetInfo(const ComponentCL type) const
@@ -207,6 +228,34 @@ ApplicationCL &ApplicationCL::ApplyArguments(const std::initializer_list<uint> i
 	std::vector<uint> ids = index;
 	for (auto i : ids)
 		kernel->SetArgument(i, (*buffers[i])());
+	return (*this);
+}
+
+ApplicationCL &ApplicationCL::ApplyBuffer(const int id, const ActionFile typeAction, const size_t bytes, void * data)
+{
+	if (typeAction == RETURN_DATA_WRITING)
+	{
+		int _id = id;// GetBuffer(bf.GetId());
+		if (_id == EMPTY_BUFFER || _id == BUSY_LOCATION)
+		{
+			Logger::Log("ERROR requested index invalidates " +
+				(_id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+		}
+
+		queue->WriteBuffer((*buffers[_id]), bytes, data);
+	}
+	else if (typeAction == RETURN_DATA_READING)
+	{
+		int _id = id;//GetBuffer(bf.GetId());
+		if (_id == EMPTY_BUFFER || id == BUSY_LOCATION)
+		{
+			Logger::Log("ERROR requested index invalidates " +
+				(_id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+		}
+
+		queue->ReadBuffer((*buffers[_id]), bytes, data);
+	}
+
 	return (*this);
 }
 

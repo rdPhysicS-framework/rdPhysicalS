@@ -69,16 +69,14 @@ RDPS_BEGIN
 			 * o tamanho do buffer e o a referencia do buffer.
 			 * Generico por que pode ser retornado qualquer tipo de dados validos.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			template<class T>
-			inline CommmandQueueComponent &ReadBuffer(const MemObjectComponent &memObj, const size_t size, T *data);
+			CommmandQueueComponent &ReadBuffer(const MemObjectComponent &memObj, const size_t size, void *data);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar para a Escrita dos dados da função kernel no DISPOSITIVO.
 			 * Recebe o Objeto de memória referente ao buffer na CPU/DISPOSITIVO,
 			 * o tamanho do buffer e o a referencia do buffer.
 			 * Generico por que pode ser lido qualquer tipo de dados validos.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			template<class T>
-			inline CommmandQueueComponent &WriteBuffer(const MemObjectComponent &memObj, const size_t size, T *data);
+			CommmandQueueComponent &WriteBuffer(const MemObjectComponent &memObj, const size_t size, void *data);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que dá o comando para ocorrer o processamento dos dados no DISPOSITIVO.
 			 * Recebe como parametro a referência da kernel que será executado, Referência ao número de
@@ -102,39 +100,6 @@ RDPS_BEGIN
 			}
 		};
 
-		//posteriormente passa uma classe ArrayBuffer contendo o id do mem_obj, 
-		//os dados do do buffer, tamanho do buffer em bytes e quantidade de elementos 
-		//no buffer.
-		template<class T>
-		inline CommmandQueueComponent 
-					&CommmandQueueComponent::ReadBuffer(const MemObjectComponent &memObj,
-														const size_t size, T *data)
-		{
-			/*adicionar mem_obj para funcionar*/
-			if (int status = clEnqueueReadBuffer(object, memObj(), CL_TRUE,
-												 0, size, data, 
-												 0, nullptr, nullptr       ))
-			{
-				Logger::Log("ERROR when writing the data in the buffer."
-							"\nERROR: " + std::to_string(status));
-			}
-			return (*this);
-		}
-
-		template<class T>
-		inline CommmandQueueComponent 
-				&CommmandQueueComponent::WriteBuffer(const MemObjectComponent &memObj, 
-													 const size_t size, T *data)
-		{
-			/*adicionar mem_obj para funcionar*/
-			if (int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE, 
-												  0, size, data, 
-												  0, nullptr, nullptr))
-			{
-				Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));
-			}
-			return (*this);
-		}
 	CL_END
 RDPS_END
 

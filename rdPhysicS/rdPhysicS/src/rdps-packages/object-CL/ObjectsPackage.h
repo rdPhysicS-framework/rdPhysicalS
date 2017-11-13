@@ -131,22 +131,36 @@ struct RT_ViewPlane
 	//RT_SScoord coord;
 };
 
-struct RT_Camera
+class RT_Camera
 {
+public:
 	/*position*/
 	RT_Vec3f eye;
-	RT_Vec3f lookAt;
-	RT_Vec3f up;
+	//RT_Vec3f lookAt;
+	//RT_Vec3f up;
 
 	float viewPlaneDistance;
 	float zoom;
 
-	float rollAngle;
-	float exposureTime;
+	//float rollAngle;
+	//float exposureTime;
 
 	RT_Vec3f u, v, w;
 
-	void computeUVW()
+public:
+	RT_Camera(const RT_Vec3f &_eye, 
+			  const float _viewPlaneDistance, 
+			  const float _zoom, 
+			  const RT_Vec3f &_u, 
+			  const RT_Vec3f &_v, 
+			  const RT_Vec3f &_w) :
+
+		eye(_eye), 
+		viewPlaneDistance(_viewPlaneDistance),
+		zoom(_zoom),
+		u(_u), v(_v), w(_w)
+	{}
+	/*void computeUVW()
 	{
 		w = Normalize(eye - lookAt);
 
@@ -168,7 +182,7 @@ struct RT_Camera
 
 		u = Normalize(Cross(up, w));
 		v = Normalize(Cross(w, u));
-	}
+	}*/
 };
 
 struct RT_DataScene

@@ -10,41 +10,41 @@ Container::Container()
 
 Container::~Container()
 {
-	for (auto i = pakages.begin(); i != pakages.end(); ++i)
+	for (auto i = packages.begin(); i != packages.end(); ++i)
 	{
 		delete i->second;
 	}
-	pakages.clear();
+	packages.clear();
 }
 
 Container &Container::CreatePackage(std::string id, 
 								    PackageBase *package)
 {
-	if (pakages.find(id) != pakages.end())
+	if (packages.find(id) != packages.end())
 	{
 		Logger::Log("Busy place - id: " + id);
 	}
 	
-	pakages[id] = package;
+	packages[id] = package;
 	
 	return (*this);
 }
 
 Container &Container::RemoveElement(std::string id, const int element)
 {
-	pakages[id]->RemoveElement(element);
+	packages[id]->RemoveElement(element);
 	return (*this);
 }
 
 Container &Container::DestroyElements(std::string id)
 {
-	pakages[id]->DestroyElements();
+	packages[id]->DestroyElements();
 	return (*this);
 }
 
 Container &Container::DestroyElements()
 {
-	for (auto i = pakages.begin(); i != pakages.end(); ++i)
+	for (auto i = packages.begin(); i != packages.end(); ++i)
 	{
 		i->second->DestroyElements();
 	}
@@ -54,7 +54,7 @@ Container &Container::DestroyElements()
 
 Container &Container::Update()
 {
-	for (auto i = pakages.begin(); i != pakages.end(); ++i)
+	for (auto i = packages.begin(); i != packages.end(); ++i)
 	{
 		PackageBase *p = i->second;
 		p->Update();
@@ -64,7 +64,7 @@ Container &Container::Update()
 
 Container &Container::ToSend()
 {
-	for (auto i = pakages.begin(); i != pakages.end(); ++i)
+	for (auto i = packages.begin(); i != packages.end(); ++i)
 	{
 		PackageBase *p = i->second;
 		p->ToSend();
@@ -75,7 +75,7 @@ Container &Container::ToSend()
 
 Container &Container::ApplyBuffer()
 {
-	for (auto i = pakages.begin(); i != pakages.end(); ++i)
+	for (auto i = packages.begin(); i != packages.end(); ++i)
 	{
 		PackageBase *p = i->second;
 		p->ApplyBuffer();

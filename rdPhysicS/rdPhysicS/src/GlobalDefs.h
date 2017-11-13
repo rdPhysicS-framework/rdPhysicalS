@@ -3,29 +3,28 @@
 
 #define RDPS_BEGIN namespace rdps{
 #define RDPS_END }
-#define RDPS rdps::
 #define USING_RDPS using namespace rdps;
+#define RDPS rdps::
 
 #define CL_BEGIN namespace Cl{
 #define CL_END }
-#define CL Cl::
 #define USING_CL using namespace Cl;
+#define CL Cl::
 
 #define PKG_BEGIN namespace pkg{
 #define PKG_END }
-#define PKG pkg::
 #define USING_PKG using namespace pkg;
+#define PKG pkg::
 
 #define FRWK_BEGIN namespace frwk{
 #define FRWK_END }
-#define FRWK frwk::
 #define USING_FRWK using namespace frwk;
+#define FRWK frwk::
 
 #define PDCT_BEGIN namespace pdct{
 #define PDCT_END }
-#define PDCT pdct::
 #define USING_PDCT using namespace pdct;
-
+#define PDCT pdct::
 
 //#define RT_BEGIN namespace rt{
 //#define RT_END }
@@ -38,6 +37,8 @@
 #define EMPTY_BUFFER 0xFFFFFF
 #define FREE_LOCATION 0
 #define BUSY_LOCATION -1
+
+#define ARRAY_WITHOUT_INDEX -1
 
 /*ERROR MESSAGE */
 #define ERROR_MSG_EMPTY_ERROR_MESSAGE ""
@@ -154,6 +155,14 @@ enum TypeLight
 	AMBIENT_OCLUDER_LIGHT,
 	AREA_LIGHT,
 	POINT_LIGHT
+};
+
+enum CollaboratorsFunction
+{
+	PACKER_OF_OBJECTS,
+	DELIVERER_OF_OBJECTS,
+	MANAGER_OF_OBJECTS,
+	//GENERAL_MANAGER
 };
 
 typedef unsigned int uint;

@@ -5,10 +5,8 @@
 #include "../GlobalDefs.h"
 #include "../World.h"
 
-#define ARRAY_WITHOUT_INDEX -1
-
 RDPS_BEGIN
-PKG_BEGIN
+	PKG_BEGIN
 		/********************************************************************************************************************************************
 		 * 
 		 * Classe responsavel em armazenar os dados que serão enviados para
@@ -124,7 +122,7 @@ PKG_BEGIN
 							   typeAction(_typeAction)
 		{
 			/*como vai ser*/
-			id = WORLD_GET_APP->CreateBuffer(*this);
+			id = WORLD_GET_APP->CreateBuffer(id, typeAction, bytes);
 		}
 
 		template<class T>
@@ -192,7 +190,7 @@ PKG_BEGIN
 				WORLD_GET_APP->DestroyBuffer(id);
 			}
 
-			id = WORLD_GET_APP->CreateBuffer(*this);
+			id = WORLD_GET_APP->CreateBuffer(id, typeAction, bytes);
 
 			return (*this);
 		}
@@ -207,7 +205,7 @@ PKG_BEGIN
 		template<class T>
 		inline ArrayBuffer<T> ArrayBuffer<T>::Apply()
 		{
-			WORLD_GET_APP->ApplyBuffer(*this);
+			WORLD_GET_APP->ApplyBuffer(id, typeAction, bytes, element);
 			return (*this);
 		}
 

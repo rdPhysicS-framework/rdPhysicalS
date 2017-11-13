@@ -50,7 +50,7 @@ ApplicationCL *ApplicationCLFactor::CreateApplicationUsersInput()
 
 	size = static_cast<uint>(devices.size());
 	
-	for (uint i = 0; i < size; i++)
+	/*for (uint i = 0; i < size; i++)
 	{	
 		std::cout << "\t"
 				  << (i+1) << " - Device Name: "
@@ -65,7 +65,7 @@ ApplicationCL *ApplicationCLFactor::CreateApplicationUsersInput()
 				  << devices[i]
 					 .GetInfo(CL_DEVICE_MAX_WORK_GROUP_SIZE)
 				  << std::endl;
-	}
+	}*/
 
 	uint d = GetOptions(size);
 
