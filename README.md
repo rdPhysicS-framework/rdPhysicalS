@@ -68,12 +68,13 @@ Função para criar um plano:
 				new PhongMaterial(RT::Vec3f(0.4f, 0.3f, 0.3f), 
 								  0.2f, 0.7f, 0.5f, 1.0f));
 		
-```		
-	Os parametros dessa função:
+```	
 	
-	* point: posição do plano;
-	* normal: normal do plano (obs: a normal do plano define o para onde está apontado a face);
-	* material: material do plano.
+Os parametros dessa função:
+	
+* point: posição do plano;
+* normal: normal do plano (obs: a normal do plano define o para onde está apontado a face);
+* material: material do plano.
 	
 Função para criar a esfera:
 
@@ -84,11 +85,11 @@ Função para criar a esfera:
 
 ```
 
-	Os parametros dessa função:
+Os parametros dessa função:
 	
-	* center: posição da esfera;
-	* radius: raio da esfera (define o tamanho da esfera);
-	* material: material ds esfera;
+* center: posição da esfera;
+* radius: raio da esfera (define o tamanho da esfera);
+* material: material ds esfera;
 	
 
 Função para criar um cubo:
@@ -100,11 +101,11 @@ Função para criar um cubo:
 								 0.2f, 0.7f, 0.2f, 1.0f));
 ```
 
-	Os parametros dessa função:
+Os parametros dessa função:
 	
-	* initPoint: ponto inicial do cubo (obs: iniciar o cubo da esquerda para a direita e em direção a o fundo);
-	* size: ponto final do cubo;
-	* material: material do cubo.
+* initPoint: ponto inicial do cubo (obs: iniciar o cubo da esquerda para a direita e em direção a o fundo);
+* size: ponto final do cubo;
+* material: material do cubo.
 	
 
 Função para criar a iluminção por ponto:
@@ -113,11 +114,11 @@ Função para criar a iluminção por ponto:
 	CreatePointLight(RT::Vec3f(162.0f, 756.0f, 732.0f), WHITE, 1.0f);
 ```
 
-	Os parametros dessa função:
+Os parametros dessa função:
 	
-	* position: ponto da luz;
-	* color: cor luz;
-	* ls: porcentagem do efeito da luz nos objetos;
-	* shadow: se vai haver calculo de sombra.
+* position: ponto da luz;
+* color: cor luz;
+* ls: porcentagem do efeito da luz nos objetos;
+* shadow: se vai haver calculo de sombra.
 
 
