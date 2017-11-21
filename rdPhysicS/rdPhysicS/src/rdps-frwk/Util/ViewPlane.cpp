@@ -12,3 +12,18 @@ ViewPlane::ViewPlane(const int _width,
 
 ViewPlane::~ViewPlane()
 {}
+
+int ViewPlane::GetWidth() const
+{
+	return width;
+}
+
+int ViewPlane::GetHeight() const
+{
+	return height;
+}
+
+RT::Vec2f ViewPlane::GetSizePixel() const
+{
+	return sp;
+}

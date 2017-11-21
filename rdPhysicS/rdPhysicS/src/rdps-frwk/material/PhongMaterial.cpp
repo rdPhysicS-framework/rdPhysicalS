@@ -53,6 +53,16 @@ PhongMaterial &PhongMaterial::operator=(const PhongMaterial &other)
 	return (*this);
 }
 
+BRDF *PhongMaterial::GetDiffuse() const
+{
+	return diffuse;
+}
+
+GlossySpecular *PhongMaterial::GetSpecular() const
+{
+	return specular;
+}
+
 PhongMaterial &PhongMaterial::SetDiffuse(BRDF * _diffuse)
 {
 	*diffuse = *_diffuse;

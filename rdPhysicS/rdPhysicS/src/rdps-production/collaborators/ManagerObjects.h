@@ -18,6 +18,8 @@ RDPS_BEGIN
 			ManagerObjects(const ManagerObjects &other);
 			~ManagerObjects();
 
+			const ObjectsHostPkg *GetPackage() const;
+
 			const int AddObject(FRWK GeometricObject *object);
 			ManagerObjects &RemoveObject(const int id);
 			const int AddLight(FRWK Light *light);
@@ -29,7 +31,6 @@ RDPS_BEGIN
 			virtual ManagerObjects &Init();
 			virtual ManagerObjects &ExecuteFunction();
 			virtual ManagerObjects &Exit();
-			virtual bool HandleMessage(const Message &message);
 		};
 
 	PDCT_END

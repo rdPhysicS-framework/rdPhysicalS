@@ -9,16 +9,16 @@ RDPS_BEGIN
 		class Renderer
 		{
 		private:
-			FrameProduct *buffer;
+			FrameBuffer *buffer;
 
 		public:
 			Renderer(const int width = 1,
 					 const int height = 1);
-			Renderer(FrameProduct *_buffer);
+			Renderer(FrameBuffer *_buffer);
 			~Renderer();
 
-			inline FrameProduct *GetBuffer() const { return buffer; }
-			inline int *GetData() const { return buffer->GetData(); }
+			FrameBuffer *GetBuffer() const;
+			int *GetData() const;
 
 			Renderer &operator=(const Renderer &other);
 			Renderer &Update();

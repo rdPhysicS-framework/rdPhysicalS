@@ -46,8 +46,9 @@ void KernelComponent::Release()
 {
 	if (object)
 	{
-		if (int status = clReleaseKernel(object) !=
-			CL_SUCCESS)
+		int status = clReleaseKernel(object);
+
+		if (status != CL_SUCCESS)
 		{
 			Logger::Log("ERROR when destroying the kernel.");
 		}
@@ -60,8 +61,9 @@ void KernelComponent::Retain()
 {
 	if (object)
 	{
-		if (int status = clRetainKernel(object) !=
-			CL_SUCCESS)
+		int status = clRetainKernel(object);
+
+		if (status != CL_SUCCESS)
 		{
 			Logger::Log("clRetainKernel ERROR: " + std::to_string(status));
 		}
@@ -84,14 +86,24 @@ std::string KernelComponent::GetInfo(const DeviceComponent &device, const cl_ker
 	return Details::DisplayDeviceDetails(device(), paramName);
 }
 
-KernelComponent &KernelComponent::SetArgument(int index, const void *data, const size_t bytes)
+KernelComponent &KernelComponent::SetArgument(uint index, const void *data, const size_t bytes)
 {
-	if (int status = clSetKernelArg(object, index, bytes, data))
+	int status = clSetKernelArg(object, index, bytes, data);
+
+	if (status != CL_SUCCESS)
 	{
 		Logger::Log("ERROR when setting the argument " + std::to_string(index)
 					+ "\nERROR: " + std::to_string(status));
 
 	}
+
+	return (*this);
+}
+
+KernelComponent &KernelComponent::operator=(const KernelComponent &other)
+{
+	if (this != &other)
+		object = other.object;
 
 	return (*this);
 }

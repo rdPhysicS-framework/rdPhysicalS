@@ -37,6 +37,21 @@ PointLight &PointLight::operator=(const PointLight &other)
 	return (*this);
 }
 
+const RT::Vec3f &PointLight::GetPosition() const
+{
+	return position;
+}
+
+const RT::Vec3f &PointLight::GetColor() const
+{
+	return color;
+}
+
+float PointLight::GetLs() const
+{
+	return ls;
+}
+
 PointLight &PointLight::SetColor(const RT::Vec3f &_color)
 {
 	color = _color;

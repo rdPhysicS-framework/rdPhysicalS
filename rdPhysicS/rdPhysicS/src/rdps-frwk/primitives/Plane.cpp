@@ -33,3 +33,13 @@ Plane &Plane::operator=(const Plane &other)
 	normal = other.normal;
 	return (*this);
 }
+
+const RT::Vec3f &Plane::GetPoint() const
+{
+	return point;
+}
+
+const RT::Vec3f &Plane::GetNormal() const
+{
+	return normal;
+}

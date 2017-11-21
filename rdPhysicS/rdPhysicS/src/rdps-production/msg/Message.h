@@ -25,10 +25,10 @@ RDPS_BEGIN
 			Message(const Message &other);
 			~Message();
 
-			inline Entity *GetSender() const { return sender; }
-			inline Entity *GetReceiver() const { return receiver; }
-			const std::string &GetMessage() const { return message; }
-			void *GetData() const { return data; }
+			Entity *GetSender() const;
+			Entity *GetReceiver() const;
+			const std::string &GetMessage() const;
+			void *GetData() const;
 
 			Message &SetSender(Entity *_sender);
 			Message &SetReceiver(Entity *_receiver);

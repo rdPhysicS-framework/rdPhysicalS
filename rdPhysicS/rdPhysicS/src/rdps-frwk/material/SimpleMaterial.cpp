@@ -47,6 +47,11 @@ SimpleMaterial &SimpleMaterial::operator=(const SimpleMaterial &other)
 	return (*this);
 }
 
+BRDF *SimpleMaterial::GetDiffuse() const
+{
+	return diffuse;
+}
+
 SimpleMaterial &SimpleMaterial::SetDiffuse(BRDF *_diffuse)
 {
 	if (!diffuse)

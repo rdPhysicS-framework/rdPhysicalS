@@ -23,8 +23,8 @@ RDPS_BEGIN
 			virtual Sphere *Clone() const;
 			Sphere &operator=(const Sphere &other);
 			
-			inline float GetRadius() const { return radius; }
-			inline const RT::Vec3f &GetCenter() const { return center; }
+			float GetRadius() const;
+			const RT::Vec3f &GetCenter() const;
 			Sphere &SetRadius(const float _radius);
 			Sphere &SetCenter(const RT::Vec3f &_center);
 		};

@@ -46,12 +46,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operadorga para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline DeviceComponent &operator=(const DeviceComponent &other)
-			{
-				if (this != &other)
-					object = other.object;
-				return (*this);
-			}
+			DeviceComponent &operator=(const DeviceComponent &other);
 		};
 	CL_END
 RDPS_END

@@ -32,6 +32,16 @@ AmbientLight &AmbientLight::operator=(const AmbientLight &other)
 	return (*this);
 }
 
+const RT::Vec3f & AmbientLight::GetColor() const
+{
+	return color;
+}
+
+float AmbientLight::GetLs() const
+{
+	return ls;
+}
+
 AmbientLight &AmbientLight::SetColor(const RT::Vec3f &_color)
 {
 	color = _color;

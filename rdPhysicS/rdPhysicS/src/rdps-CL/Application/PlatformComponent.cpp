@@ -38,6 +38,8 @@ std::vector<PlatformComponent> PlatformComponent::GetPlatforms()
 	if (status != CL_SUCCESS)
 		Logger::Log(PLATFORM_COMPONENT_CREATE, status, "Unable to capture the Platforms.");
 
+	delete p;
+
 	return std::vector<PlatformComponent>(&p[0], &p[size]);
 }
 
@@ -54,4 +56,11 @@ std::vector<DeviceComponent> PlatformComponent::GetDevices(const cl_device_type 
 		Logger::Log(DEVICE_COMPONENT_CREATE, status, "Unable to capture the Devices.");
 
 	return std::vector<DeviceComponent>(&d[0], &d[size]);
+}
+
+PlatformComponent &PlatformComponent::operator=(const PlatformComponent &other)
+{
+	if (this != &other)
+		object = other.object;
+	return (*this);
 }

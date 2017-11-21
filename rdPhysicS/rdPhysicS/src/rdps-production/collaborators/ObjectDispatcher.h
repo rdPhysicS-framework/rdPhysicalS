@@ -4,25 +4,27 @@
 #include "..\base\Collaborator.h"
 
 RDPS_BEGIN
-	PDCT_BEGIN
+	
+	PKG_BEGIN class Container; PKG_END
 
-		class Container;
+	PDCT_BEGIN
 
 		class ObjectDispatcher : public Collaborator
 		{
 		private:
-			Container *container;
+			PKG Container *container;
 
 		public:
-			ObjectDispatcher();
+			ObjectDispatcher(PKG Container *_container);
 			ObjectDispatcher(const ObjectDispatcher &other);
 			~ObjectDispatcher();
+
+			PKG Container *GetContainer() const;
 
 			virtual Collaborator *Clone();
 			virtual Collaborator &Init();
 			virtual Collaborator &ExecuteFunction();
 			virtual Collaborator &Exit();
-			virtual bool HandleMessage(const Message &message);
 		};
 
 	PDCT_END

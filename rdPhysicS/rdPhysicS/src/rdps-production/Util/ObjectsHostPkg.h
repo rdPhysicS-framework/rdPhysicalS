@@ -26,8 +26,12 @@ RDPS_BEGIN
 			ObjectsHostPkg();
 			~ObjectsHostPkg();
 
-			inline const std::vector<FRWK GeometricObject*> &GetObjects() const { return objects; }
-			inline const std::vector<FRWK Light*> &GetLights() const { return lights; }
+			const std::vector<FRWK GeometricObject*> &GetObjects() const;
+			const std::vector<FRWK Light*> &GetLights() const;
+			const FRWK ViewPlane *GetVp() const;
+			const FRWK Camera *GetCamera() const;
+			FRWK GeometricObject* GetObject(const size_t id) const;
+			FRWK Light *GetLight(const size_t id) const;
 
 			const int AddObject(FRWK GeometricObject *object);
 			ObjectsHostPkg &RemoveObject(const int id);

@@ -23,8 +23,8 @@ RDPS_BEGIN
 
 			AmbientLight &operator=(const AmbientLight &other);
 
-			inline const RT::Vec3f &GetColor() const { return color; }
-			inline float GetLs() const { return ls; }
+			const RT::Vec3f &GetColor() const;
+			float GetLs() const;
 
 			AmbientLight &SetColor(const RT::Vec3f &_color);
 			AmbientLight &SetColor(const float r, const float g, const float b);

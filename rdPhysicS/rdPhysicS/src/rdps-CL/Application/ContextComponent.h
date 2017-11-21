@@ -58,12 +58,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline ContextComponent &operator=(const ContextComponent &other)
-			{
-				if (this != &other)
-					BaseClComponent<Type>::operator=(other);
-				return (*this);
-			}
+			ContextComponent &operator=(const ContextComponent &other);
 		};
 	CL_END
 RDPS_END

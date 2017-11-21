@@ -92,12 +92,7 @@ RDPS_BEGIN
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *-------------------------------------------------------------------------------------------------------------------------------------*/
-			inline CommmandQueueComponent &operator=(const CommmandQueueComponent &other)
-			{
-				if (this != &other)
-					BaseClComponent<Type>::operator=(other);
-				return (*this);
-			}
+			CommmandQueueComponent &operator=(const CommmandQueueComponent &other);
 		};
 
 	CL_END

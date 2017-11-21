@@ -49,6 +49,51 @@ Camera &Camera::operator=(const Camera &other)
 	return (*this);
 }
 
+const RT::Vec3f &Camera::GetEye() const
+{
+	return eye;
+}
+
+const RT::Vec3f &Camera::GetLookAt() const
+{
+	return lookAt;
+}
+
+const RT::Vec3f &Camera::GetEyeUp() const
+{
+	return up;
+}
+
+const RT::Vec3f &Camera::GetU() const
+{
+	return u;
+}
+
+const RT::Vec3f &Camera::GetV() const
+{
+	return v;
+}
+
+const RT::Vec3f &Camera::GetW() const
+{
+	return w;
+}
+
+float Camera::GetZoom() const
+{
+	return zoom;
+}
+
+float Camera::GetExposureTime() const
+{
+	return exposureTime;
+}
+
+float Camera::GetViewPlaneDistance() const
+{
+	return viewPlaneDistance;
+}
+
 Camera & Camera::SetZoom(const float _zoom)
 {
 	zoom = _zoom;
@@ -93,7 +138,22 @@ Camera &Camera::ComputeUVW()
 	return (*this);
 }
 
+Camera &Camera::Configure(const RT::Vec3f &_eye, 
+						  const RT::Vec3f &_lookAt, 
+						  const RT::Vec3f &_up, 
+						  const float _viewPlaneDistance, 
+						  const float _zoom)
+{
+	eye = _eye;
+	lookAt = _lookAt;
+	up = _up;
+	viewPlaneDistance = _viewPlaneDistance;
+	zoom = _zoom;
+	return (*this);
+}
+
 void Camera::Render(SceneBase &scene)
 {
+	ComputeUVW();
 	scene.GetRenderer()->Render();
 }

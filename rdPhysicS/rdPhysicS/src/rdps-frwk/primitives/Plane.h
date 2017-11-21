@@ -22,8 +22,8 @@ RDPS_BEGIN
 			virtual Plane *Clone() const;
 			Plane &operator=(const Plane &other);
 
-			inline const RT::Vec3f &GetPoint() const { return point; }
-			inline const RT::Vec3f &GetNormal() const { return normal; }
+			const RT::Vec3f &GetPoint() const;
+			const RT::Vec3f &GetNormal() const;
 		};
 
 	FRWK_END

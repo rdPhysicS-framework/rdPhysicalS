@@ -4,6 +4,7 @@
 #include "BaseClComponent.h"
 #include "ClConfig.h"
 #include "..\..\Util\LogError.h"
+#include "MemObjectComponent.h"
 
 RDPS_BEGIN
 	CL_BEGIN
@@ -82,24 +83,20 @@ RDPS_BEGIN
 			template<class T>
 			inline KernelComponent &SetArgument(int index, T &obj);
 
-			KernelComponent &SetArgument(int index, const void *data, const size_t bytes);
+			KernelComponent &SetArgument(uint index, const void *data, const size_t bytes);
 
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline KernelComponent &operator=(const KernelComponent &other)
-			{
-				if (this != &other)
-					object = other.object;
-
-				return (*this);
-			}
+			KernelComponent &operator=(const KernelComponent &other);
 		};
 
 		template<class T>
 		inline KernelComponent &KernelComponent::SetArgument(int index, T &obj)
 		{
-			if (int status = clSetKernelArg(object, index, sizeof(T), (void*)&obj))
+			int status = clSetKernelArg(object, index, sizeof(T), (const void*)&obj);
+
+			if (status != CL_SUCCESS)
 			{
 				Logger::Log("ERROR when setting the argument " + std::to_string(index)
 							+ "\nERROR: " + std::to_string(status));
@@ -108,6 +105,7 @@ RDPS_BEGIN
 
 			return (*this);
 		}
+
 	RDPS_END
 CL_END
 #endif//__KERNEL_COMPONENTE_H__

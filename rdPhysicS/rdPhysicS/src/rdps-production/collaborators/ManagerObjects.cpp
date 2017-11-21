@@ -1,21 +1,35 @@
 #include "ManagerObjects.h"
 #include "..\..\rdps-frwk\base\GeometricObject.h"
+#include "..\states\StateMachine.h"
+#include "..\states\state-global\ToRest.h"
+#include "..\Util\ObjectsHostPkg.h"
 
 USING_RDPS
 USING_PDCT
 
 ManagerObjects::ManagerObjects() :
-	Collaborator(MANAGER_OF_OBJECTS),
-	package(new ObjectsHostPkg())
-{}
+				Collaborator(MANAGER_OF_OBJECTS, 
+							 new StateMachine(this)),
+				package(new ObjectsHostPkg())
+{
+	stateMachine->SetCurrentState(ToRest::Get());
+}
 
 ManagerObjects::ManagerObjects(const ManagerObjects &other) :
-	Collaborator(other),
-	package(other.package)
+				Collaborator(other),
+				package(other.package)
 {}
 
 ManagerObjects::~ManagerObjects()
-{}
+{
+	if (package)
+		delete package;
+}
+
+const ObjectsHostPkg * ManagerObjects::GetPackage() const
+{
+	return package;
+}
 
 const int ManagerObjects::AddObject(FRWK GeometricObject * object)
 {
@@ -63,15 +77,11 @@ ManagerObjects &ManagerObjects::Init()
 
 ManagerObjects &ManagerObjects::ExecuteFunction()
 {
+	stateMachine->Update();
 	return (*this);
 }
 
 ManagerObjects &ManagerObjects::Exit()
 {
 	return (*this);
-}
-
-bool ManagerObjects::HandleMessage(const Message & message)
-{
-	return false;
 }

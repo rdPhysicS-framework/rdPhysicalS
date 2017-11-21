@@ -49,8 +49,8 @@ RDPS_BEGIN
 			 *--------------------------------------------------------------------------------------------*/
 			std::string GetInfo(const cl_platform_info paramName);
 			/*--------------------------------------------------------------------------------------------
-			 * Função que retorna um vector contendo tadas as plataformas.
-			 * Função static, que poder ser chamada sem a necessidade de existir um objeto.
+			 * Função que retorna um vector contendo todas as plataformas.
+			 * Função static, que pode ser chamada sem a necessidade de existir um objeto.
 			 * Exemplo:
 			 * std::vector<PlatformComponent> platforms = PlatformComponent::GetPlatforms();
 			 *--------------------------------------------------------------------------------------------*/
@@ -65,12 +65,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			* Função de sobrecar de operador para cópia, chama a função de cópia do pai.
 			*--------------------------------------------------------------------------------------------*/
-			inline PlatformComponent &operator=(const PlatformComponent &other)
-			{
-				if (this != &other)
-					object = other.object;
-				return (*this);
-			}
+			PlatformComponent &operator=(const PlatformComponent &other);
 		};
 	CL_END
 RDPS_END

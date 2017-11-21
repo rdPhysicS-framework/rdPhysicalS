@@ -25,10 +25,10 @@ RDPS_BEGIN
 
 			StateMachine &operator=(const StateMachine &other);
 
-			inline Collaborator *GetOwner() const { return myOwner; }
-			inline State<Collaborator> *GetCurrentState()  const { return currentState; }
-			inline State<Collaborator> *GetPreviousState() const { return previousState; }
-			inline State<Collaborator> *GetGlobalState()   const { return globalState; }
+			Collaborator *GetOwner() const;
+			State<Collaborator> *GetCurrentState()  const;
+			State<Collaborator> *GetPreviousState() const;
+			State<Collaborator> *GetGlobalState()   const;
 
 			StateMachine &SetCurrentState(State<Collaborator> *_currentState);
 			StateMachine &SetPreviousState(State<Collaborator> *_previousState);

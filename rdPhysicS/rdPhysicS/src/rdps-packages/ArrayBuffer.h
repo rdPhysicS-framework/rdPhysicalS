@@ -91,15 +91,15 @@ RDPS_BEGIN
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que da o comando para setar o attributo pelo id e processar os dados
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ArrayBuffer<T> Binding() const;
+			inline ArrayBuffer<T> &Binding();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Função auxiliar que da o comando para aplicar a acao de leitura ou escrita no buffer
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ArrayBuffer<T> Apply();
+			inline ArrayBuffer<T> &Apply();
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			* Função auxiliar que adiciona o elemento de processamento para nullptr.
 			*---------------------------------------------------------------------------------------------------------------------------------------*/
-			inline ArrayBuffer<T> DestroyElement();
+			inline ArrayBuffer<T> &DestroyElement();
 		};
 
 		template<class T>
@@ -109,7 +109,7 @@ RDPS_BEGIN
 							   bytes(0),
 							   typeAction(_typeAction)
 		{
-			id = WORLD_GET_APP->GetBuffer();
+			id = World::GetApp()->GetBuffer();
 		}
 
 		template<class T>
@@ -122,7 +122,7 @@ RDPS_BEGIN
 							   typeAction(_typeAction)
 		{
 			/*como vai ser*/
-			id = WORLD_GET_APP->CreateBuffer(id, typeAction, bytes);
+			id = World::GetApp()->CreateBuffer(id, typeAction, bytes);
 		}
 
 		template<class T>
@@ -185,32 +185,34 @@ RDPS_BEGIN
 			element = data;
 			bytes = sizeof(T) * size;
 
-			if (WORLD_GET_APP->GetBuffer(id) == BUSY_LOCATION)
+			if (World::GetApp()->GetBuffer(id) == BUSY_LOCATION)
 			{
-				WORLD_GET_APP->DestroyBuffer(id);
+				World::GetApp()->DestroyBuffer(id);
 			}
 
-			id = WORLD_GET_APP->CreateBuffer(id, typeAction, bytes);
+			id = World::GetApp()->CreateBuffer(id, typeAction, bytes);
 
 			return (*this);
 		}
 
 		template<class T>
-		inline ArrayBuffer<T> ArrayBuffer<T>::Binding() const
+		inline ArrayBuffer<T> &ArrayBuffer<T>::Binding()
 		{
-			WORLD_GET_APP->ApplyArgument(id);
+			//WORLD_GET_APP->ApplyArgument(id);
+			World::GetApp()->ApplyArgument(id);
 			return (*this);
 		}
 
 		template<class T>
-		inline ArrayBuffer<T> ArrayBuffer<T>::Apply()
+		inline ArrayBuffer<T> &ArrayBuffer<T>::Apply()
 		{
-			WORLD_GET_APP->ApplyBuffer(id, typeAction, bytes, element);
+			//WORLD_GET_APP->ApplyBuffer(id, typeAction, bytes, element);
+			World::GetApp()->ApplyBuffer(id, typeAction, bytes, (void*)element);
 			return (*this);
 		}
 
 		template<class T>
-		inline ArrayBuffer<T> ArrayBuffer<T>::DestroyElement()
+		inline ArrayBuffer<T> &ArrayBuffer<T>::DestroyElement()
 		{
 			element = nullptr;
 			bytes = 0;

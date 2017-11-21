@@ -70,12 +70,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função de sobrecarga de operador para cópia, chama a função de cópia do pai.
 			 *--------------------------------------------------------------------------------------------*/
-			inline MemObjectComponent &operator=(const MemObjectComponent &other)
-			{
-				if (this != &other)
-					BaseClComponent<Type>::operator=(other);
-				return (*this);
-			}
+			MemObjectComponent &operator=(const MemObjectComponent &other);
 		};
 	CL_END
 RDPS_END

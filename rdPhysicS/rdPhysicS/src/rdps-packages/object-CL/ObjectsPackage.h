@@ -59,6 +59,18 @@ struct RT_BRDF
 	float ex;
 
 	RT_TypeBRDF type;
+
+	void operator=(const RT_BRDF &other)
+	{
+		color.x = other.color.x;
+		color.y = other.color.y;
+		color.z = other.color.z;
+
+		k = other.k;
+		ex = other.ex;
+
+		type = other.type;
+	}
 };
 
 struct RT_Material
@@ -73,6 +85,14 @@ struct RT_Material
 	RT_BRDF diffuse;
 	RT_BRDF specular;
 	RT_BRDF refl;
+
+	void operator=(const RT_Material &other)
+	{
+		ambient = other.ambient;
+		diffuse = other.diffuse;
+		specular = other.specular;
+		refl = other.refl;
+	}
 };
 
 enum RT_TypeObject
@@ -86,6 +106,12 @@ struct RT_BBox
 {
 	float x0, y0, z0;
 	float x1, y1, z1;
+
+	void operator=(const RT_BBox &other)
+	{
+		x0 = other.x0; y0 = other.y0; z0 = other.z0;
+		x1 = other.x1; y1 = other.y1; z1 = other.z1;
+	}
 };
 
 struct RT_Primitive
@@ -105,12 +131,24 @@ struct RT_Primitive
 	RT::Mat4f invMatrix;
 
 	RT_BBox bbox;
+
+	void operator=(const RT_Primitive &other)
+	{
+		p.x = other.p.x; p.y = other.p.y; p.z = other.p.z;
+		s.x = other.s.x; s.y = other.s.y; s.z = other.s.z;
+		r = other.r;
+		material = other.material;
+		type = other.type;
+		invMatrix = other.invMatrix;
+		bbox = other.bbox;
+	}
 };
 
 enum RT_TypeLight
 {
+	RT_AMBIENT_LIGHT,
 	RT_AREA_LIGHT,
-	RT_POINT_LIGHT
+	RT_POINT_LIGHT,
 };
 
 struct RT_Light
@@ -121,6 +159,21 @@ struct RT_Light
 	float ex;
 
 	RT_TypeLight type;
+
+	void operator=(const RT_Light &other)
+	{
+		position.x = other.position.x;
+		position.y = other.position.y;
+		position.z = other.position.z;
+
+		color.x = other.color.x;
+		color.y = other.color.y;
+		color.z = other.color.z;
+
+		ls = other.ls;
+
+		ex = other.ex;
+	}
 };
 
 struct RT_ViewPlane
@@ -129,6 +182,15 @@ struct RT_ViewPlane
 	int height;
 	RT_Vec2f sp;
 	//RT_SScoord coord;
+
+	void operator=(const RT_ViewPlane &other)
+	{
+		width = other.width;
+		height = other.height;
+
+		sp.x = other.sp.x;
+		sp.y = other.sp.y;
+	}
 };
 
 class RT_Camera
@@ -148,6 +210,7 @@ public:
 	RT_Vec3f u, v, w;
 
 public:
+	RT_Camera() {}
 	RT_Camera(const RT_Vec3f &_eye, 
 			  const float _viewPlaneDistance, 
 			  const float _zoom, 
@@ -160,29 +223,20 @@ public:
 		zoom(_zoom),
 		u(_u), v(_v), w(_w)
 	{}
-	/*void computeUVW()
+
+	void operator=(const RT_Camera &other)
 	{
-		w = Normalize(eye - lookAt);
+		eye.x = other.eye.x;
+		eye.y = other.eye.y;
+		eye.z = other.eye.z;
 
-		if (eye.x == lookAt.x && eye.z == lookAt.z && eye.y > lookAt.y)
-		{
-			u = { 0, 0, 1 };
-			v = { 1, 0, 0 };
-			w = { 0, 1, 0 };
-			return;
-		}
+		viewPlaneDistance = other.viewPlaneDistance;
+		zoom = other.zoom;
 
-		if (eye.x == lookAt.x && eye.z == lookAt.z && eye.y < lookAt.y)
-		{
-			u = { 1, 0, 0 };
-			v = { 0, 0, 1 };
-			w = { 0, -1, 0 };
-			return;
-		}
-
-		u = Normalize(Cross(up, w));
-		v = Normalize(Cross(w, u));
-	}*/
+		u.x = other.u.x; u.y = other.u.y; u.z = other.u.z;
+		v.x = other.v.x; v.y = other.v.y; v.z = other.v.z;
+		w.x = other.w.x; w.y = other.w.y; w.z = other.w.z;
+	}
 };
 
 struct RT_DataScene
@@ -210,6 +264,18 @@ struct RT_DataScene
 	ulong numShuffledIndices;
 	/*seed random*/
 	/*ulong seed;*/
+
+	void operator=(const RT_DataScene &other)
+	{
+		vp = other.vp;
+
+		background.x = other.background.x;
+		background.y = other.background.y;
+		background.z = other.background.z;
+
+		numLights = other.numLights;
+		numObjects = other.numObjects;
+	}
 };
 
 	PKG_END

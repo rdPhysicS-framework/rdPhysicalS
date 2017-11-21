@@ -45,6 +45,16 @@ Transform &Transform::operator=(const Transform &other)
 	return (*this);
 }
 
+const RT::Mat4f &Transform::GetInvMatrix() const
+{
+	return invMatrix;
+}
+
+const RT::Mat4f & Transform::GetForwardMatrix() const
+{
+	return forwardMatrix;
+}
+
 Transform &Transform::Translate(const float x, const float y, const float z)
 {
 	invMatrix *= RT::mt4::AffTranslation(-x, -y, -z);

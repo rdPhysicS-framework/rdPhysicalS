@@ -8,12 +8,12 @@ USING_RDPS
 USING_CL
 
 std::string ProgramComponent::GetBuidInfo(const DeviceComponent &device, 
-													const cl_program_build_info paramName)
+										  const cl_program_build_info paramName)
 {
 	return Details::DisplayBuildInfo(*this, device, paramName);
 }
 
-cl_program ProgramComponent::Create(const ContextComponent &context, 
+cl_program ProgramComponent::CreateProgramWithSource(const ContextComponent &context, 
 								    const std::string source)
 {
 	int status = 0;
@@ -25,7 +25,7 @@ cl_program ProgramComponent::Create(const ContextComponent &context,
 		Logger::Log(PROGRAM_COMPONENT_CREATE, status,
 			"ERROR when creating the program.");
 	}
-
+	
 	return program;
 }
 
@@ -34,9 +34,8 @@ ProgramComponent::ProgramComponent() :
 {}
 
 ProgramComponent::ProgramComponent(const ContextComponent &context, 
-								   const std::string source, 
-								   const std::string options) :
-		  BaseClComponent<Type>(Create(context, source))
+								   const std::string source) :
+		  BaseClComponent<Type>(CreateProgramWithSource(context, source))
 {}
 
 ProgramComponent::ProgramComponent(const cl_program &program) :
@@ -56,7 +55,9 @@ void ProgramComponent::Release()
 {
 	if (object)
 	{
-		if (int status = clReleaseProgram(object) != CL_SUCCESS)
+		int status = clReleaseProgram(object);
+
+		if (status != CL_SUCCESS)
 		{
 			Logger::Log("clReleaseProgram ERROR: " + std::to_string(status));
 		}
@@ -69,7 +70,9 @@ void ProgramComponent::Retain()
 {
 	if (object)
 	{
-		if (int status = clRetainProgram(object) != CL_SUCCESS)
+		int status = clRetainProgram(object);
+
+		if (status != CL_SUCCESS)
 		{
 			Logger::Log("clRetainProgram ERROR: " + std::to_string(status));
 		}
@@ -86,11 +89,9 @@ ProgramComponent &ProgramComponent::BuildProgram(const DeviceComponent &device,
 {
 	cl_device_id id = device();
 	const char *o = options.c_str();
-	if (int status = clBuildProgram(object, 1, &id,
-									o, 
-									nullptr,
-									nullptr         ) 
-		!= CL_SUCCESS                               )
+	int status = clBuildProgram(object, 1, &id, o, nullptr, nullptr);
+
+	if (status != CL_SUCCESS)
 	{
 		Logger::Log( "ERROR when building the program. \nERROR: "
 					+ std::to_string(status) + "\n\n" 
@@ -98,5 +99,12 @@ ProgramComponent &ProgramComponent::BuildProgram(const DeviceComponent &device,
 					GetBuidInfo(device, CL_PROGRAM_BUILD_LOG));
 	}
 
+	return (*this);
+}
+
+ProgramComponent &ProgramComponent::operator=(const ProgramComponent &other)
+{
+	if (this != &other)
+		BaseClComponent<Type>::operator=(other);
 	return (*this);
 }

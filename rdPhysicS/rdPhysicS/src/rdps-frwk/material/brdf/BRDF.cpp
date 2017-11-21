@@ -43,6 +43,21 @@ BRDF &BRDF::operator=(const BRDF &other)
 	return (*this);
 }
 
+const RT::Vec3f &BRDF::GetColor() const
+{
+	return color;
+}
+
+float BRDF::GetK() const
+{
+	return k;
+}
+
+TypeBRDF BRDF::GetType() const
+{
+	return type;
+}
+
 BRDF &BRDF::SetColor(const RT::Vec3f &_color)
 {
 	color = _color;

@@ -5,7 +5,7 @@
 USING_RDPS
 USING_CL
 
-cl_context ContextComponent::Create(const DeviceComponent & device, const cl_context_properties * prop)
+cl_context ContextComponent::Create(const DeviceComponent &device, const cl_context_properties *prop)
 {
 	cl_device_id id = device();
 	int status = 0;
@@ -64,4 +64,11 @@ void ContextComponent::Retain()
 std::string ContextComponent::GetInfo(const cl_context_info paramName)
 {
 	return std::string();
+}
+
+ContextComponent &ContextComponent::operator=(const ContextComponent &other)
+{
+	if (this != &other)
+		BaseClComponent<Type>::operator=(other);
+	return (*this);
 }

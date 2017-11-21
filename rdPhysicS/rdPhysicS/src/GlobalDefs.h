@@ -80,8 +80,8 @@
 #define ERROR_MSG_INVALID_DEVICE_PROGRAM     "CL_INVALID_DEVICE: device is not in the associated with program"
 //#define TO_STRING(x) std::to_string(x)
 
-#define WORLD_GET World::Get()
-#define WORLD_GET_APP World::Get()->GetApp()
+//#define WORLD_GET World::Get()
+#define WORLD_GET_APP World::GetApp()
 
 #define BLACK RT::Vec3f(0.0f, 0.0f, 0.0f)
 #define WHITE RT::Vec3f(1.0f, 1.0f, 1.0f)
@@ -162,7 +162,7 @@ enum CollaboratorsFunction
 	PACKER_OF_OBJECTS,
 	DELIVERER_OF_OBJECTS,
 	MANAGER_OF_OBJECTS,
-	//GENERAL_MANAGER
+	GENERAL_MANAGER
 };
 
 typedef unsigned int uint;

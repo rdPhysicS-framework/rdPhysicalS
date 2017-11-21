@@ -62,6 +62,46 @@ ApplicationCL::~ApplicationCL()
 	buffers.clear();
 }
 
+inline PlatformComponent *ApplicationCL::GetPlatform() const
+{
+	return platform;
+}
+
+inline DeviceComponent *ApplicationCL::GetDevice() const
+{
+	return device;
+}
+
+inline ContextComponent *ApplicationCL::GetContext() const
+{
+	return context;
+}
+
+inline CommmandQueueComponent *ApplicationCL::GetQueue() const
+{
+	return queue;
+}
+
+inline ProgramComponent *ApplicationCL::GetProgram() const
+{
+	return program;
+}
+
+inline KernelComponent *ApplicationCL::GetKernel() const
+{
+	return kernel;
+}
+
+inline const std::vector<MemObjectComponent*> &ApplicationCL::GetBuffers() const
+{
+	return buffers;
+}
+
+inline ItensWorkGroupComponent * ApplicationCL::GetItens() const
+{
+	return itens;
+}
+
 ApplicationCL &ApplicationCL::CreateProgram(const std::string &source)
 {
 	CreateContext();
@@ -231,29 +271,29 @@ ApplicationCL &ApplicationCL::ApplyArguments(const std::initializer_list<uint> i
 	return (*this);
 }
 
-ApplicationCL &ApplicationCL::ApplyBuffer(const int id, const ActionFile typeAction, const size_t bytes, void * data)
+ApplicationCL &ApplicationCL::ApplyBuffer(const int id, const ActionFile typeAction, const size_t bytes, void *data)
 {
 	if (typeAction == RETURN_DATA_WRITING)
 	{
-		int _id = id;// GetBuffer(bf.GetId());
-		if (_id == EMPTY_BUFFER || _id == BUSY_LOCATION)
+		//int _id = id;// GetBuffer(bf.GetId());
+		if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 		{
 			Logger::Log("ERROR requested index invalidates " +
-				(_id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+				(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 		}
 
-		queue->WriteBuffer((*buffers[_id]), bytes, data);
+		queue->WriteBuffer((*buffers[id]), bytes, data);
 	}
 	else if (typeAction == RETURN_DATA_READING)
 	{
-		int _id = id;//GetBuffer(bf.GetId());
-		if (_id == EMPTY_BUFFER || id == BUSY_LOCATION)
+		//int _id = id;//GetBuffer(bf.GetId());
+		if (id == EMPTY_BUFFER || id == BUSY_LOCATION)
 		{
 			Logger::Log("ERROR requested index invalidates " +
-				(_id == EMPTY_BUFFER) ? "empty array." : "busy location.");
+				(id == EMPTY_BUFFER) ? "empty array." : "busy location.");
 		}
 
-		queue->ReadBuffer((*buffers[_id]), bytes, data);
+		queue->ReadBuffer((*buffers[id]), bytes, data);
 	}
 
 	return (*this);

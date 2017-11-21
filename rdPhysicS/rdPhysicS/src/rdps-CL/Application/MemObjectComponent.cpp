@@ -32,8 +32,9 @@ void MemObjectComponent::Release()
 {
 	if (object)
 	{
-		if (int status = clReleaseMemObject(object) !=
-			CL_SUCCESS)
+		int status = clReleaseMemObject(object);
+
+		if (status != CL_SUCCESS)
 			Logger::Log("clReleaseMemObject - Error when destroying the" 
 						"memory object. ERROR: " + std::to_string(status));
 
@@ -45,8 +46,9 @@ void MemObjectComponent::Retain()
 {
 	if (object)
 	{
-		if (int status = clRetainMemObject(object) !=
-			CL_SUCCESS)
+		int status = clRetainMemObject(object);
+
+		if (status != CL_SUCCESS)
 			Logger::Log("clRetainMemObject - ERROR: " + std::to_string(status));
 	}
 }
@@ -62,4 +64,11 @@ cl_mem MemObjectComponent::Create(const ContextComponent &context,
 		Logger::Log("ERROR when creating the memory object.\n");
 	}
 	return mem;
+}
+
+MemObjectComponent &MemObjectComponent::operator=(const MemObjectComponent &other)
+{
+	if (this != &other)
+		BaseClComponent<Type>::operator=(other);
+	return (*this);
 }

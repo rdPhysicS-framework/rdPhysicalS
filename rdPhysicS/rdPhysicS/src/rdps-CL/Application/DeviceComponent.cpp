@@ -48,3 +48,10 @@ std::string DeviceComponent::GetInfo(const cl_device_info paramName)
 {
 	return Details::DisplayDeviceDetails(object, paramName);
 }
+
+DeviceComponent &DeviceComponent::operator=(const DeviceComponent &other)
+{
+	if (this != &other)
+		object = other.object;
+	return (*this);
+}

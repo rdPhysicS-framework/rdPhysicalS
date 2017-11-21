@@ -17,6 +17,17 @@ Container::~Container()
 	packages.clear();
 }
 
+const PackageBase *Container::GetPackage(std::string id)
+{
+	if (packages.find(id) == packages.end())
+	{
+		Logger::Log("Attribute no exists : " + id);
+	}
+
+	return packages[id];
+}
+
+
 Container &Container::CreatePackage(std::string id, 
 								    PackageBase *package)
 {

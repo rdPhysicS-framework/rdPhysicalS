@@ -26,6 +26,16 @@ Light &Light::operator=(const Light & other)
 	return (*this);
 }
 
+bool Light::GetShadow() const
+{
+	return shadow;
+}
+
+TypeLight Light::GetType() const
+{
+	return type;
+}
+
 Light &Light::SetShadow(const bool _shadow)
 {
 	shadow = _shadow;

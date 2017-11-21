@@ -18,7 +18,7 @@ RDPS_BEGIN
 		template<class T>
 		class Package : public PackageBase
 		{
-		private:
+		public:
 			std::vector<T> elements;
 			ArrayBuffer<T> *buffer;
 

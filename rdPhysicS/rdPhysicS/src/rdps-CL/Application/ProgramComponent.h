@@ -30,7 +30,7 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------
 			 * Função auxiliar que cria o Programa OpenCL baseado no contexto e o retorna.
 			 *--------------------------------------------------------------------------------------------*/
-			cl_program Create(const ContextComponent &context,
+			cl_program CreateProgramWithSource(const ContextComponent &context,
 							  const std::string source);
 
 		public:
@@ -47,8 +47,7 @@ RDPS_BEGIN
 			 * na DISPOSITIVO.   
 			 *------------------------------------------------------------------------------------------*/
 			ProgramComponent(const ContextComponent &context,
-							 const std::string source       , 
-							 const std::string options = ""  );
+							 const std::string source       );
 			/*------------------------------------------------------------------------------------------
 			 * Construtor
 			 * Adiciona no a referencia um programa já contruido fora.
@@ -84,12 +83,7 @@ RDPS_BEGIN
 			/*------------------------------------------------------------------------------------------
 			 * Função de sobrecar de operadorga para cópia, chama a função de cópia do pai.
 			 *------------------------------------------------------------------------------------------*/
-			inline ProgramComponent &operator=(const ProgramComponent &other)
-			{
-				if (this != &other)
-					BaseClComponent<Type>::operator=(other);
-				return (*this);
-			}
+			ProgramComponent &operator=(const ProgramComponent &other);
 			//KernelComponent *CreateKernel(const std::string nameFunction);
 			//void CreateKernels(std::vector<KernelComponent> &kernels);
 		};

@@ -40,6 +40,11 @@ GeometricObject &GeometricObject::operator=(const GeometricObject &other)
 	return (*this);
 }
 
+Material *GeometricObject::GetMaterial() const
+{
+	return material;
+}
+
 GeometricObject &GeometricObject::SetMaterial(const Material &_material)
 {
 	*material = _material;

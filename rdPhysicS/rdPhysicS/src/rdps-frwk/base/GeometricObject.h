@@ -8,7 +8,7 @@
 RDPS_BEGIN
 	FRWK_BEGIN
 
-		class GeometricObject : public ObjectBase, Actor
+		class GeometricObject : public ObjectBase, public Actor
 		{
 		private:
 			Material *material;
@@ -27,7 +27,7 @@ RDPS_BEGIN
 			virtual GeometricObject *Clone() const = 0;
 
 			GeometricObject &operator=(const GeometricObject &other);
-			virtual inline Material *GetMaterial() const { return material; }
+			virtual Material *GetMaterial() const;
 			virtual GeometricObject &SetMaterial(const Material &_material);
 		};
 		

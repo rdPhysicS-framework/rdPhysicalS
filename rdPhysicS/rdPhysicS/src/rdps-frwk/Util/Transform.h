@@ -32,8 +32,8 @@ RDPS_BEGIN
 			/*inline const RT::Vec3f &GetPosition() const      { return position;      }
 			inline const RT::Vec3f &GetRotation() const      { return rotation;      }
 			inline const RT::Vec3f &GetScale() const         { return scale;         }*/
-			inline const RT::Mat4f &GetInvMatrix() const     { return invMatrix;     }
-			inline const RT::Mat4f &GetForwardMatrix() const { return forwardMatrix; }
+			const RT::Mat4f &GetInvMatrix() const;
+			const RT::Mat4f &GetForwardMatrix() const;
 
 			Transform &Translate(const float x, const float y, const float z);
 			Transform &Translate(const RT::Vec3f &_position);

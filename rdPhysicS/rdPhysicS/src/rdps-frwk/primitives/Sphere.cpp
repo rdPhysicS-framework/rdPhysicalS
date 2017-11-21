@@ -39,6 +39,16 @@ Sphere &Sphere::operator=(const Sphere &other)
 	return (*this);
 }
 
+float Sphere::GetRadius() const
+{
+	return radius;
+}
+
+const RT::Vec3f &Sphere::GetCenter() const
+{
+	return center;
+}
+
 Sphere &Sphere::SetRadius(const float _radius)
 {
 	radius = _radius;

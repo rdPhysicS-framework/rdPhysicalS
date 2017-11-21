@@ -4,30 +4,31 @@
 #include "..\base\Collaborator.h"
 
 RDPS_BEGIN
+		PKG_BEGIN class Container; PKG_END
 	PDCT_BEGIN
 		class ManagerObjects;
 		class ObjectsHostPkg;
-		class Container;
 
 		class PackerObjects : public Collaborator
 		{
 		private:
 			const ObjectsHostPkg *package;
-			Container *container;
+			PKG Container *container;
 
 		public:
-			PackerObjects(Container *_container);
+			PackerObjects(PKG Container *_container);
 			PackerObjects(const PackerObjects &other);
 			~PackerObjects();
 
-			//PackerObjects &SetPackage(const ObjectsHostPkg *_package);
-			//PackerObjects &SetConatiner(Container *_container);
+			const ObjectsHostPkg *GetPackage() const;
+			PKG Container *GetContainer() const;
+			PackerObjects &SetPackage(const ObjectsHostPkg *_package);
+			PackerObjects &SetContainer(PKG Container *_container);
 
 			virtual PackerObjects *Clone();
 			virtual PackerObjects &Init();
 			virtual PackerObjects &ExecuteFunction();
 			virtual PackerObjects &Exit();
-			virtual bool HandleMessage(const Message &message);
 		};
 	PDCT_END
 RDPS_END

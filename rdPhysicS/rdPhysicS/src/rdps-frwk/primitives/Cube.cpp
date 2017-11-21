@@ -39,6 +39,16 @@ Cube &Cube::operator=(const Cube &other)
 	return (*this);
 }
 
+const RT::Vec3f Cube::GetInitPoint() const
+{
+	return initPoint;
+}
+
+const RT::Vec3f Cube::GetSize() const
+{
+	return size;
+}
+
 Cube &Cube::SetInitPoint(const RT::Vec3f &_initPoint)
 {
 	initPoint = _initPoint;

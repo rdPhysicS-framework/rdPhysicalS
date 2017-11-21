@@ -12,9 +12,7 @@ RDPS_BEGIN
 		{
 		public:
 			virtual ~Entity() {}
-			virtual Entity &Init() = 0;
 			virtual Entity &ExecuteFunction() = 0;
-			virtual Entity &Exit() = 0;
 			virtual bool HandleMessage(const Message &message) = 0;
 		};
 

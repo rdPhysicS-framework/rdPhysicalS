@@ -38,6 +38,36 @@ ObjectsHostPkg::~ObjectsHostPkg()
 		delete camera;
 }
 
+const std::vector<FRWK GeometricObject*> &ObjectsHostPkg::GetObjects() const
+{
+	return objects;
+}
+
+const std::vector<FRWK Light*> &ObjectsHostPkg::GetLights() const
+{
+	return lights;
+}
+
+const FRWK ViewPlane *ObjectsHostPkg::GetVp() const
+{
+	return vp;
+}
+
+const FRWK Camera *ObjectsHostPkg::GetCamera() const
+{
+	return camera;
+}
+
+FRWK GeometricObject *ObjectsHostPkg::GetObject(const size_t id) const
+{
+	return objects[id];
+}
+
+FRWK Light *ObjectsHostPkg::GetLight(const size_t id) const
+{
+	return lights[id];
+}
+
 const int ObjectsHostPkg::AddObject(FRWK GeometricObject *object)
 {
 	objects.push_back(object);
@@ -68,9 +98,10 @@ ObjectsHostPkg &ObjectsHostPkg::SetViewPlane(FRWK ViewPlane *_vp)
 	return (*this);
 }
 
-ObjectsHostPkg &ObjectsHostPkg::SetCamera(Camera *_camera)
+ObjectsHostPkg &ObjectsHostPkg::SetCamera(FRWK Camera *_camera)
 {
 	camera = _camera;
 	return (*this);
 }
+
 

@@ -49,6 +49,16 @@ Actor &Actor::operator=(const Actor &other)
 	return (*this);
 }
 
+Transform *Actor::GetTransform() const
+{
+	return transform;
+}
+
+const std::string &Actor::GetTag() const
+{
+	return tag;
+}
+
 Actor &Actor::SetTansform(const Transform &_transform)
 {
 	*transform = _transform;

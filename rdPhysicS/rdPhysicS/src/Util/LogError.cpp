@@ -1,5 +1,6 @@
 #include "LogError.h"
 #include "..\rdps-CL\Application\ClConfig.h"
+#include <RTmath.h>
 
 USING_RDPS
 
@@ -253,4 +254,56 @@ void Logger::Log(const std::string message)
 void Logger::Log(const InfoComponentCL componenet, const int codeError, const std::string message)
 {
 	throw LogError(message + "\n" + GetErrorMessage(componenet, codeError));
+}
+
+void rdps::Logger::TestPrim(const PKG RT_Primitive &p)
+{
+	std::cout << "pos: " << p.p.x << " - ";
+	std::cout << p.p.y << " - ";
+	std::cout << p.p.z << std::endl;
+
+	std::cout << "s/n: "<< p.s.x << " - ";
+	std::cout << p.s.y << " - ";
+	std::cout << p.s.z << std::endl;
+
+	std::cout << "type: " << p.type << std::endl;
+
+	//std::cout << p.invMatrix << std::endl;
+	std::cout << "ambient: " << p.material.ambient.color.x << " - ";
+	std::cout << p.material.ambient.color.y << " - ";
+	std::cout << p.material.ambient.color.z << std::endl;
+	std::cout << p.material.ambient.ex << std::endl;
+	std::cout << p.material.ambient.k << std::endl;
+
+	std::cout << "diffuse: " << p.material.diffuse.color.x << " - ";
+	std::cout << p.material.diffuse.color.y << " - ";
+	std::cout << p.material.diffuse.color.z << std::endl;
+	std::cout << p.material.diffuse.ex << std::endl;
+	std::cout << p.material.diffuse.k << std::endl;
+
+	std::cout << "specular: " << p.material.specular.color.x << " - ";
+	std::cout << p.material.specular.color.y << " - ";
+	std::cout << p.material.specular.color.z << std::endl;
+	std::cout << p.material.specular.ex << std::endl;
+	std::cout << p.material.specular.k << std::endl;
+
+	std::cout << "refl: " << p.material.refl.color.x << " - ";
+	std::cout << p.material.refl.color.y << " - ";
+	std::cout << p.material.refl.color.z << std::endl;
+	std::cout << p.material.refl.ex << std::endl;
+	std::cout << p.material.refl.k << std::endl;
+}
+
+void rdps::Logger::TestLight(const PKG RT_Light &l)
+{
+	std::cout << "pos: " << l.position.x << " - ";
+	std::cout << l.position.x << " - ";
+	std::cout << l.position.x << std::endl;
+	
+	std::cout << "color: " << l.color.x << " - ";
+	std::cout << l.color.x << " - ";
+	std::cout << l.color.x << std::endl;
+
+	std::cout << l.ex << std::endl;
+	std::cout << l.ls << std::endl;
 }

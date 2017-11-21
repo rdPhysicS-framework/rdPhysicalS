@@ -44,6 +44,21 @@ Material &Material::operator=(const Material &other)
 	return (*this);
 }
 
+BRDF *Material::GetAmbient() const
+{
+	return ambient;
+}
+
+bool Material::GetShadow() const
+{
+	return shadow;
+}
+
+TypeMaterial Material::GetType() const
+{
+	return type;
+}
+
 Material &Material::SetAmbient(BRDF *_ambient)
 {
 	if (!ambient)

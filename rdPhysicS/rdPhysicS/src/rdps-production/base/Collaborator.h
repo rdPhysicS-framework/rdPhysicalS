@@ -6,15 +6,22 @@
 RDPS_BEGIN
 	PDCT_BEGIN
 
+		class StateMachine;
+
 		class Collaborator : public Entity
 		{
-		private:
+		protected:
 			CollaboratorsFunction function;
+			StateMachine *stateMachine;
 
 		public:
-			Collaborator(const CollaboratorsFunction _function);
+			Collaborator(const CollaboratorsFunction _function,
+						 StateMachine *_stateMachine);
 			Collaborator(const Collaborator &other);
-			virtual ~Collaborator() {}
+			virtual ~Collaborator();
+
+			const CollaboratorsFunction GetFunction() const;
+			StateMachine *GetStateMachine() const;
 
 			virtual Collaborator *Clone() = 0;
 			virtual Collaborator &Init() = 0;

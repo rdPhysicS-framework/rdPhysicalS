@@ -55,7 +55,6 @@ RDPS_BEGIN
 			~ItensWorkGroupComponent();
 
 			/*----------------------------------------------------------------------------------------------------------
-			 * Construtor
 			 * Retorna o número de dimenções do grupo de trabalho
 			 *----------------------------------------------------------------------------------------------------------*/
 			const cl_uint  GetDimensions()  const;

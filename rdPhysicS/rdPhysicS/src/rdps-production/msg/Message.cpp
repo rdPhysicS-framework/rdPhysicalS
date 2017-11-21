@@ -24,6 +24,26 @@ Message::Message(const Message &other) :
 Message::~Message()
 {}
 
+Entity *Message::GetSender() const
+{
+	return sender;
+}
+
+Entity *Message::GetReceiver() const
+{
+	return receiver;
+}
+
+const std::string &Message::GetMessage() const
+{
+	return message;
+}
+
+void *Message::GetData() const
+{
+	return data;
+}
+
 Message &Message::SetSender(Entity *_sender)
 {
 	sender = _sender;

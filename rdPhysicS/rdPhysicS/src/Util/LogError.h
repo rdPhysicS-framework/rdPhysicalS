@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include "..\GlobalDefs.h"
+#include "..\rdps-packages\object-CL\ObjectsPackage.h"
 
 namespace rdps
 {
@@ -29,9 +30,12 @@ namespace rdps
 		static char *GetErrorProgramComponent(const int codeError);
 		static char *GetErrorProgramInfo(const int codeError);
 		static char *GetErrorProgramBuildInfo(const int codeError);
+
 	public:
 		static void Log(const std::string message);
 		static void Log(const InfoComponentCL componenet, const int codeError, const std::string message);
+		static void TestPrim(const PKG RT_Primitive &p);
+		static void TestLight(const PKG RT_Light &l);
 	};
 
 }

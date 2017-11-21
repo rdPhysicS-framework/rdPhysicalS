@@ -21,9 +21,9 @@ RDPS_BEGIN
 					  const int _height);
 			~ViewPlane();
 
-			inline int GetWidth()			const { return width;  }
-			inline int GetHeight()			const { return height; }
-			inline RT::Vec2f GetSizePixel() const { return sp;     }
+			int GetWidth() const;
+			int GetHeight()	const;
+			RT::Vec2f GetSizePixel() const;
 		};
 
 	FRWK_END

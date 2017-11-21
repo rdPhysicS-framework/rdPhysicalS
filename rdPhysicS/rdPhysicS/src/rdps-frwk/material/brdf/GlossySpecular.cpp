@@ -31,6 +31,11 @@ GlossySpecular &GlossySpecular::operator=(const GlossySpecular &other)
 	return (*this);
 }
 
+float GlossySpecular::GetExp() const
+{
+	return exp;
+}
+
 GlossySpecular &GlossySpecular::SetExp(const float _exp)
 {
 	exp = _exp;

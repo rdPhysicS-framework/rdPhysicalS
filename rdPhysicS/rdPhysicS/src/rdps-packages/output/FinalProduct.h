@@ -7,17 +7,17 @@
 
 RDPS_BEGIN
 	PKG_BEGIN
-	/********************************************************************************************************************************************
-	 *
-	 * Classe responsavel em armazenar o resultado dos dados finais calculados
-	 * no dispositivo openCL.
-	 * Nela Contem:
-	 * -> Um ponteiro para os dados que serão lidos da memória do dispositivo;
-	 * -> A quantidade de elementos no array;
-	 * -> E o array buffer, para envio do array para o despositivo, com a função
-	 *    de leitura de dados.
-	 *
-	 ********************************************************************************************************************************************/
+		/********************************************************************************************************************************************
+		 *
+		 * Classe responsavel em armazenar o resultado dos dados finais calculados
+		 * no dispositivo openCL.
+		 * Nela Contem:
+		 * -> Um ponteiro para os dados que serão lidos da memória do dispositivo;
+		 * -> A quantidade de elementos no array;
+		 * -> E o array buffer, para envio do array para o despositivo, com a função
+		 *    de leitura de dados.
+		 *
+		 ********************************************************************************************************************************************/
 		template<class T>
 		class FinalProduct
 		{
@@ -153,7 +153,7 @@ RDPS_BEGIN
 		}
 
 		template<class T>
-		inline ArrayBuffer<T>* FinalProduct<T>::GetBuffer() const
+		inline ArrayBuffer<T> *FinalProduct<T>::GetBuffer() const
 		{
 			return buffer;
 		}
@@ -192,7 +192,7 @@ RDPS_BEGIN
 			return (*this);
 		}
 
-		typedef FinalProduct<int> FrameProduct;
+		typedef FinalProduct<int> FrameBuffer;
 	PKG_END
 RDPS_END
 

@@ -23,8 +23,8 @@ RDPS_BEGIN
 		virtual Cube *Clone() const;
 		Cube &operator=(const Cube &other);
 
-		inline const RT::Vec3f GetInitPoint() const { return initPoint; }
-		inline const RT::Vec3f GetSize() const { return size; }
+		const RT::Vec3f GetInitPoint() const;
+		const RT::Vec3f GetSize() const;
 		Cube &SetInitPoint(const RT::Vec3f &_initPoint);
 		Cube &SetSize(const RT::Vec3f &_size);
 	};

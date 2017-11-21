@@ -28,6 +28,8 @@ RDPS_BEGIN
 			 * Construtor de cópia
 			 *--------------------------------------------------------------------------------------------*/
 			BaseClComponent(const Type &_object) : object(_object){}
+
+			BaseClComponent(const BaseClComponent<Type> &other) : object(other.object) {}
 			/*--------------------------------------------------------------------------------------------
 			 * Destrutor
 			 *--------------------------------------------------------------------------------------------*/
@@ -57,6 +59,7 @@ RDPS_BEGIN
 				if (object)
 					Release();
 				object = other.object;
+				Retain();
 				return (*this);
 			}
 			/*--------------------------------------------------------------------------------------------

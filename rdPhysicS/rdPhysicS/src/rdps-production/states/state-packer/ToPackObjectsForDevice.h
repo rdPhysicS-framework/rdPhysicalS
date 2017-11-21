@@ -4,6 +4,20 @@
 #include "..\..\base\State.h"
 
 RDPS_BEGIN
+	
+	FRWK_BEGIN
+		class Light;
+		class GeometricObject;
+		class Camera;
+		class ViewPlane;
+		class Material;
+	FRWK_END
+
+	PKG_BEGIN 
+		class Container; 
+		struct RT_Material;
+	PKG_END
+
 	PDCT_BEGIN
 
 		class PackerObjects;
@@ -15,6 +29,19 @@ RDPS_BEGIN
 
 		private:
 			ToPackObjectsForDevice();
+
+			void ToPackLightData(const FRWK Light *light, 
+								 const PackerObjects &c);
+
+			void ToPackObjectData(const FRWK GeometricObject *object,
+								  const PackerObjects &c);
+
+			PKG RT_Material ToPackMaterialData(const FRWK Material *object);
+
+			void ToPackCameraData(const FRWK Camera *object,
+								  const PackerObjects &c);
+
+			void ToPackWordData(const PackerObjects &c);
 
 		public:
 			~ToPackObjectsForDevice();

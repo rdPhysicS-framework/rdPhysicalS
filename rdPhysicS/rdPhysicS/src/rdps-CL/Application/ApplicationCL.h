@@ -15,7 +15,7 @@ RDPS_BEGIN
 		class KernelComponent;
 		class MemObjectComponent;
 		class ItensWorkGroupComponent;
-		
+		class ApplicationCLBuilder;
 		/******************************************************************************************************************************************
 		 *
 		 * Classe que contem os componentes para para o Programa OpenCL.
@@ -30,7 +30,7 @@ RDPS_BEGIN
 		class ApplicationCL 
 		{
 		private:
-			friend class ApplicationCLBuilder;
+			friend ApplicationCLBuilder;
 
 		private:
 			PlatformComponent *platform;
@@ -77,14 +77,14 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcoes de acesso
 			 *--------------------------------------------------------------------------------------------------------------------------------------*/
-			inline PlatformComponent *GetPlatform() const		     { return platform; }
-			inline DeviceComponent *GetDevice() const			     { return device;   }
-			inline ContextComponent *GetContext() const			     { return context;  }
-			inline CommmandQueueComponent *GetQueue() const		     { return queue;    }
-			inline ProgramComponent *GetProgram() const			     { return program;  }
-			inline KernelComponent *GetKernel() const			     { return kernel;   }
-			inline std::vector<MemObjectComponent*> &GetBuffers()    { return buffers;  }
-			inline ItensWorkGroupComponent *GetItens() const		 { return itens;    }
+			inline PlatformComponent *GetPlatform() const;
+			inline DeviceComponent *GetDevice() const;
+			inline ContextComponent *GetContext() const;
+			inline CommmandQueueComponent *GetQueue() const;
+			inline ProgramComponent *GetProgram() const;
+			inline KernelComponent *GetKernel() const;
+			inline const std::vector<MemObjectComponent*> &GetBuffers() const;
+			inline ItensWorkGroupComponent *GetItens() const;
 
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Cria o buffer (MemObjectComponent) e adiciona na lista de memObjects,
@@ -163,7 +163,7 @@ RDPS_BEGIN
 		template<class T>
 		inline ApplicationCL &ApplicationCL::PassDataCopy(const int id, T *data)
 		{
-			kernel->SetArgument(id, data, sizeof(T));
+			kernel->SetArgument(id, (const void*)data, sizeof(T));
 			return (*this);
 		}
 
