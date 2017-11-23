@@ -125,8 +125,7 @@ Os parametros dessa função:
 
 Os materiais por padrão herdão de um material base. Esse material base possui um componente BRDF que é referente o efeito (cor) do componente Ambient do material. Então todos os materiais possuirá uma cor ambient.
 
-* BRDF: é um component do material que simplesmente              possui um vector (```c++ RT::Vec3f color; ```) referente a     cor, um ponto flutuante (```c++ float k; ```) que é o          percentual que a cor afetará o objeto e um tipo (```c++
-  TypeBRDF type; ```) Ambient, Diffuse, Specular, Reflective.
+* BRDF: é um component do material que simplesmente              possui um vector (RT::Vec3f color;) referente a     cor, um ponto flutuante (float k;) que é o          percentual que a cor afetará o objeto e um tipo (TypeBRDF type;) Ambient, Diffuse, Specular, Reflective.
  
   Possui 3 construtores:
 
@@ -138,8 +137,7 @@ Os materiais por padrão herdão de um material base. Esse material base possui 
   BRDF(RT::Vec3f(0.6f, 0.5f, 0.2f), 0.2f); 
   ```
 
-* GlossySpecular: também é uma componente BRDF do material só    que mais expecífico. É o componente Specular do material 	     Phong. Essa classe herda os atributos da classe BRDF, com um   ponto flutuante a mais (```c++  float exp; 
-  ```) para o 	     calculo do efeito specular.
+* GlossySpecular: também é uma componente BRDF do material só    que mais expecífico. É o componente Specular do material 	     Phong. Essa classe herda os atributos da classe BRDF, com um   ponto flutuante a mais (float exp;) para o calculo do efeito   specular.
 
   Possui 2 construtores:
 
@@ -156,16 +154,17 @@ Possui apenas 2 Componetes BRDF de cor Ambient e Diffuse.
 
 Possui 2 Construtores;
 
-* 1* ```c++ 
+* 1*
+```c++ 
 	SimpleMaterial(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f, 0.7f);
-	```
+```
 
-	Esse construtor recebe como parametro um vetor (```c
-	RT::Vec3 ```) que é a cor padrão para todos os componetes BRDF, um percentual para oa cor Ambient e percentual para a cor diffusa;
+	Esse construtor recebe como parametro um vetor (RT::Vec3) que é a cor padrão para todos os componetes BRDF, um percentual para oa cor Ambient e percentual para a cor diffusa;
 
-* 2* ```c++ 
+* 2* 
+```c++ 
 	SimpleMaterial(new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f), new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.7f));
-	```
+```
 
 	Esse construtor recebe como parametro 2 componentes BRDF, ambient e diffuse. Pois cada componente pode possuir a cor diferentes do outro.
 
@@ -187,8 +186,7 @@ Possui 2 Construtores;
 	PhongMaterial(new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f), new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.7f));
 ```
 
-	Esse construtor recebe como parametro 3 componentes BRDF, ambient, diffuse, Specular (```c++ 
-		GlossySpecular ```). Pois cada componente pode possuir a cor diferente dos outros.
+	Esse construtor recebe como parametro 3 componentes BRDF, ambient, diffuse, Specular (GlossySpecular). Pois cada componente pode possuir a cor diferente dos outros.
 
 
 
