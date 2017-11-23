@@ -121,7 +121,7 @@ Os parametros dessa função:
 * ls: porcentagem do efeito da luz nos objetos;
 * shadow: se vai haver calculo de sombra.
 
-#Referente ao Material
+# Referente ao Material
 
 Os materiais por padrão herdão de um material base. Esse material base possui um componente BRDF que é referente o efeito (cor) do componente Ambient do material. Então todos os materiais possuirá uma cor ambient.
 
@@ -144,7 +144,7 @@ Os materiais por padrão herdão de um material base. Esse material base possui 
 
   ```c++ GlossySpecular(RT::Vec3f(0.7f, 0.6f, 0.6f), 0.8f, 1.0f); ```
 
-#Simple material
+# Simple material
 
 Possui apenas 2 Componetes BRDF de cor Ambient e Diffuse. 
 
@@ -158,7 +158,7 @@ Possui 2 Construtores;
 
 	Esse construtor recebe como parametro 2 componentes BRDF, ambient e diffuse. Pois cada componente pode possuir a cor diferentes do outro.
 
-#PhongMaterial
+# PhongMaterial
 
 Possui 3 Componetes BRDF de cor Ambient, Diffuse e Specular (```c++ GlossySpecular ```).
 
