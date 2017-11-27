@@ -58,8 +58,8 @@ Obs: quanto maior a qualidade mais processamento, mais demorado vai ser.
 # Importante
 
 O sistema de coordenadas é em numeros inteiros, com o 0x0 no centro da tela. Então se a janela for 800x600, em x irá de 
--400 a 400, com a esquerda sedo negativo e a direita positivo, y irá de 300 a -300 com a parte superior positivo e inferior negativo. E,
-z negativo para o lado do observador e positivo apontando para a cena.
+-400 a 400, com a esquerda sedo negativo e a direita positivo, y irá de 300 a -300 com a parte superior positivo e inferior 
+negativo. E,z negativo para o lado do observador e positivo apontando para a cena.
 
 Depois, Deve-se criar uma cena e herdar da classe SceneBase.
 
@@ -215,8 +215,9 @@ Exemplo:
 	BRDF(RT::Vec3f(0.6f, 0.5f, 0.2f), 0.2f); 
 ```
 
-* GlossySpecular: também é uma componente BRDF do material, só que mais expecífico. É o componente Specular do material Phong. 
-  Essa classe herda os atributos da classe BRDF, com um ponto flutuante a mais (float exp;) para o calculo do efeito specular.
+* GlossySpecular: também é uma componente BRDF do material, só que mais expecífico. É o componente Specular do 
+  material Phong. Essa classe herda os atributos da classe BRDF, com um ponto flutuante a mais (float exp;) para 
+  o calculo do efeito specular.
 
   Possui 2 construtores:
 
@@ -240,15 +241,16 @@ Possui 2 Construtores;
 	SimpleMaterial(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f, 0.7f);
 ```
 
-	Esse construtor recebe como parametro um vetor (RT::Vec3f color) que é a cor padrão para todos os componetes BRDF, um percentual para 
-	a cor Ambient (float ambient;) e um percentual para a cor diffusa (float diffuse;);
+	Esse construtor recebe como parametro um vetor (RT::Vec3f color) que é a cor padrão para todos os componetes BRDF, um 
+	percentual para a cor Ambient (float ambient;) e um percentual para a cor diffusa (float diffuse;);
 
 * 2* 
 ```c++ 
 	SimpleMaterial(new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f), new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.7f));
 ```
 
-	Esse construtor recebe como parametro 2 componentes BRDF, ambient e diffuse. Pois cada componente pode possuir a cor diferentes do outro.
+	Esse construtor recebe como parametro 2 componentes BRDF, ambient e diffuse. Pois cada componente pode possuir a cor 
+	diferentes do outro.
 
 # PhongMaterial
 
@@ -261,17 +263,17 @@ Possui 2 Construtores;
 	PhongMaterial(RT::Vec3f(0.7f, 0.7f, 0.7f), 0.2f, 0.7f, 0.8f, 1.0f);
 ```
 
-	Esse construtor recebe como parametro um vetor (RT::Vec3f color;) que é a cor padrão para todos os componetes BRDF, um percentual 
-	para a cor ambient (float ambient;), um percentual para a cor diffusa (float diffuse;), um percentual para a cor specular (float specular;) 
-	e um expoente para a intensidade da specular (float intensit;);
+	Esse construtor recebe como parametro um vetor (RT::Vec3f color;) que é a cor padrão para todos os componetes BRDF, 
+	um percentual para a cor ambient (float ambient;), um percentual para a cor diffusa (float diffuse;), um percentual 
+	para a cor specular (float specular;) e um expoente para a intensidade da specular (float intensit;);
 
 * 2* 
 ```c++ 
 	PhongMaterial(new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.2f), new BRDF(RT::Vec3f(0.4f, 0.3f, 0.3f), 0.7f));
 ```
 
-	Esse construtor recebe como parametro 3 componentes BRDF, ambient, diffuse, Specular (GlossySpecular). Pois cada componente pode possuir a 
-	cor diferente dos outros.
+	Esse construtor recebe como parametro 3 componentes BRDF, ambient, diffuse, Specular (GlossySpecular). Pois cada 
+	componente pode possuir a cor diferente dos outros.
 
 # Objetos
 
@@ -284,19 +286,19 @@ Exemplo:
 	rdps::frwk::Sphere *s = dynamic_cast<rdps::frwk::Sphere>(GetObject(id));
 ```
 
-O tipo de retorno dessa função (GetObject) é um GeometricObject e se não se sabe o tipo do objeto que está no id desejado, e necessita 
-de uma esfera por exemplo, é necessário fazer a converção com dynamic_cast, pois, se não for uma esfera ele retorna-rá nulo. Mas, se no ato 
-da criação foi quardado o id do objeto basta pegar a referência diretamente.
+O tipo de retorno dessa função (GetObject) é um GeometricObject e se não se sabe o tipo do objeto que está no id desejado, 
+e necessita de uma esfera por exemplo, é necessário fazer a converção com dynamic_cast, pois, se não for uma esfera ele 
+retorna-rá nulo. Mas, se no ato da criação foi quardado o id do objeto basta pegar a referência diretamente.
 
 ```c++ 
 	rdps::frwk::Sphere *s = GetObject(id);
 ```
 
-Os objetos possuem internamente um componente de transformações (Transform), com as transformações básicas translação, rotação, escala.
-Para transformar basta recuperar a instancia do componete e utilizar a função desejada;
+Os objetos possuem internamente um componente de transformações (Transform), com as transformações básicas translação, 
+rotação, escala. Para transformar basta recuperar a instancia do componete e utilizar a função desejada;
 
-* Translate: possui 2 funções sobrecarregadas, uma recebe um vetor3 (RT::Vec3f position) como parametro e a outra recebe 3 pontos flutuantes
-(float x, float y, float z) que é referente a posição final;
+* Translate: possui 2 funções sobrecarregadas, uma recebe um vetor3 (RT::Vec3f position) como parametro e a outra recebe 3 
+  pontos flutuantes (float x, float y, float z) que é referente a posição final;
 
 Exemplo:
 
@@ -308,8 +310,8 @@ Exemplo:
 	GetObject(id)->GetTransform()->Rotate(10.0f, -200.0f, 400.0f);
 ```
 
-* Rotate: para a rotação, possui 3 funções separas, uma para cada eixo. RotateX, RotateY, RotateZ e pra trabalhar com elas deve-se trabalhar em
-  angulos, pois internmente é convertido em radiano.
+* Rotate: para a rotação, possui 3 funções separas, uma para cada eixo. RotateX, RotateY, RotateZ e pra trabalhar com elas 
+  deve-se trabalhar em angulos, pois internmente é convertido em radiano.
 
 Exemplo:
 
@@ -325,8 +327,8 @@ Exemplo:
 	GetObject(id)->GetTransform()->RotateZ(45.0f);
 ```
 
-* Escala: possui 3 funções sobrecarregadas, uma recebe um vetor3 (RT::Vec3f position) como parametro, outra recebe 3 pontos flutuantes
- (float x, float y, float z) e outra um ponto flutuante.
+* Escala: possui 3 funções sobrecarregadas, uma recebe um vetor3 (RT::Vec3f position) como parametro, outra recebe 3 pontos 
+  flutuantes (float x, float y, float z) e outra um ponto flutuante.
 
 Exemplo:
 
@@ -356,9 +358,11 @@ Test.h
 #ifndef	__TEST_H__
 #define	__TEST_H__
 
-#include "..\rdps-frwk\base\SceneBase.h"
+//#include "..\rdps-frwk\base\SceneBase.h"
+#include "..\rdps.h"
 
-class Test : public frwk::SceneBase
+
+class Test : public rdps::SceneBase
 {
 private:
 	int id;
@@ -371,7 +375,6 @@ public:
 	virtual void Update(const float secs);
 };
 
-
 #endif//__TEST_H__
 ```
 
@@ -380,12 +383,11 @@ Test.cpp
 
 ```c++
 #include "Test.h"
-#include "..\rdps-frwk\includes_frwk.h"
 
-using namespace rdps;
+USING_RDPS
 
 Test::Test() :
-	frwk::SceneBase()
+	SceneBase()
 {
 	Init();
 }
@@ -402,8 +404,10 @@ void Test::Init()
 						   800.0f, 1.5f);
 
 	/*Adiciona as luzes*/
-	CreatePointLight(RT::Vec3f(162.0f, 756.0f, 732.0f), WHITE, 1.0f);
-	CreatePointLight(RT::Vec3f(-540.0f, 756.0f, 432.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(972, 756.0f, -108.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, -108.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, 1404.0f), WHITE, 1.0f);
 
 	/*Adiciona os planos*/
 	CreatePlane(RT::Vec3f(0.0f, -324.0f, 0.0f), 
@@ -449,8 +453,9 @@ void Test::Init()
 
 void Test::Update(const float secs)
 {
-	GetObject(id)->GetTransform()->Translate(10.0f, -200.0f, 400.0f);
+	//GetObject(id)->GetTransform()->Translate(10.0f, -200.0f, 400.0f);
 }
+
 ```
 
 
