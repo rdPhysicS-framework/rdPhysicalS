@@ -23,7 +23,7 @@ RDPS_BEGIN
 			* Função auxiliar que cria o Kernel baseado no programa OpenCL e o retorna.
 			*--------------------------------------------------------------------------------------------*/
 			cl_kernel Create(const ProgramComponent &program,
-							const std::string &name);
+							 const std::string &name);
 
 		public:
 			/*-------------------------------------------------------------------------------------------
@@ -80,8 +80,8 @@ RDPS_BEGIN
 			 * cópia, neste caso ao inves de passar o objeto referencia(MemObjectComponent), passa-se
 			 * a variável do próprio dado.
 			 *--------------------------------------------------------------------------------------------*/
-			template<class T>
-			inline KernelComponent &SetArgument(int index, T &obj);
+			template<typename T>
+			inline KernelComponent &SetArgument(int index, T obj);
 
 			KernelComponent &SetArgument(uint index, const void *data, const size_t bytes);
 
@@ -91,10 +91,10 @@ RDPS_BEGIN
 			KernelComponent &operator=(const KernelComponent &other);
 		};
 
-		template<class T>
-		inline KernelComponent &KernelComponent::SetArgument(int index, T &obj)
+		template<typename T>
+		inline KernelComponent &KernelComponent::SetArgument(int index, T obj)
 		{
-			int status = clSetKernelArg(object, index, sizeof(T), (const void*)&obj);
+			int status = clSetKernelArg(object, index, sizeof(T), (void*)&obj);
 
 			if (status != CL_SUCCESS)
 			{

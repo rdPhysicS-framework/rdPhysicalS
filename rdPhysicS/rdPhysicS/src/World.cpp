@@ -9,11 +9,14 @@
 #include "rdps-packages\input\Package.h"
 #include "rdps-CL\Application\ApplicationCL.h"
 #include "rdps-CL\Application\ApplicationCLFactor.h"
+#include "rdps-CL\Application\ItensWorkGroupComponent.h"
 #include "rdps-packages\output\Renderer.h"
 #include "rdps-frwk\Util\ViewPlane.h"
 #include "rdps-production\msg\Message.h"
 #include "rdps-production\msg\MessageDispatcher.h"
 #include "rdps-production\collaborators\GeneralManager.h"
+#include "rdps-frwk\Util\Sampler.h"
+#include <ctime>
 
 USING_RDPS
 USING_CL
@@ -27,6 +30,7 @@ ManagerObjects *World::manager = nullptr;
 ObjectDispatcher *World::oDispatcher = nullptr;
 PackerObjects *World::packer = nullptr;
 Renderer *World::renderer = nullptr;
+Sampler *World::sampler = nullptr;
 
 World::World()
 {}
@@ -81,19 +85,33 @@ void World::SetApp(ApplicationCL *_app)
 
 void World::SetViewPlane(const int w, const int h)
 {
+	if (!app)
+		Logger::Log("ERROR to work correctly first it"
+			" is necessary to initialize all the components");
 	manager->SetViewPlane(new ViewPlane(w, h));
 	renderer = new Renderer(w, h);
+	app->GetItens()->SetItensWorkGroup({static_cast<size_t>(w*h)});
+}
+
+void World::Quality(const int r)
+{
+	sampler->SetNumSamples(r);
+	sampler->SetNumSets((r > 1) ? 83 : 1);
+	sampler->SetupShuffledIndices();
 }
 
 void World::Init()
 {
+	srand(time(NULL));
 	app = ApplicationCLFactor::CreateApplicationUsersInput();
 	container = ContainerFactory::CreateContainer({ "world", "camera",
-												    "lights", "objects" },
+												    "lights", "objects",
+												    "sampleShuffledIndices" },
 												    { new Package<RT_DataScene>(),
 												      new Package<RT_Camera>(),
-												      new Package<RT_Light>() ,
-												      new Package<RT_Primitive>() });
+												      new Package<RT_Light>(),
+												      new Package<RT_Primitive>(),
+												      new Package<char>() });
 	manager = new ManagerObjects();
 	oDispatcher = new ObjectDispatcher(container);
 	packer = new PackerObjects(container);
@@ -102,14 +120,19 @@ void World::Init()
 	GeneralManager::Get()->AddCollaborator(MANAGER_OF_OBJECTS, manager);
 	GeneralManager::Get()->AddCollaborator(DELIVERER_OF_OBJECTS, oDispatcher);
 	GeneralManager::Get()->AddCollaborator(PACKER_OF_OBJECTS, packer);
+
+	sampler = new Sampler();
+	manager->SetSampler(sampler);
 }
 
 void World::Update()
 {
+	/*Teste, será mudado-------------------------------------------------------------*/
 	MessageDispatcher::DispatchMessage(nullptr, GeneralManager::Get(), "request");
 	manager->ExecuteFunction();
 	packer->ExecuteFunction();
 	oDispatcher->ExecuteFunction();
+	/*------------------------------------------------------------------------------*/
 }
 
 void World::Draw()

@@ -18,7 +18,7 @@ RDPS_BEGIN
 		template<class T>
 		class Package : public PackageBase
 		{
-		public:
+		private:
 			std::vector<T> elements;
 			ArrayBuffer<T> *buffer;
 
@@ -40,7 +40,6 @@ RDPS_BEGIN
 			~Package();
 
 			Package<T> &operator=(const Package<T> &other);
-
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar para adicionar um elemento no array

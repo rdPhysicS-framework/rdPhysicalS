@@ -5,9 +5,14 @@
 
 RDPS_BEGIN
 	PDCT_BEGIN
-
 		class Message;
 
+		/********************************************************************************************************************************************
+		 *
+		 * Classe Base para todas os stados que possam existir na aplicação,
+		 * todas elas devem herdar desta classe e sobreescrever os métodos.
+		 *
+		 ********************************************************************************************************************************************/
 		template<class T>
 		class State
 		{

@@ -1,5 +1,5 @@
 #include "ApplicationCLFactor.h"
-#include "../ClGlobalDef.h"
+#include "..\includes_appCL.h"
 #include <iostream>
 
 USING_RDPS
@@ -78,8 +78,9 @@ ApplicationCL *ApplicationCLFactor::CreateApplicationUsersInput()
 							  CLPATH"rtGeometricObject.cl" ,
 							  CLPATH"rtLights.cl" ,
 							  CLPATH"rtWorld.cl",
+							  CLPATH"rtSamples.cl",
 							  CLPATH"rtKernel.cl"})
 				.AddFunctionKernel("render")
-				.AddItensWorkGroup(ItensWorkGroupComponent({1920*1080}))
+				.AddItensWorkGroup(ItensWorkGroupComponent({}))
 				.Create();
 }

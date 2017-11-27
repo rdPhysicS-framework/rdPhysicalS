@@ -145,14 +145,14 @@ typedef struct
 { 
 	/*position*/
 	RT_Vec3f eye;
-	RT_Vec3f lookAt;
-	RT_Vec3f up;
+	//RT_Vec3f lookAt;
+	//RT_Vec3f up;
 
 	float viewPlaneDistance;
 	float zoom;
 
-	float rollAngle;
-	float exposureTime;
+	//float rollAngle;
+	//float exposureTime;
 
 	RT_Vec3f u, v, w;
 } RT_Camera;
@@ -173,13 +173,16 @@ typedef struct
 	int numObjects;
 
 	/*data of the samples*/
-	/*int numSamples;
+	int numSamples;
 	int numSets;
-	int jump;
+	/*int jump;
 	ulong count;
-	ulong numShuffledIndices;
-	seed random
-	ulong seed;*/
+	ulong numShuffledIndices;*/
+	/*seed random*/
+	uint seed;
+
+	RT_TypeSampler type;
+
 } RT_DataScene;
 
 /*----------------------------------------------------------------------------------------------
@@ -222,8 +225,8 @@ RT_Vec3f PerfectSpecular_SampleF(const RT_Result *r,
  *----------------------------------------------------------------------------------------------*/
 
 RT_Vec3f Shade(__global const RT_Light *lights,
-			   __constant RT_Primitive *objects,
-			   __constant RT_DataScene *world,
+			   __global const RT_Primitive *objects,
+			   __global const RT_DataScene *world,
 			   const RT_Ray *ray,
 			   const RT_Result *r);
 
@@ -291,14 +294,14 @@ bool Sphere_ShadowHit(const RT_Primitive *s,
  *
  *----------------------------------------------------------------------------------------------*/
  bool Grid_Hit(const RT_Grid *grid,
-			   __constant RT_Primitive *objects,
+			   __global const RT_Primitive *objects,
 			   __constant int *cells,
 			   __constant int *count,
 			   const RT_Ray *ray,
 			   float *tmin,
 			   RT_Result *r); 
  bool Grid_ShadowHit(const RT_Grid *grid,
-					 __constant RT_Primitive *objects,
+					 __global const RT_Primitive *objects,
 					 __constant int *cells,
 					 __constant int *count, 
 					 const RT_Ray *ray, 
@@ -317,7 +320,7 @@ inline RT_Vec3f Direction(const RT_Light *l,
 inline RT_Vec3f Color(const RT_Light *l, 
 					  const RT_Result *r);
 bool InShadow(const RT_Light *l, 
-			  __constant RT_Primitive *objects,
+			  __global const RT_Primitive *objects,
 			  const int numObj, 
 			  const RT_Ray ray);
 
@@ -326,7 +329,7 @@ bool InShadow(const RT_Light *l,
  * The direction of the ray returns based on the camera
  *
  *----------------------------------------------------------------------------------------------*/
-inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, __constant RT_Camera *camera);
+inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, __global const RT_Camera *camera);
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -341,9 +344,9 @@ inline RT_Vec3f HitPoint(const RT_Ray *r, const float t);
  * Method for collision verification between the rays and objects
  *
  *----------------------------------------------------------------------------------------------*/
-RT_Result Hit(__constant RT_Primitive *objects, 
+RT_Result Hit(__global const RT_Primitive *objects, 
 			  const int numObj, const RT_Ray *ray);
-bool ShadowHit(__constant RT_Primitive *objects, 
+bool ShadowHit(__global const RT_Primitive *objects, 
 			   const int numObj, const RT_Ray *ray, 
 			   float tmin);
 
@@ -360,6 +363,55 @@ bool ShadowHit(__constant RT_Primitive *objects,
  *
  *----------------------------------------------------------------------------------------------*/
 RT_Vec3f TraceRay(__global const RT_Light *lights,
-				  __constant RT_Primitive *objects,
-				  __constant RT_DataScene *world, 
+				  __global const RT_Primitive *objects,
+				  __global const RT_DataScene *world, 
 				  const RT_Ray *ray);
+
+uint RandIndex(uint *seed,
+			   const int numSamples,
+			   const int numSets);
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for the generation of the Regular sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec2f RegularGenerateSampler(const int n,
+							     const int id);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for the generation of the Jittered sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec2f JitteredGenerateSampler(uint *seed,
+								  const int n,
+							      const int id);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for the generation of the Hammersley sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec2f HammersleyGenerateSampler(const int numSamples,
+							        const int id);
+
+float Phi(int index);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for the generation of the NRooks sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec2f NRooksGenerateSampler(uint *seed,
+								const int numSamples,
+							    const int id);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method for the generation of the MultiJittered sampler
+ *
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec2f MultiJitteredGenerateSampler(uint *seed,
+									   const int numSamples,
+									   const int id);
+

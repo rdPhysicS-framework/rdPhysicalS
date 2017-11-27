@@ -1,282 +1,439 @@
 #ifndef	 __OBJECTS_PACKAGE_H__
 #define	 __OBJECTS_PACKAGE_H__
 
-#include "..\..\GlobalDefs.h"
 #include "..\..\rdps-CL\Application\ClConfig.h"
 #include <RTmath.h>
+#include "..\..\GlobalDefs.h"
 
 RDPS_BEGIN
 	PKG_BEGIN
-	
-typedef cl_float3 RT_Vec3f;
-typedef cl_float2 RT_Vec2f;
 
-inline RT_Vec3f operator+(const RT_Vec3f &v1, const RT_Vec3f &v2)
-{
-	return{ v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
-}
+		typedef cl_float3 RT_Vec3f;
+		typedef cl_float2 RT_Vec2f;
 
-inline RT_Vec3f operator-(const RT_Vec3f &v1, const RT_Vec3f &v2)
-{
-	return{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
-}
+		inline RT_Vec3f operator+(const RT_Vec3f &v1, const RT_Vec3f &v2)
+		{
+			return{ v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
+		}
 
-inline RT_Vec3f Cross(const RT_Vec3f &v1, const RT_Vec3f &v2)
-{
-	return{ (v1.y * v2.z) - (v1.z * v2.y),
-		(v1.z * v2.x) - (v1.x * v2.z),
-		(v1.x * v2.y) - (v1.y * v2.x) };
-}
+		inline RT_Vec3f operator-(const RT_Vec3f &v1, const RT_Vec3f &v2)
+		{
+			return{ v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+		}
 
-inline RT_Vec3f Normalize(const RT_Vec3f &v)
-{
-	float invSize = 1.0f / sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
-	return{ v.x * invSize, v.y * invSize, v.z * invSize };
-}
+		inline RT_Vec3f Cross(const RT_Vec3f &v1, const RT_Vec3f &v2)
+		{
+			return{ (v1.y * v2.z) - (v1.z * v2.y),
+				(v1.z * v2.x) - (v1.x * v2.z),
+				(v1.x * v2.y) - (v1.y * v2.x) };
+		}
 
-inline float clamp(double x, double min, double max)
-{
-	return static_cast<float>((x < min) ? min : (x > max) ? max : x);
-}
+		inline RT_Vec3f Normalize(const RT_Vec3f &v)
+		{
+			float invSize = 1.0f / sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
+			return{ v.x * invSize, v.y * invSize, v.z * invSize };
+		}
 
-/*std::ostream &operator<<(std::ostream &out, const RT_Vec3f &v)
-{
-out << "(" << v.x << " - " << v.y << " - " << v.z << ")" << std::endl;
-return out;
-}*/
+		inline float clamp(double x, double min, double max)
+		{
+			return static_cast<float>((x < min) ? min : (x > max) ? max : x);
+		}
 
-enum RT_TypeBRDF
-{
-	RT_GLOSSY_SPECULAR,
-	RT_LAMBERTIAN,
-	RT_PERFECT_SPECULAR
-};
+		/*std::ostream &operator<<(std::ostream &out, const RT_Vec3f &v)
+		{
+		out << "(" << v.x << " - " << v.y << " - " << v.z << ")" << std::endl;
+		return out;
+		}*/
 
-struct RT_BRDF
-{
-	RT_Vec3f color;
-	float k;
-	float ex;
+		enum RT_TypeBRDF
+		{
+			RT_GLOSSY_SPECULAR,
+			RT_LAMBERTIAN,
+			RT_PERFECT_SPECULAR
+		};
 
-	RT_TypeBRDF type;
+		class RT_BRDF
+		{
+		public:
+			RT_Vec3f RDPS_ALIGN(16) color;
+			float RDPS_ALIGN(4) k;
+			float RDPS_ALIGN(4) ex;
 
-	void operator=(const RT_BRDF &other)
-	{
-		color.x = other.color.x;
-		color.y = other.color.y;
-		color.z = other.color.z;
+			RT_TypeBRDF RDPS_ALIGN(sizeof(RT_TypeBRDF)) type;
 
-		k = other.k;
-		ex = other.ex;
+		public:
+			RT_BRDF() :
+				color(),
+				k(0.0f),
+				ex(0.0f)
+			{}
 
-		type = other.type;
-	}
-};
+			RT_BRDF(const RT_Vec3f &_color,
+				const float _k,
+				const float _ex,
+				const RT_TypeBRDF _type) :
+				color(_color),
+				k(_k),
+				ex(_ex),
+				type(_type)
+			{}
 
-struct RT_Material
-{
-	//RT_Vec3f color;
-	/*float ambient;
-	float diffuse;
-	float specular;
-	float intensity;*/
+			friend std::ostream &operator<<(std::ostream &out, const RT_BRDF &brdf)
+			{
+				out << "color: " << brdf.color.x << " - " << brdf.color.y << " - " << brdf.color.z << std::endl;
+				out << "k: " << brdf.k << std::endl;
+				out << "ex: " << brdf.ex << std::endl;
 
-	RT_BRDF ambient;
-	RT_BRDF diffuse;
-	RT_BRDF specular;
-	RT_BRDF refl;
+				if (brdf.type == RT_GLOSSY_SPECULAR)
+					out << "type: RT_GLOSSY_SPECULAR" << std::endl;
+				if (brdf.type == RT_LAMBERTIAN)
+					out << "type: RT_LAMBERTIAN" << std::endl;
+				if (brdf.type == RT_PERFECT_SPECULAR)
+					out << "type: RT_PERFECT_SPECULAR" << std::endl;
 
-	void operator=(const RT_Material &other)
-	{
-		ambient = other.ambient;
-		diffuse = other.diffuse;
-		specular = other.specular;
-		refl = other.refl;
-	}
-};
+				return out;
+			}
+		};
 
-enum RT_TypeObject
-{
-	RT_BOX,
-	RT_PLANE,
-	RT_SPHERE
-};
+		class RT_Material
+		{
+		public:
+			//RT_Vec3f color;
+			/*float ambient;
+			float diffuse;
+			float specular;
+			float intensity;*/
 
-struct RT_BBox
-{
-	float x0, y0, z0;
-	float x1, y1, z1;
+			RT_BRDF ambient;
+			RT_BRDF diffuse;
+			RT_BRDF specular;
+			RT_BRDF refl;
 
-	void operator=(const RT_BBox &other)
-	{
-		x0 = other.x0; y0 = other.y0; z0 = other.z0;
-		x1 = other.x1; y1 = other.y1; z1 = other.z1;
-	}
-};
+		public:
+			RT_Material() {}
 
-struct RT_Primitive
-{
-	RT_Vec3f p;
-	//RT_Vec3f p1, p2;
-	/*box == size | plane == normal*/
-	RT_Vec3f s;
-	/*radius for sphere*/
-	float r;
+			RT_Material(const RT_BRDF &_ambient,
+				const RT_BRDF &_diffuse,
+				const RT_BRDF &_specular,
+				const RT_BRDF &_refl) :
+				ambient(_ambient),
+				diffuse(_diffuse),
+				specular(_specular),
+				refl(_refl)
+			{}
 
-	RT_Material material;
-	RT_TypeObject type;
+			friend std::ostream &operator<<(std::ostream &out, const RT_Material &m)
+			{
+				out << "\nMaterial" << std::endl;
+				out << "AMBIENT" << m.ambient << std::endl;
+				out << "DIFFUSE" << m.diffuse << std::endl;
+				out << "SPECULAR" << m.specular << std::endl;
+				out << "REFLECTIVE" << m.refl << std::endl;
 
-	/*transform*/
-	//float invMatrix[4][4];
-	RT::Mat4f invMatrix;
+				return out;
+			}
+		};
 
-	RT_BBox bbox;
+		enum RT_TypeObject
+		{
+			RT_BOX,
+			RT_PLANE,
+			RT_SPHERE
+		};
 
-	void operator=(const RT_Primitive &other)
-	{
-		p.x = other.p.x; p.y = other.p.y; p.z = other.p.z;
-		s.x = other.s.x; s.y = other.s.y; s.z = other.s.z;
-		r = other.r;
-		material = other.material;
-		type = other.type;
-		invMatrix = other.invMatrix;
-		bbox = other.bbox;
-	}
-};
+		class RT_BBox
+		{
+		public:
+			float RDPS_ALIGN(4) x0, y0, z0;
+			float RDPS_ALIGN(4) x1, y1, z1;
 
-enum RT_TypeLight
-{
-	RT_AMBIENT_LIGHT,
-	RT_AREA_LIGHT,
-	RT_POINT_LIGHT,
-};
+		public:
+			RT_BBox() :
+				x0(0.0f), y0(0.0f), z0(0.0f),
+				x1(0.0f), y1(0.0f), z1(0.0f)
+			{}
 
-struct RT_Light
-{
-	RT_Vec3f position;
-	RT_Vec3f color;
-	float ls;
-	float ex;
+			RT_BBox(const float _x0, const float _y0, const float _z0,
+				const float _x1, const float _y1, const float _z1) :
+				x0(_x0), y0(_y0), z0(_z0),
+				x1(_x1), y1(_y1), z1(_z1)
+			{}
 
-	RT_TypeLight type;
+			friend std::ostream &operator<<(std::ostream &out, const RT_BBox &b)
+			{
+				out << "\nBBox" << std::endl;
+				out << "x0: " << b.x0 << " - y0: " << b.y0 << " - z0: " << b.z0 << std::endl;
+				out << "x1: " << b.x1 << " - y1: " << b.y1 << " - z1: " << b.z1 << std::endl;
 
-	void operator=(const RT_Light &other)
-	{
-		position.x = other.position.x;
-		position.y = other.position.y;
-		position.z = other.position.z;
+				return out;
+			}
+		};
 
-		color.x = other.color.x;
-		color.y = other.color.y;
-		color.z = other.color.z;
+		class RT_Primitive
+		{
+		public:
+			RT_Vec3f RDPS_ALIGN(16) p;
+			//RT_Vec3f p1, p2;
+			/*box == size | plane == normal*/
+			RT_Vec3f RDPS_ALIGN(16) s;
+			/*radius for sphere*/
+			float RDPS_ALIGN(4) r;
 
-		ls = other.ls;
+			RT_Material material;
+			RT_TypeObject RDPS_ALIGN(sizeof(RT_TypeObject)) type;
 
-		ex = other.ex;
-	}
-};
+			/*transform*/
+			//float invMatrix[4][4];
+			RT::Mat4f invMatrix;
 
-struct RT_ViewPlane
-{
-	int width;
-	int height;
-	RT_Vec2f sp;
-	//RT_SScoord coord;
+			RT_BBox bbox;
 
-	void operator=(const RT_ViewPlane &other)
-	{
-		width = other.width;
-		height = other.height;
+		public:
+			RT_Primitive()
+			{}
 
-		sp.x = other.sp.x;
-		sp.y = other.sp.y;
-	}
-};
+			RT_Primitive(const RT_Vec3f &_p,
+				const RT_Vec3f &_s,
+				const float _r,
+				const RT_Material &_material,
+				const RT_TypeObject _type,
+				const RT::Mat4f _invMatrix,
+				const RT_BBox _bbox) :
+				p(_p), s(_s), r(_r),
+				material(_material),
+				type(_type),
+				invMatrix(_invMatrix),
+				bbox(_bbox)
+			{}
 
-class RT_Camera
-{
-public:
-	/*position*/
-	RT_Vec3f eye;
-	//RT_Vec3f lookAt;
-	//RT_Vec3f up;
+			friend std::ostream &operator<<(std::ostream &out, RT_Primitive &p)
+			{
+				if (p.type == RT_BOX)
+					out << "BOX" << std::endl;
+				else if (p.type == RT_PLANE)
+					out << "PLANE" << std::endl;
+				else if (p.type == RT_SPHERE)
+					out << "SPHERE" << std::endl;
 
-	float viewPlaneDistance;
-	float zoom;
+				out << "position: " << p.p.x << " - " << p.p.y << " - " << p.p.z << std::endl;
+				out << "size_normal: " << p.s.x << " - " << p.s.y << " - " << p.s.z << std::endl;
+				out << "r: " << p.r << std::endl;
+				out << p.material;
+				out << p.invMatrix;
+				out << p.bbox << std::endl;
 
-	//float rollAngle;
-	//float exposureTime;
+				return out;
+			}
+		};
 
-	RT_Vec3f u, v, w;
+		typedef enum
+		{
+			RT_AMBIENT_LIGHT,
+			RT_AREA_LIGHT,
+			RT_POINT_LIGHT
+		} RT_TypeLight;
 
-public:
-	RT_Camera() {}
-	RT_Camera(const RT_Vec3f &_eye, 
-			  const float _viewPlaneDistance, 
-			  const float _zoom, 
-			  const RT_Vec3f &_u, 
-			  const RT_Vec3f &_v, 
-			  const RT_Vec3f &_w) :
+		class RT_Light
+		{
+		public:
+			RT_Vec3f RDPS_ALIGN(16) position;
+			RT_Vec3f RDPS_ALIGN(16) color;
+			float RDPS_ALIGN(4) ls;
+			float RDPS_ALIGN(4) ex;
 
-		eye(_eye), 
-		viewPlaneDistance(_viewPlaneDistance),
-		zoom(_zoom),
-		u(_u), v(_v), w(_w)
-	{}
+			RT_TypeLight RDPS_ALIGN(sizeof(RT_TypeLight)) type;
 
-	void operator=(const RT_Camera &other)
-	{
-		eye.x = other.eye.x;
-		eye.y = other.eye.y;
-		eye.z = other.eye.z;
+		public:
+			RT_Light() {}
 
-		viewPlaneDistance = other.viewPlaneDistance;
-		zoom = other.zoom;
+			RT_Light(const RT_Vec3f &_position,
+				const RT_Vec3f &_color,
+				const float _ls,
+				const float _ex,
+				const RT_TypeLight _type) :
+				position(_position),
+				color(_color),
+				ls(_ls),
+				ex(_ex),
+				type(_type)
+			{}
 
-		u.x = other.u.x; u.y = other.u.y; u.z = other.u.z;
-		v.x = other.v.x; v.y = other.v.y; v.z = other.v.z;
-		w.x = other.w.x; w.y = other.w.y; w.z = other.w.z;
-	}
-};
+			RT_Light &operator=(const RT_Light &other)
+			{
+				position = other.position;
+				color = other.color;
+				ls = other.ls;
+				ex = other.ex;
+				type = other.type;
+				return (*this);
+			}
 
-struct RT_DataScene
-{
-	/*data of the canvas*/
-	RT_ViewPlane vp;
+			friend std::ostream &operator<<(std::ostream &out, RT_Light &l)
+			{
+				if (l.type == RT_AMBIENT_LIGHT)
+					out << "RT_AMBIENT_LIGHT" << std::endl;
+				else if (l.type == RT_POINT_LIGHT)
+					out << "RT_POINT_LIGHT" << std::endl;
 
-	/*data of the camera(point of origin of the ray)*/
-	//RT_Camera camera;
 
-	/*background-color*/
-	RT_Vec3f background;
+				out << "position: " << l.position.x << " - " << l.position.y << " - " << l.position.z << std::endl;
+				out << "color: " << l.color.x << " - " << l.color.y << " - " << l.color.z << std::endl;
+				out << "ls: " << l.ls << std::endl;
+				out << "ex: " << l.ex << std::endl << std::endl;
+				out << "type: " << l.type << std::endl;
+				return out;
+			}
+		};
 
-	/*data of the lights*/
-	int numLights;
+		class RT_ViewPlane
+		{
+		public:
+			int RDPS_ALIGN(4) width;
+			int RDPS_ALIGN(4) height;
+			RT_Vec2f RDPS_ALIGN(8) sp;
+			//RT_SScoord coord;
 
-	/*data of the objects*/
-	int numObjects;
+		public:
+			RT_ViewPlane() : width(0), height(0), sp() {}
 
-	/*data of the samples*/
-	/*int numSamples;
-	int numSets;
-	int jump;
-	ulong count;
-	ulong numShuffledIndices;
-	/*seed random*/
-	/*ulong seed;*/
+			RT_ViewPlane(const int w,
+				         const int h,
+				         const RT_Vec2f &_sp) : width(w), height(h), sp(_sp) {}
 
-	void operator=(const RT_DataScene &other)
-	{
-		vp = other.vp;
+			/*friend std::ostream &operator<<(std::ostream &out, RT_ViewPlane &vp)
+			{
+			out << "ViewPlane" << std::endl;
+			out << "size_pixel: " << vp.sp.x << " - " << vp.sp.y << std::endl;
+			out << "width: " << vp.width << std::endl;
+			out << "height: " << vp.height << std::endl;
 
-		background.x = other.background.x;
-		background.y = other.background.y;
-		background.z = other.background.z;
+			return out;
+			}*/
+		};
 
-		numLights = other.numLights;
-		numObjects = other.numObjects;
-	}
-};
+		class RT_Camera
+		{
+		public:
+			/*position*/
+			RT_Vec3f RDPS_ALIGN(16) eye;
+			//RT_Vec3f lookAt;
+			//RT_Vec3f up;
+
+			float RDPS_ALIGN(4) viewPlaneDistance;
+			float RDPS_ALIGN(4) zoom;
+
+			//float rollAngle;
+			//float exposureTime;
+
+			RT_Vec3f RDPS_ALIGN(16) u;
+			RT_Vec3f RDPS_ALIGN(16) v;
+			RT_Vec3f RDPS_ALIGN(16) w;
+
+		public:
+			RT_Camera(const RT_Vec3f &_eye,
+				const float _viewPlaneDistance,
+				const float _zoom,
+				const RT_Vec3f &_u,
+				const RT_Vec3f &_v,
+				const RT_Vec3f &_w) :
+
+				eye(_eye),
+				viewPlaneDistance(_viewPlaneDistance),
+				zoom(_zoom),
+				u(_u), v(_v), w(_w)
+			{}
+
+			friend std::ostream &operator<<(std::ostream &out, RT_Camera &c)
+			{
+				out << "Camera" << std::endl;
+				out << "eye: " << c.eye.x << " - " << c.eye.y << " - " << c.eye.z << std::endl;
+				out << "viewPlaneDistance: " << c.viewPlaneDistance << std::endl;
+				out << "zoom: " << c.zoom << std::endl;
+				out << "U: " << c.u.x << " - " << c.u.y << " - " << c.u.z << std::endl;
+				out << "V: " << c.v.x << " - " << c.v.y << " - " << c.v.z << std::endl;
+				out << "W: " << c.w.x << " - " << c.w.y << " - " << c.w.z << std::endl << std::endl;
+
+				return out;
+			}
+		};
+
+		typedef enum
+		{
+			RT_HAMMERSLEY,
+			RT_JITTERED,
+			RT_REGULAR
+		} RT_TypeSampler;
+
+		class RT_DataScene
+		{
+		public:
+			/*data of the canvas*/
+			RT_ViewPlane vp;
+
+			/*data of the camera(point of origin of the ray)*/
+			//RT_Camera camera;
+
+			/*background-color*/
+			RT_Vec3f RDPS_ALIGN(16) background;
+
+			/*data of the lights*/
+			int RDPS_ALIGN(4) numLights;
+
+			/*data of the objects*/
+			int RDPS_ALIGN(4) numObjects;
+
+			/*data of the samples*/
+			int RDPS_ALIGN(4) numSamples;
+			int RDPS_ALIGN(4) numSets;
+			/*int jump;
+			ulong count;
+			ulong numShuffledIndices;
+			/*seed random*/
+			uint RDPS_ALIGN(4) seed;
+
+			RT_TypeSampler RDPS_ALIGN(sizeof(RT_TypeSampler)) type;
+		public:
+			RT_DataScene() :
+				vp(),
+				background(),
+				numLights(0),
+				numObjects(0),
+				numSamples(0),
+				numSets(0),
+				seed(0)
+			{}
+
+			RT_DataScene(const RT_ViewPlane &_vp,
+				const RT_Vec3f &_background,
+				const int _numLights,
+				const int _numObjects,
+				const int _numSamples,
+				const int _numSets,
+				RT_TypeSampler _type,
+				const uint _seed) :
+				vp(_vp), background(_background),
+				numLights(_numLights),
+				numObjects(_numObjects),
+				numSamples(_numSamples),
+				numSets(_numSets),
+				type(_type),
+				seed(_seed)
+			{}
+
+			/*friend std::ostream &operator<<(std::ostream &out, RT_DataScene &ds)
+			{
+			out << "DataScene" << std::endl;
+			out << ds.vp;
+			out << "background: " << ds.background.x << " - " << ds.background.y << " - " << ds.background.z << std::endl;
+			out << "numLights: " << ds.numLights << std::endl;
+			out << "numObjects: " << ds.numObjects << std::endl;
+			out << "numSamples: " << ds.numSamples << std::endl;
+			out << "numSets: " << ds.numSets << std::endl;
+			out << "seed: " << ds.seed << std::endl;
+
+			return out;
+			}*/
+		};
 
 	PKG_END
 RDPS_END

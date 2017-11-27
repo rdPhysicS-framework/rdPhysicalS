@@ -33,11 +33,9 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 		{
 			const AmbientLight *a = static_cast<const AmbientLight*>(light);
 
-			RT_Light l;
-			l.color = { a->GetColor().x, a->GetColor().z, a->GetColor().z, 0.0f };
-			l.ls = a->GetLs();
-			l.ex = 0.0f;
-			l.type = RT_AMBIENT_LIGHT;
+			RT_Light l({ 0.0f, 0.0f, 0.0f, 0.0f },
+					   { a->GetColor().x, a->GetColor().z, a->GetColor().z, 0.0f },
+				       1.0f, 0.0f, RT_AMBIENT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
@@ -54,12 +52,9 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 		{
 			const PointLight *p = static_cast<const PointLight*>(light);
 
-			RT_Light l;
-			l.position = { p->GetPosition().x, p->GetPosition().y, p->GetPosition().z, 0.0f };
-			l.color = { p->GetColor().x, p->GetColor().y, p->GetColor().z, 0.0f };
-			l.ls = p->GetLs();
-			l.ex = 0.0f;
-			l.type = RT_POINT_LIGHT;
+			RT_Light l({ p->GetPosition().x, p->GetPosition().y, p->GetPosition().z, 0.0f },
+						  { p->GetColor().x, p->GetColor().y, p->GetColor().z, 0.0f },
+						  1.0f, 0.0f, RT_POINT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
@@ -76,14 +71,21 @@ void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object
 		{
 			const Cube *cube = static_cast<const Cube*>(object);
 			
-			RT_Primitive p;
-			p.p = { cube->GetInitPoint().x, cube->GetInitPoint().y, cube->GetInitPoint().z, 0.0f };
+			RT_Primitive p({ cube->GetInitPoint().x, cube->GetInitPoint().y, cube->GetInitPoint().z, 0.0f },
+						   { cube->GetSize().x, cube->GetSize().y, cube->GetSize().z, 0.0f },
+							0.0f,
+							ToPackMaterialData(cube->GetMaterial()),
+							RT_BOX,
+							cube->GetTransform()->GetInvMatrix(),
+							RT_BBox());
+
+			/*p.p = { cube->GetInitPoint().x, cube->GetInitPoint().y, cube->GetInitPoint().z, 0.0f };
 			p.s = { cube->GetSize().x, cube->GetSize().y, cube->GetSize().z, 0.0f };
 			p.r = 0.0f;
 			p.material = ToPackMaterialData(cube->GetMaterial());
 			p.type = RT_BOX;
 			p.bbox;
-			p.invMatrix = cube->GetTransform()->GetInvMatrix();
+			p.invMatrix = cube->GetTransform()->GetInvMatrix();*/
 
 			c.GetContainer()->AddElement("objects", p);
 
@@ -97,14 +99,20 @@ void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object
 		{
 			const Plane *plane = static_cast<const Plane*>(object);
 			
-			RT_Primitive p;
-			p.p = { plane->GetPoint().x, plane->GetPoint().y, plane->GetPoint().z, 0.0f };
+			RT_Primitive p({ plane->GetPoint().x, plane->GetPoint().y, plane->GetPoint().z, 0.0f },
+						   { plane->GetNormal().x, plane->GetNormal().y, plane->GetNormal().z, 0.0f },
+							0.0f,
+							ToPackMaterialData(plane->GetMaterial()),
+							RT_PLANE,
+							plane->GetTransform()->GetInvMatrix(),
+							RT_BBox());
+			/*p.p = { plane->GetPoint().x, plane->GetPoint().y, plane->GetPoint().z, 0.0f };
 			p.s = { plane->GetNormal().x, plane->GetNormal().y, plane->GetNormal().z, 0.0f };
 			p.r = 0.0f;
 			p.material = ToPackMaterialData(plane->GetMaterial());
 			p.type = RT_PLANE;
 			p.bbox;
-			p.invMatrix = plane->GetTransform()->GetInvMatrix();
+			p.invMatrix = plane->GetTransform()->GetInvMatrix();*/
 
 			c.GetContainer()->AddElement("objects", p);
 
@@ -118,14 +126,20 @@ void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object
 		{
 			const Sphere *s = static_cast<const Sphere*>(object);
 			
-			RT_Primitive p;
-			p.p = { s->GetCenter().x, s->GetCenter().y, s->GetCenter().z, 0.0f };
+			RT_Primitive p({ s->GetCenter().x, s->GetCenter().y, s->GetCenter().z, 0.0f },
+						  { 0.0f, 0.0f, 0.0f, 0.0f },
+						   s->GetRadius(),
+						   ToPackMaterialData(s->GetMaterial()),
+						   RT_SPHERE,
+						   s->GetTransform()->GetInvMatrix(),
+						   RT_BBox());
+			/*p.p = { s->GetCenter().x, s->GetCenter().y, s->GetCenter().z, 0.0f };
 			p.s = { 0.0f, 0.0f, 0.0f, 0.0f };
 			p.r = s->GetRadius();
 			p.material = ToPackMaterialData(s->GetMaterial());
 			p.type = RT_SPHERE;
 			p.bbox;
-			p.invMatrix = s->GetTransform()->GetInvMatrix();
+			p.invMatrix = s->GetTransform()->GetInvMatrix();*/
 
 			c.GetContainer()->AddElement("objects", p);
 			return;
@@ -171,14 +185,14 @@ PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *
 		}
 		case REFLECT_MATERIAL:
 		{
-			return{};
+			return RT_Material();
 		}
 		case TRANSPARENT_MATERIAL:
 		{
-			return{};
+			return RT_Material();
 		}
 	}
-	return { };
+	return RT_Material();
 }
 
 void ToPackObjectsForDevice::ToPackCameraData(const FRWK Camera *camera,
@@ -197,15 +211,40 @@ void ToPackObjectsForDevice::ToPackCameraData(const FRWK Camera *camera,
 void ToPackObjectsForDevice::ToPackWordData(const PackerObjects &c)
 {
 	const ViewPlane *vp = c.GetPackage()->GetVp();
-	
-	RT_DataScene world;
-	world.vp = { vp->GetWidth(), vp->GetHeight(), 
-			     { vp->GetSizePixel().x, vp->GetSizePixel().y } };
-	world.background = { 0.0f, 0.0f, 0.8f, 1.0f };
-	world.numLights = static_cast<int>(c.GetPackage()->GetLights().size());
-	world.numObjects = static_cast<int>(c.GetPackage()->GetObjects().size());
+
+	RT_TypeSampler type;
+
+	switch (c.GetPackage()->GetSampler()->GetType())
+	{
+	case REGULAR:
+		type = RT_REGULAR;
+		break;
+	case JITTERED:
+		type = RT_JITTERED;
+		break;
+	case MULTIJITTERED:
+		break;
+	default:
+		break;
+	}
+
+	RT_DataScene world(RT_ViewPlane(vp->GetWidth(), vp->GetHeight(),
+									{ vp->GetSizePixel().x, vp->GetSizePixel().y }),
+									{ 0.0f, 0.0f, 0.0f, 1.0f },
+					   static_cast<int>(c.GetPackage()->GetLights().size()),
+					   static_cast<int>(c.GetPackage()->GetObjects().size()),
+					   c.GetPackage()->GetSampler()->GetNumSamples(),
+					   c.GetPackage()->GetSampler()->GetNumSets(), 
+					   type, rand());
 
 	c.GetContainer()->AddElement("world", world);
+}
+
+void ToPackObjectsForDevice::ToPackDataSampler(const PackerObjects &c)
+{
+	c.GetContainer()->AddElements("sampleShuffledIndices", 
+								  (std::vector<char>)c.GetPackage()->GetSampler()
+											    ->GetIndices());
 }
 
 State<PackerObjects> *ToPackObjectsForDevice::Get()
@@ -221,6 +260,9 @@ void ToPackObjectsForDevice::Enter(const PackerObjects &c)
 
 void ToPackObjectsForDevice::Execute(const PackerObjects &c)
 {
+	//Temporario
+	c.GetContainer()->DestroyElements();
+
 	const ObjectsHostPkg *pkg = c.GetPackage();
 
 	for (auto i : pkg->GetLights())
@@ -235,6 +277,7 @@ void ToPackObjectsForDevice::Execute(const PackerObjects &c)
 
 	ToPackCameraData(pkg->GetCamera(), c);
 	ToPackWordData(c);
+	ToPackDataSampler(c);
 
 	c.GetStateMachine()->ChangeState(ToRest::Get());
 }

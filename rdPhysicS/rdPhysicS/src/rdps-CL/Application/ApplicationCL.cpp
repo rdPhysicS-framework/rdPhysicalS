@@ -32,13 +32,13 @@ ApplicationCL::ApplicationCL(const PlatformComponent &_platform,
 			   itens(nullptr)
 {}
 
-inline ApplicationCL &ApplicationCL::CreateContext()
+ApplicationCL &ApplicationCL::CreateContext()
 { 
 	context = new ContextComponent(*device);
 	return (*this);
 }
 
-inline ApplicationCL &ApplicationCL::CreateCommandQueue()
+ApplicationCL &ApplicationCL::CreateCommandQueue()
 {
 	queue = new CommmandQueueComponent(*context, *device);
 	return (*this);
@@ -62,42 +62,42 @@ ApplicationCL::~ApplicationCL()
 	buffers.clear();
 }
 
-inline PlatformComponent *ApplicationCL::GetPlatform() const
+PlatformComponent *ApplicationCL::GetPlatform() const
 {
 	return platform;
 }
 
-inline DeviceComponent *ApplicationCL::GetDevice() const
+DeviceComponent *ApplicationCL::GetDevice() const
 {
 	return device;
 }
 
-inline ContextComponent *ApplicationCL::GetContext() const
+ContextComponent *ApplicationCL::GetContext() const
 {
 	return context;
 }
 
-inline CommmandQueueComponent *ApplicationCL::GetQueue() const
+CommmandQueueComponent *ApplicationCL::GetQueue() const
 {
 	return queue;
 }
 
-inline ProgramComponent *ApplicationCL::GetProgram() const
+ProgramComponent *ApplicationCL::GetProgram() const
 {
 	return program;
 }
 
-inline KernelComponent *ApplicationCL::GetKernel() const
+KernelComponent *ApplicationCL::GetKernel() const
 {
 	return kernel;
 }
 
-inline const std::vector<MemObjectComponent*> &ApplicationCL::GetBuffers() const
+const std::vector<MemObjectComponent*> &ApplicationCL::GetBuffers() const
 {
 	return buffers;
 }
 
-inline ItensWorkGroupComponent * ApplicationCL::GetItens() const
+ItensWorkGroupComponent * ApplicationCL::GetItens() const
 {
 	return itens;
 }

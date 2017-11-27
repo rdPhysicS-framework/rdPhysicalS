@@ -1,6 +1,16 @@
 #ifndef	__GLOBAL_DEFS_H__
 #define	__GLOBAL_DEFS_H__
 
+#ifdef RDPS_ALIGN
+	#undef RDPS_ALIGN
+#endif
+
+#ifdef _MSC_VER
+	#define RDPS_ALIGN(x) __declspec(align(x))
+#elif __GNUC__
+	#define RDPS_ALIGN(x) __attribute__ ((aligned(x)))
+#endif
+
 #define RDPS_BEGIN namespace rdps{
 #define RDPS_END }
 #define USING_RDPS using namespace rdps;
@@ -25,6 +35,13 @@
 #define PDCT_END }
 #define USING_PDCT using namespace pdct;
 #define PDCT pdct::
+
+#define VERY_LOW  1
+#define LOW       4
+#define MEDIUM    16
+#define HIGH      64
+#define VERY_HIGH 144
+#define ULTRA     256
 
 //#define RT_BEGIN namespace rt{
 //#define RT_END }
@@ -163,6 +180,13 @@ enum CollaboratorsFunction
 	DELIVERER_OF_OBJECTS,
 	MANAGER_OF_OBJECTS,
 	GENERAL_MANAGER
+};
+
+enum TypeSampler
+{
+	REGULAR,
+	JITTERED,
+	MULTIJITTERED
 };
 
 typedef unsigned int uint;

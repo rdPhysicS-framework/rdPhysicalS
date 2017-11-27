@@ -77,14 +77,14 @@ RDPS_BEGIN
 			/*--------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcoes de acesso
 			 *--------------------------------------------------------------------------------------------------------------------------------------*/
-			inline PlatformComponent *GetPlatform() const;
-			inline DeviceComponent *GetDevice() const;
-			inline ContextComponent *GetContext() const;
-			inline CommmandQueueComponent *GetQueue() const;
-			inline ProgramComponent *GetProgram() const;
-			inline KernelComponent *GetKernel() const;
-			inline const std::vector<MemObjectComponent*> &GetBuffers() const;
-			inline ItensWorkGroupComponent *GetItens() const;
+			PlatformComponent *GetPlatform() const;
+			DeviceComponent *GetDevice() const;
+			ContextComponent *GetContext() const;
+			CommmandQueueComponent *GetQueue() const;
+			ProgramComponent *GetProgram() const;
+			KernelComponent *GetKernel() const;
+			const std::vector<MemObjectComponent*> &GetBuffers() const;
+			ItensWorkGroupComponent *GetItens() const;
 
 			/*-------------------------------------------------------------------------------------------------------------------------------------
 			 * Cria o buffer (MemObjectComponent) e adiciona na lista de memObjects,

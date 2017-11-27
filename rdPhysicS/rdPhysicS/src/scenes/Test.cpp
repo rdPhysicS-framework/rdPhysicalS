@@ -1,8 +1,6 @@
 #include "Test.h"
-#include "..\rdps-frwk\includes_frwk.h"
 
 USING_RDPS
-USING_FRWK
 
 Test::Test() :
 	SceneBase()
@@ -22,8 +20,10 @@ void Test::Init()
 						   800.0f, 1.5f);
 
 	/*Adiciona as luzes*/
-	CreatePointLight(RT::Vec3f(162.0f, 756.0f, 732.0f), WHITE, 1.0f);
-	CreatePointLight(RT::Vec3f(-540.0f, 756.0f, 432.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(972, 756.0f, -108.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, -108.0f), WHITE, 1.0f);
+	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, 1404.0f), WHITE, 1.0f);
 
 	/*Adiciona os planos*/
 	CreatePlane(RT::Vec3f(0.0f, -324.0f, 0.0f), 
@@ -69,4 +69,5 @@ void Test::Init()
 
 void Test::Update(const float secs)
 {
+	//GetObject(id)->GetTransform()->Translate(10.0f, -200.0f, 400.0f);
 }

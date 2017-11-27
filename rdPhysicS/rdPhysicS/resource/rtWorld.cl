@@ -3,7 +3,8 @@
  * Camera
  *
  *----------------------------------------------------------------------------------------------*/
-inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, __constant RT_Camera *camera)
+inline RT_Vec3f GetDirectionRayCam(const RT_Vec2f *point, 
+								   __global const RT_Camera *camera)
 { 
 	return normalize(camera->u * (*point).x +
 					 camera->v * (*point).y +
@@ -34,7 +35,7 @@ inline RT_Vec3f HitPoint(const RT_Ray *r, const float t)
 	return (r->o + (r->d * t));
 }
 
-RT_Result Hit(__constant RT_Primitive *objects, 
+RT_Result Hit(__global const RT_Primitive *objects, 
 			  const int numObj, const RT_Ray *ray)
 {
 	RT_Result r = CreateResult();
@@ -100,7 +101,7 @@ RT_Result Hit(__constant RT_Primitive *objects,
 	return r;
 }
 
-bool ShadowHit(__constant RT_Primitive *objects, 
+bool ShadowHit(__global const RT_Primitive *objects, 
 			   const int numObj, const RT_Ray *ray, 
 			   float tmin)
 {
@@ -140,8 +141,8 @@ bool ShadowHit(__constant RT_Primitive *objects,
 }
 
 RT_Vec3f TraceRay(__global const RT_Light *lights,
-				  __constant RT_Primitive *objects,
-				  __constant RT_DataScene *world, 
+				  __global const RT_Primitive *objects,
+				  __global const RT_DataScene *world, 
 				  const RT_Ray *ray)
 {
 	RT_Result r = Hit(objects, world->numObjects, ray);

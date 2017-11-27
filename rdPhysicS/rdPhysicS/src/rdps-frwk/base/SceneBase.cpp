@@ -20,16 +20,16 @@ SceneBase::SceneBase() :
 	ambient(new AmbientLight())
 {
 	World::GetManager()->SetCamera(camera);
-	//World::GetManager()->AddLight(ambient);
+	World::GetManager()->AddLight(ambient);
 }
 
-size_t SceneBase::AddObject(GeometricObject *obj)
+int SceneBase::AddObject(GeometricObject *obj)
 {
 	World::GetManager()->AddObject(obj);
 	return World::GetManager()->GetPackage()->GetObjects().size() - 1;
 }
 
-size_t SceneBase::AddLight(Light *light)
+int SceneBase::AddLight(Light *light)
 {
 	World::GetManager()->AddLight(light);
 	return World::GetManager()->GetPackage()->GetLights().size() - 1;
@@ -39,28 +39,28 @@ int SceneBase::CreateCube(const RT::Vec3f &initPoint,
 						  const RT::Vec3f &size, 
 						  Material *material)
 {
-	return (int)AddObject(new Cube(initPoint, size, material));
+	return AddObject(new Cube(initPoint, size, material));
 }
 
 int SceneBase::CreatePlane(const RT::Vec3f &point, 
 						   const RT::Vec3f &normal, 
 						   Material *material)
 {
-	return (int)AddObject(new Plane(point, normal, material));
+	return AddObject(new Plane(point, normal, material));
 }
 
 int SceneBase::CreateSphere(const RT::Vec3f &center, 
 							const float radius, 
 							Material *material)
 {
-	return (int)AddObject(new Sphere(center, radius, material));
+	return AddObject(new Sphere(center, radius, material));
 }
 
 int SceneBase::CreatePointLight(const RT::Vec3f &point, 
 								const RT::Vec3f &color, 
 								const float exp)
 {
-	return (int)AddLight(new PointLight(point, color, 1.0f));
+	return AddLight(new PointLight(point, color, 1.0f));
 }
 
 GeometricObject *SceneBase::GetObject(const size_t id) const

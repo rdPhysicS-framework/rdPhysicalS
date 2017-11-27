@@ -49,6 +49,10 @@ RDPS_BEGIN
 			~Container();
 
 			const PackageBase *GetPackage(std::string id);
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar para verificar se existe um elemento pelo id indicado
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
+			bool ElementExists(std::string id) const;
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que adiciona um elemento no id indicado
@@ -59,7 +63,7 @@ RDPS_BEGIN
 			 * Funcao auxiliar que adiciona varios elementos no id indicado
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			template<class T>
-			inline Container &AddElements(std::string id, const std::vector<T> &element);
+			inline Container &AddElements(std::string id, std::vector<T> &element);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que remove um elemento do array de objetos
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -102,9 +106,9 @@ RDPS_BEGIN
 		}
 
 		template<class T>
-		inline Container &Container::AddElements(std::string id, const std::vector<T> &elements)
+		inline Container &Container::AddElements(std::string id, std::vector<T> &elements)
 		{
-			if (packages.find(id) != packages.end())
+			if (packages.find(id) == packages.end())
 			{
 				Logger::Log("Attribute no exists : " + id);
 			}

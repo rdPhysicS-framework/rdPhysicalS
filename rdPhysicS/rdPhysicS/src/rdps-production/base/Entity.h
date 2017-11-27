@@ -8,6 +8,12 @@ RDPS_BEGIN
 
 		class Message;
 
+		/********************************************************************************************************************************************
+		 *
+		 * Classe Base para todas as etidades existentes na aplicação que fazem trocas de mensagens.
+		 * Todas as entidades devem herdar desta classe e sobreescrever os métodos.
+		 *
+		 ********************************************************************************************************************************************/
 		class Entity
 		{
 		public:

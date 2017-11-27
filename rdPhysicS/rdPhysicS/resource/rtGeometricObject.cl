@@ -126,14 +126,14 @@ bool Sphere_ShadowHit(const RT_Primitive *s, const RT_Ray *ray, float *tmin)
 	float c = dot(temp, temp) - (s->r * s->r);
 	float disc = b * b - 4.0f * a * c;
 
-	if(disc < 0)
+	if(disc < 0.0f)
 		return false;
 
 	float e = sqrt(disc);
 	float denom = 2.0f * a;
 	float t = (-b - e) / denom;
 
-	if(t > EPSILON)
+	if(t > 0.1f)
 	{
 		*tmin = t;
 		return true;
@@ -141,7 +141,7 @@ bool Sphere_ShadowHit(const RT_Primitive *s, const RT_Ray *ray, float *tmin)
 
 	t = (-b + e) / denom;
 
-	if(t > EPSILON)
+	if(t > 0.1f)
 	{
 		*tmin = t;
 		return true;
@@ -278,9 +278,9 @@ bool Box_ShadowHit(const RT_Primitive *b,
 		{
 			ip[i] = o + d * t[i];
 
-			if ((ip[i].x > (b->p.x - EPSILON)) && (ip[i].x < (s.x + EPSILON)) &&
-				(ip[i].y > (b->p.y - EPSILON)) && (ip[i].y < (s.y + EPSILON)) &&
-				(ip[i].z > (b->p.z - EPSILON)) && (ip[i].z < (s.z + EPSILON)))
+			if ((ip[i].x > (b->p.x - 0.01f)) && (ip[i].x < (s.x + 0.01f)) &&
+				(ip[i].y > (b->p.y - 0.01f)) && (ip[i].y < (s.y + 0.01f)) &&
+				(ip[i].z > (b->p.z - 0.01f)) && (ip[i].z < (s.z + 0.01f)))
 			{
 				if(t[i] < *tmin)
 				{
@@ -355,7 +355,7 @@ bool Instance_ShadowHit(const RT_Primitive *object,
  *
  *----------------------------------------------------------------------------------------------*/
 bool Grid_Hit(const RT_Grid *grid,
-			  __constant RT_Primitive *objects,
+			  __global const RT_Primitive *objects,
 			  __constant int *cells,
 			  __constant int *count,
 			  const RT_Ray *ray,
@@ -366,7 +366,7 @@ bool Grid_Hit(const RT_Grid *grid,
 }
 
 bool Grid_ShadowHit(const RT_Grid *grid,
-					__constant RT_Primitive *objects,
+					__global const RT_Primitive *objects,
 					__constant int *cells,
 					__constant int *count, 
 					const RT_Ray *ray, 

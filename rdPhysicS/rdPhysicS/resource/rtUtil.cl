@@ -12,7 +12,7 @@
 #define ADDEND 0xBL
 #define MASK (1L << 48) - 1
 
-#define EPSILON 0.01
+#define EPSILON 0.01f
 
 #define RMASK 0x000000FF
 #define GMASK 0x0000FF00
@@ -38,8 +38,8 @@ typedef enum
 
 typedef enum
 { 
+	RT_AMBIENT_LIGHT,
 	RT_AREA_LIGHT,
-	//RT_SPHERICAL_LIGHT,
 	RT_POINT_LIGHT
 } RT_TypeLight;
 
@@ -59,11 +59,9 @@ typedef enum
 typedef enum
 { 
 	RT_HAMMERSLEY,
-	RT_MULTIJITTERED,
-	RT_NROOKS,
+	RT_JITTERED,
 	RT_REGULAR
 } RT_TypeSampler;
-
 
 inline float toRadians(const float d)
 {
@@ -81,7 +79,7 @@ inline float _absf(float x)
 }
 
 
-uint rand(uint2 *state)
+/*uint rand(uint2 *state)
 { 
 	enum { A=4294883355U };
 	uint x = (*state).x;
@@ -98,7 +96,7 @@ uint rand(uint2 *state)
 float rand_float(uint2 *state)
 { 
 	return (float)rand(state) / UINT_MAX;
-}
+}*/
 
 int next(uint *seed, int bits)
 {

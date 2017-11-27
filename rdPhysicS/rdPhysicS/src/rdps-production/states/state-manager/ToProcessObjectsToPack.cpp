@@ -34,6 +34,9 @@ void ToProcessObjectsToPack::Enter(const ManagerObjects &c)
 
 void ToProcessObjectsToPack::Execute(const ManagerObjects &c)
 {
+	/*futuramente existira um double buffer o que será processado e
+	  enviado para o dispositivo e o que é manipulado pela cena 
+	  na cpu, e aqui será atualizado.*/
 	c.GetStateMachine()->ChangeState(ToRest::Get());
 }
 

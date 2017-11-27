@@ -10,7 +10,7 @@ RDPS_BEGIN
 		class BRDF;
 		/********************************************************************************************************************************************
 		 *
-		 * Classe Base para o material (todo material de herdar desta class), 
+		 * Classe Base para o material (todo material prcisa herdar desta class), 
 		 * nela um Componente BRDF com a informação do ambientMaterial,
 		 * o tipo do material que sera enviado para o dispositivo,
 		 * e um bool que indicara se existira calculo de sombra.
@@ -74,7 +74,9 @@ RDPS_BEGIN
 			 * Funcao auxiliar que retorna o shadow
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			bool GetShadow() const;
-
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar que retorna o tipo do material
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			TypeMaterial GetType() const;
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------

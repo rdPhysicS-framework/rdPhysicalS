@@ -2,7 +2,7 @@
 #define	__LOADER_FILES__
 
 #include <string>
-#include "..\rdps-CL\ClGlobalDef.h"
+#include "..\rdps-CL\includes_appCL.h"
 
 RDPS_BEGIN
 	CL_BEGIN

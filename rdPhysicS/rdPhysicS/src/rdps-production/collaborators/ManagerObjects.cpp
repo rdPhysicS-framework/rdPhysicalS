@@ -65,6 +65,12 @@ ManagerObjects &ManagerObjects::SetCamera(FRWK Camera *camera)
 	return (*this);
 }
 
+ManagerObjects &ManagerObjects::SetSampler(FRWK Sampler *_sampler)
+{
+	package->SetSampler(_sampler);
+	return (*this);
+}
+
 ManagerObjects *ManagerObjects::Clone()
 {
 	return new ManagerObjects(*this);

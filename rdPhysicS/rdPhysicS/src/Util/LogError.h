@@ -6,8 +6,7 @@
 #include "..\GlobalDefs.h"
 #include "..\rdps-packages\object-CL\ObjectsPackage.h"
 
-namespace rdps
-{
+RDPS_BEGIN
 	class LogError : public std::exception
 	{
 	public:
@@ -38,6 +37,6 @@ namespace rdps
 		static void TestLight(const PKG RT_Light &l);
 	};
 
-}
+RDPS_END
 
 #endif//__LOG_ERROR_H__

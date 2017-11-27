@@ -20,6 +20,16 @@ ItensWorkGroupComponent::~ItensWorkGroupComponent()
 	offSet.clear();
 }
 
+ItensWorkGroupComponent &ItensWorkGroupComponent::SetItensWorkGroup(const std::initializer_list<size_t> gItemSize, 
+																	const std::initializer_list<size_t> lwItemSize, 
+																	const std::initializer_list<size_t> _offSet)
+{
+	globalItemSize = gItemSize;
+	localWorkItemSize = lwItemSize;
+	offSet = _offSet;
+	return (*this);
+}
+
 const cl_uint ItensWorkGroupComponent::GetDimensions() const
 {
 	cl_uint size = static_cast<cl_uint>(globalItemSize.size());

@@ -41,12 +41,12 @@ void ToSendObjectsForTheDevice::Execute(const ObjectDispatcher &c)
 	//container->ToSend();
 	//World::GetRenderer()->GetBuffer()->ToSend();
 
-	const Package<RT_Primitive> *aux = dynamic_cast<const Package<RT_Primitive>*>(container->GetPackage("objects"));
+	/*const Package<RT_Primitive> *aux = dynamic_cast<const Package<RT_Primitive>*>(container->GetPackage("objects"));
 	for (int i = 0; i < aux->elements.size(); i++)
 	{
 		Logger::TestPrim(aux->elements[i]);
 		std::cout << std::endl;
-	}
+	}*/
 
 	c.GetStateMachine()->ChangeState(ToRest::Get());
 }

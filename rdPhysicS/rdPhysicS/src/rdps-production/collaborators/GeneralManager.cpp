@@ -53,7 +53,7 @@ GeneralManager &GeneralManager::AddCollaborator(CollaboratorsFunction function,
 	return (*this);
 }
 
-GeneralManager &GeneralManager::RemoveCollaborator(CollaboratorsFunction function, Collaborator * collaborator)
+GeneralManager &GeneralManager::RemoveCollaborator(CollaboratorsFunction function)
 {
 	if (collaborators.find(function) == collaborators.end())
 	{
@@ -63,10 +63,10 @@ GeneralManager &GeneralManager::RemoveCollaborator(CollaboratorsFunction functio
 	collaborators.erase(function);
 }
 
-GeneralManager *GeneralManager::Clone()
-{
-	return new GeneralManager(*this);
-}
+//GeneralManager *GeneralManager::Clone()
+//{
+//	return new GeneralManager(*this);
+//}
 
 GeneralManager &GeneralManager::ExecuteFunction()
 {

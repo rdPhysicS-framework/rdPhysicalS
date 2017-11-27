@@ -27,6 +27,10 @@ const PackageBase *Container::GetPackage(std::string id)
 	return packages[id];
 }
 
+bool Container::ElementExists(std::string id) const
+{
+	return packages.find(id) != packages.end();
+}
 
 Container &Container::CreatePackage(std::string id, 
 								    PackageBase *package)

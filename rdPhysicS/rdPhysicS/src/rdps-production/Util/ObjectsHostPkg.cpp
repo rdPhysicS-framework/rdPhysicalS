@@ -3,6 +3,7 @@
 #include "..\..\rdps-frwk\base\Light.h"
 #include "..\..\rdps-frwk\Util\ViewPlane.h"
 #include "..\..\rdps-frwk\camera\Camera.h"
+#include "..\..\rdps-frwk\Util\Sampler.h"
 
 USING_RDPS
 USING_PDCT
@@ -12,7 +13,8 @@ ObjectsHostPkg::ObjectsHostPkg() :
 	objects(),
 	lights(),
 	vp(nullptr),
-	camera(nullptr)
+	camera(nullptr),
+	sampler(nullptr)
 {}
 
 ObjectsHostPkg::~ObjectsHostPkg()
@@ -36,6 +38,9 @@ ObjectsHostPkg::~ObjectsHostPkg()
 
 	if (camera)
 		delete camera;
+
+	if (sampler)
+		delete sampler;
 }
 
 const std::vector<FRWK GeometricObject*> &ObjectsHostPkg::GetObjects() const
@@ -56,6 +61,11 @@ const FRWK ViewPlane *ObjectsHostPkg::GetVp() const
 const FRWK Camera *ObjectsHostPkg::GetCamera() const
 {
 	return camera;
+}
+
+const FRWK Sampler *ObjectsHostPkg::GetSampler() const
+{
+	return sampler;
 }
 
 FRWK GeometricObject *ObjectsHostPkg::GetObject(const size_t id) const
@@ -101,6 +111,12 @@ ObjectsHostPkg &ObjectsHostPkg::SetViewPlane(FRWK ViewPlane *_vp)
 ObjectsHostPkg &ObjectsHostPkg::SetCamera(FRWK Camera *_camera)
 {
 	camera = _camera;
+	return (*this);
+}
+
+ObjectsHostPkg &ObjectsHostPkg::SetSampler(FRWK Sampler *_sampler)
+{
+	sampler = _sampler;
 	return (*this);
 }
 

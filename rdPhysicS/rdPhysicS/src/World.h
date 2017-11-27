@@ -15,7 +15,7 @@ RDPS_BEGIN
 		class ObjectDispatcher;
 		class PackerObjects;
 	PDCT_END;
-
+	FRWK_BEGIN class Sampler; FRWK_END
 
 	class World
 	{
@@ -26,6 +26,7 @@ RDPS_BEGIN
 		static PDCT ObjectDispatcher *oDispatcher;
 		static PDCT PackerObjects *packer;
 		static PKG Renderer *renderer;
+		static FRWK Sampler *sampler;
 
 	public:
 		World();
@@ -39,6 +40,7 @@ RDPS_BEGIN
 
 		static void SetApp(CL ApplicationCL *_app);
 		static void SetViewPlane(const int w, const int h);
+		static void Quality(const int r);
 
 		static void Init();
 		static void Update();

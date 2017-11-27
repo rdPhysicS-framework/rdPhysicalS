@@ -9,39 +9,100 @@ inline void DisplayPixel(const int x,
 	*(bufferImage + i) = pc->rgba;
 }
 
-__kernel void render(__constant RT_DataScene *world,
-					 __constant RT_Camera *camera,
-					 __global const RT_Light *lights,
-				     __constant RT_Primitive *objects, 
-					 __global int *bufferImage)
-{
+RT_Vec3f _render(__global const RT_DataScene *world,
+			     __global const RT_Camera *camera,
+			     __global const RT_Light *lights,
+			     __global const RT_Primitive *objects,
+				 const int x, const int y)
+{ 
 	RT_Vec2f s = world->vp.sp / camera->zoom;
+	RT_Vec2f pp = (RT_Vec2f)( s.x * (x - 0.5f * world->vp.width),
+								 -s.y * (y - 0.5f * world->vp.height));
+	RT_Ray ray = CreateRay(camera->eye, 
+						   GetDirectionRayCam(&pp, camera));
+
+	RT_Vec3f pc = TraceRay(lights, objects, world, &ray);
+	
+	return pc;	
+}
+
+
+RT_Vec3f Sampler_Render(__global const RT_DataScene *world,
+						__global const RT_Camera *camera,
+						__global const RT_Light *lights,
+						__global const RT_Primitive *objects,
+						__global const char *sampleShuffledIndices,
+						const int x, const int y)
+{ 
+	RT_Vec3f pc = (RT_Vec3f)(0.0f);
+	RT_Vec2f s = world->vp.sp / camera->zoom;
+	int n = sqrt((float)world->numSamples);
+	uint seed = get_global_size(0) * y + x;
+	uint i = RandIndex(&seed, world->numSamples, world->numSets);
+	
+	for(int p = 0; p < n; p++)
+	{ 
+		for(int q = 0; q < n; q++)
+		{
+			RT_Vec2f sp;
+			switch(world->type)
+			{ 
+				case RT_HAMMERSLEY:
+					sp = HammersleyGenerateSampler(world->numSamples, (int)sampleShuffledIndices[i]);
+				break;
+				case RT_JITTERED:
+					sp = JitteredGenerateSampler(&seed, n, (int)sampleShuffledIndices[i]);
+				break;
+				case RT_REGULAR:
+					sp = RegularGenerateSampler(n, (int)sampleShuffledIndices[i]);
+				break;
+			}
+
+			RT_Vec2f pp = (RT_Vec2f)( s.x * (x - 0.5f * world->vp.width + sp.x),
+									 -s.y * (y - 0.5f * world->vp.height + sp.y));
+			RT_Ray ray = CreateRay(camera->eye, 
+								   GetDirectionRayCam(&pp, camera));
+
+			pc += TraceRay(lights, objects, world, &ray);
+			i++;
+		}
+	}
+
+	pc /= world->numSamples;
+	
+	return pc;
+}
+
+__kernel void render(__global const RT_DataScene *world,
+					 __global const RT_Camera *camera,
+					 __global const RT_Light *lights,
+				     __global const RT_Primitive *objects,
+					 __global const char *sampleShuffledIndices, 
+					 __global int *bufferImage)
+					 //__global int *res)
+{
 	uint id = get_global_id(0);
 
 	uint x = id % world->vp.width;
 	uint y = id / world->vp.width;
 	
-	RT_Vec2f pp = (RT_Vec2f)( s.x * (x - 0.5f * world->vp.width),
-							 -s.y * (y - 0.5f * world->vp.height));
-	RT_Ray ray = CreateRay(camera->eye, 
-						   GetDirectionRayCam(&pp, camera));
+	RT_Vec3f pc = world->background;
 
-	RT_Vec3f pc = TraceRay(lights, objects, world, &ray);
+	if(world->numSamples == 1)
+	{
+		pc = _render(world, camera, lights, objects, x, y);	
+	}
+	else
+	{ 
+		pc = Sampler_Render(world, camera, lights, objects, sampleShuffledIndices, x, y);
+	}
+
 	Saturate(&pc);
 	RT_Color color = CreatePixelColorv3(pc);
 	DisplayPixel(x, y, world->vp.width, &color, bufferImage);
-	
-	/*uint2 seed = (uint2)((world->vp.width * (y + 1) + x),
-						 83 + (world->vp.width * (y + 1) + x));*/
-	//uint seed = get_global_size(0) * y + x;
-	//outRand[id] = randFloat2(&seed, 0, 1.0f/100);// / (float)RANDMAX;
-}
 
-__kernel void test(__constant float3 *in1, 
-				   __constant float3 *in2,
-				   __global   float3 *out )
-{ 
-	(*out) = (float3)((*in1).x + (*in2).x, 
-					  (*in1).y - (*in2).y, 
-					  (*in1).z + (*in2).z );
+	//uint2 seed = (uint2)((world->vp.width * (y + 1) + x),
+						 //83 + (world->vp.width * (y + 1) + x));
+	//uint seed = world->seed + get_global_size(0) * y + x;
+	//res[id] = randInt(&seed) % 83;// / (float)RANDMAX;
 }

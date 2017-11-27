@@ -1,5 +1,5 @@
-#ifndef	__CL_GLOBAL_DEF_H__
-#define	__CL_GLOBAL_DEF_H__
+#ifndef	__INCLUDES_APP_CL_H__
+#define	__INCLUDES_APP_CL_H__
 
 #include "Application\PlatformComponent.h"
 #include "Application\DeviceComponent.h"
@@ -11,5 +11,6 @@
 #include "Application\ItensWorkGroupComponent.h"
 #include "Application\ApplicationCL.h"
 #include "Application\ApplicationCLBuider.h"
+#include "Application\ApplicationCLFactor.h"
 
-#endif//__CL_GLOBAL_DEF_H__
+#endif//__INCLUDES_APP_CL_H__

@@ -58,15 +58,17 @@ RT_Vec3f PerfectSpecular_SampleF(const RT_Result *r,
 }*/
 
 RT_Vec3f Shade(__global const RT_Light *lights,
-			   __constant RT_Primitive *objects,
-			   __constant RT_DataScene *world,
+			   __global const RT_Primitive *objects,
+			   __global const RT_DataScene *world,
 			   const RT_Ray *ray,
 			   const RT_Result *r)
 { 
 	//RT_Vec3f wo = -ray->d;
-	RT_Vec3f color = Lambertian_RHO(&r->material.ambient) * (RT_Vec3f)(0.8f);
+	RT_Light ambient = lights[0];
+	RT_Vec3f color = Lambertian_RHO(&r->material.ambient) * 
+					 Color(&ambient, r);
 	
-	for(int i = 0; i < world->numLights; i++)
+	for(int i = 1; i < world->numLights; i++)
 	{ 
 		RT_Light l = lights[i];
 		RT_Vec3f wi = Direction(&l, r);
