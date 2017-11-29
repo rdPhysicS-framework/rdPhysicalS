@@ -20,6 +20,7 @@ RDPS_BEGIN
 		public:
 			virtual ~PackageBase() {}
 
+			virtual size_t Size() const = 0;
 			virtual PackageBase &AddElement(void *_element) = 0;
 			virtual PackageBase &AddElements(void *_elements) = 0;
 			virtual PackageBase &RemoveElement(const int id) = 0;

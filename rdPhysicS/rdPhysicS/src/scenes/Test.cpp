@@ -1,4 +1,5 @@
 #include "Test.h"
+#include "..\rdps-frwk\includes_frwk.h"
 
 USING_RDPS
 
@@ -18,12 +19,34 @@ void Test::Init()
 						   RT::Vec3f(-540.0f, -100.0f, 0.0f), 
 						   RT::Vec3f(0.0f, 1.0f, 0.0f), 
 						   800.0f, 1.5f);
-
 	/*Adiciona as luzes*/
-	CreatePointLight(RT::Vec3f(972, 756.0f, -108.0f), WHITE, 1.0f);
-	CreatePointLight(RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);
-	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, -108.0f), WHITE, 1.0f);
-	CreatePointLight(RT::Vec3f(-1188.0f, 756.0f, 1404.0f), WHITE, 1.0f);
+	CreatePointLight(new Rectangle(RT::Vec3f(864, 756, -216), 
+								   RT::Vec3f(216, 0, 0),
+								   RT::Vec3f(0, 0, 216),
+								   RT::Vec3f(0, -1, 0), 
+								   new EmissiveMaterial(WHITE, 50.0f)),
+					 RT::Vec3f(972, 756.0f, -108.0f), WHITE, 1.0f);
+
+	CreatePointLight(new Rectangle(RT::Vec3f(864, 756, 1296), 
+								  RT::Vec3f(216, 0, 0),
+								   RT::Vec3f(0, 0, 216),
+								   RT::Vec3f(0, -1, 0),
+								   new EmissiveMaterial(WHITE, 50.0f)), 
+					  RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);
+
+	CreatePointLight(new Rectangle(RT::Vec3f(-1296, 756, -216), 
+								   RT::Vec3f(216, 0, 0),
+								   RT::Vec3f(0, 0, 216),
+								   RT::Vec3f(0, -1, 0),
+								   new EmissiveMaterial(WHITE, 50.0f)),
+					 RT::Vec3f(-1188.0f, 756.0f, -108.0f), WHITE, 1.0f);
+
+	CreatePointLight(new Rectangle(RT::Vec3f(864, 756, -216), 
+								   RT::Vec3f(216, 0, 0),
+								   RT::Vec3f(0, 0, 216),
+								   RT::Vec3f(0, -1, 0),
+								   new EmissiveMaterial(WHITE, 50.0f)),
+					 RT::Vec3f(-1188.0f, 756.0f, 1404.0f), WHITE, 1.0f);
 
 	/*Adiciona os planos*/
 	CreatePlane(RT::Vec3f(0.0f, -324.0f, 0.0f), 
@@ -57,7 +80,7 @@ void Test::Init()
 								   0.2f, 0.7f, 0.8f, 1.0f));
 
 	id = CreateSphere(RT::Vec3f(-540.0f, -86.0f, 432.0f), 270.0f,
-					  new PhongMaterial(RT::Vec3f(0.7f, 0.7f, 0.7f),
+					  new PhongMaterial(RT::Vec3f(0.7f, 0.7f, 1.0f),
 										0.2f, 0.7f, 0.8f, 1.0f));
 
 	/*Adiciona o Cubo*/

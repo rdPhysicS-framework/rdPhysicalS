@@ -66,23 +66,86 @@ RT_Vec3f Shade(__global const RT_Light *lights,
 	//RT_Vec3f wo = -ray->d;
 	RT_Light ambient = lights[0];
 	RT_Vec3f color = Lambertian_RHO(&r->material.ambient) * 
-					 Color(&ambient, r);
+					 Color(&ambient, 0, r);
 	
 	for(int i = 1; i < world->numLights; i++)
 	{ 
 		RT_Light l = lights[i];
-		RT_Vec3f wi = Direction(&l, r);
+		RT_Vec3f wi = Direction(world, &l, 0, r, 0, 0);
 
 		float nDotWi = dot(r->normal, wi);
 
 		if(nDotWi > 0.0f)
 		{ 
-			if(!InShadow(&l, objects, world->numObjects, 
-					     CreateRay(r->lhitPoint, wi))  )
+			RT_Ray auxRay = CreateRay(r->lhitPoint, wi);
+			if(!InShadow(&l, objects, world->numObjects, &auxRay))
 			{ 
 				color += (Lambertian_F(&r->material.diffuse) +
 						  GlossySpecular_F(r, &wi, &ray->d))  *
-						  Color(&l, r) * nDotWi;
+						  Color(&l, 0, r) * nDotWi;
+			}
+		}
+	}
+
+	return color;
+}
+
+
+RT_Vec3f Emissive_Shade(const RT_Ray *ray,
+					    const RT_Result *r)
+{ 
+	return (dot(-r->normal, ray->d) > 0.0f)? 
+			(Emissive_Color(&r->emissiveMaterial) * 
+			 r->emissiveMaterial.ls)	   :
+		   (RT_Vec3f)(0.0f);
+}
+
+RT_Vec3f Emissive_Color(const RT_Emissive *m)
+{ 
+	RT_Vec3f c;
+	c.x = ((m->color & RMASK) >> RSHIFT) / COLORMAX;
+	c.y = ((m->color & GMASK) >> GSHIFT) / COLORMAX;
+	c.z = ((m->color & BMASK) >> BSHIFT) / COLORMAX;
+
+	return (c * m->ls);
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * it calculates the effects of the illumination in area in the material
+ * 
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec3f AreaLight_Shade(__global const RT_Light *lights,
+						  __global const RT_Lamp *lamps,
+						  __global const RT_Primitive *objects,
+						  __global const RT_DataScene *world,
+						  const RT_Ray *ray,
+						  const RT_Result *r,
+						  const int sampleIndex,
+						  uint *seed)
+{ 
+	//RT_Vec3f wo = -ray->d;
+	RT_Light ambient = lights[0];
+	RT_Vec3f color = Lambertian_RHO(&r->material.ambient) * 
+					 Color(&ambient, 0, r);
+	
+	for(int i = 1; i < world->numLights; i++)
+	{ 
+		RT_Light l = lights[i];
+		RT_Lamp o = lamps[l.index];
+		RT_Vec3f wi = Direction(world, &l, &o, r, sampleIndex, seed);
+
+		float nDotWi = dot(r->normal, wi);
+
+		if(nDotWi > 0.0f)
+		{ 
+			RT_Ray auxRay = CreateRay(r->lhitPoint, wi);
+			if(!InShadow(&l, objects, world->numObjects, &auxRay))
+			{ 
+				color += (Lambertian_F(&r->material.diffuse) +
+						  GlossySpecular_F(r, &wi, &ray->d))  *
+						  Color(&l, &o, r) * G(&l, &o, r) *
+						  nDotWi / PDF(&o);
 			}
 		}
 	}

@@ -30,8 +30,6 @@ void Sampler::SetNumSamples(const int _numSamples)
 	numSamples = _numSamples;
 	type = (numSamples < 16 || numSamples == ULTRA) ?
 			REGULAR : JITTERED;
-		   
-
 }
 
 void Sampler::SetNumSets(const int _numSets)

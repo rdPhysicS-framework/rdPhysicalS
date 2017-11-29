@@ -2,7 +2,7 @@
 #define	__PHONG_H__
 
 #include "..\..\GlobalDefs.h"
-#include "..\base\Material.h"
+#include "..\base\MaterialBase.h"
 
 RDPS_BEGIN
 	FRWK_BEGIN
@@ -16,7 +16,7 @@ RDPS_BEGIN
 		 * ambient, diffuse, specular.
 		 *
 		 ********************************************************************************************************************************************/
-		class PhongMaterial : public Material
+		class PhongMaterial : public MaterialBase
 		{
 		private:
 			BRDF *diffuse;

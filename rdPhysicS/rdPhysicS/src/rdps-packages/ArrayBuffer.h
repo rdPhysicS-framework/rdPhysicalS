@@ -183,14 +183,14 @@ RDPS_BEGIN
 		inline ArrayBuffer<T> &ArrayBuffer<T>::UpdateData(T *data, const size_t size)
 		{
 			element = data;
-			bytes = sizeof(T) * size;
+			bytes = (data)? sizeof(T) * size : 0;
 
 			if (World::GetApp()->GetBuffer(id) == BUSY_LOCATION)
 			{
 				World::GetApp()->DestroyBuffer(id);
 			}
-
-			id = World::GetApp()->CreateBuffer(id, typeAction, bytes);
+			if(element)
+				id = World::GetApp()->CreateBuffer(id, typeAction, bytes);
 
 			return (*this);
 		}

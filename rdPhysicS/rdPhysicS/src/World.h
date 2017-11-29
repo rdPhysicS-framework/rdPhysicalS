@@ -27,6 +27,7 @@ RDPS_BEGIN
 		static PDCT PackerObjects *packer;
 		static PKG Renderer *renderer;
 		static FRWK Sampler *sampler;
+		static byte flags;
 
 	public:
 		World();
@@ -37,10 +38,12 @@ RDPS_BEGIN
 		static PDCT ManagerObjects *GetManager();
 		static PDCT ObjectDispatcher *GetObjectDispatcher();
 		static PDCT PackerObjects *GetPackerObjects();
+		static byte GetFlags();
 
 		static void SetApp(CL ApplicationCL *_app);
 		static void SetViewPlane(const int w, const int h);
 		static void Quality(const int r);
+		static void Enable(const byte _flags);
 
 		static void Init();
 		static void Update();

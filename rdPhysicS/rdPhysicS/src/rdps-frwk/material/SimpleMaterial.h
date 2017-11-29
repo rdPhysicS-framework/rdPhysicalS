@@ -1,7 +1,7 @@
 #ifndef	__SIMPLE_MATERIAL_H__
 #define	__SIMPLE_MATERIAL_H__
 
-#include "..\base\Material.h"
+#include "..\base\MaterialBase.h"
 
 RDPS_BEGIN
 	FRWK_BEGIN
@@ -13,7 +13,7 @@ RDPS_BEGIN
 		 * ambient, diffuse.
 		 *
 		 ********************************************************************************************************************************************/
-		class SimpleMaterial : public Material
+		class SimpleMaterial : public MaterialBase
 		{
 		private:
 			BRDF *diffuse;

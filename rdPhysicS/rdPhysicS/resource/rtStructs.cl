@@ -35,6 +35,12 @@ typedef struct
 	RT_BRDF refl;
 } RT_Material;
 
+typedef struct
+{ 
+	int color;
+	float ls;
+} RT_Emissive;
+
 /*----------------------------------------------------------------------------------------------
  *
  * Bounding Box
@@ -78,6 +84,19 @@ typedef struct
 	RT_BBox bbox;
 } RT_Triangle;
 
+typedef struct
+{ 
+	RT_Vec3f p;
+	RT_Vec3f a;
+	RT_Vec3f b;
+	RT_Vec3f normal;
+
+	RT_Emissive material;
+
+	RT_TypeLamp type;
+
+} RT_Lamp;
+
 /*----------------------------------------------------------------------------------------------
  *
  * RT_Result
@@ -90,7 +109,9 @@ typedef struct
 	RT_Vec3f lhitPoint;
 	RT_Vec3f normal;
 	RT_Material material;
+	RT_Emissive emissiveMaterial;
 	int depth;
+	char type;
 } RT_Result;
 
 /*----------------------------------------------------------------------------------------------
@@ -115,12 +136,14 @@ typedef struct
  *----------------------------------------------------------------------------------------------*/
 typedef struct
 {
-	RT_Vec3f position;
-	RT_Vec3f color;
+	RT_Vec3f point;
+	RT_Vec3f c_wi;
 	float ls;
 	float ex;
+	int index;
 
 	RT_TypeLight type;
+
 } RT_Light;
 
 /*----------------------------------------------------------------------------------------------
@@ -169,6 +192,9 @@ typedef struct
 	/*data of the lights*/
 	int numLights;
 
+	/*data of the lights*/
+	int numLamps;
+
 	/*data of the objects*/
 	int numObjects;
 
@@ -182,6 +208,7 @@ typedef struct
 	uint seed;
 
 	RT_TypeSampler type;
+	RT_TypeTracer typeTracer;
 
 } RT_DataScene;
 
@@ -190,7 +217,6 @@ typedef struct
  * Ray
  *
  *----------------------------------------------------------------------------------------------*/
-
  typedef struct
  {
 	RT_Vec3f o;
@@ -229,6 +255,26 @@ RT_Vec3f Shade(__global const RT_Light *lights,
 			   __global const RT_DataScene *world,
 			   const RT_Ray *ray,
 			   const RT_Result *r);
+
+RT_Vec3f Emissive_Shade(const RT_Ray *ray,
+					    const RT_Result *r);
+
+inline RT_Vec3f Emissive_Color(const RT_Emissive *m);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * it calculates the effects of the illumination in area in the material
+ * 
+ *----------------------------------------------------------------------------------------------*/
+ RT_Vec3f AreaLight_Shade(__global const RT_Light *lights,
+						  __global const RT_Lamp *lamps,
+						  __global const RT_Primitive *objects,
+						  __global const RT_DataScene *world,
+						  const RT_Ray *ray,
+						  const RT_Result *r,
+						  const int sampleIndex,
+						  uint *seed);
+
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -277,6 +323,24 @@ bool Sphere_ShadowHit(const RT_Primitive *s,
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Methods to verify intercession with the lamp rectangular
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Rect_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r);
+
+bool Rect_ShadowHit(const RT_Lamp *l, 
+					const RT_Ray *ray,
+					float *tmin);
+
+RT_Vec3f Rect_Sample(__global const RT_DataScene *world,
+					 const RT_Lamp *l,
+					 const int index,
+					 uint *seed);
+
+/*----------------------------------------------------------------------------------------------
+ *
  * Method that verifies collision of transformed objects
  *
  *----------------------------------------------------------------------------------------------*/
@@ -315,14 +379,33 @@ bool Sphere_ShadowHit(const RT_Primitive *s,
 RT_Light Create_PointLight(const RT_Vec3f p, 
 						   const RT_Vec3f c, 
 						   const float ls);
-inline RT_Vec3f Direction(const RT_Light *l, 
-						  const RT_Result *r);
-inline RT_Vec3f Color(const RT_Light *l, 
+
+inline RT_Vec3f Direction(__global const RT_DataScene *world,
+						  RT_Light *l,
+						  const RT_Lamp *o, 
+						  const RT_Result *r,
+						  const int index,
+						  uint *seed);
+
+inline RT_Vec3f Color(const RT_Light *l,
+					  const RT_Lamp *o, 
 					  const RT_Result *r);
+
 bool InShadow(const RT_Light *l, 
 			  __global const RT_Primitive *objects,
 			  const int numObj, 
-			  const RT_Ray ray);
+			  const RT_Ray *ray);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Methods for the AreaLight
+ *
+ *----------------------------------------------------------------------------------------------*/
+ inline float G(const RT_Light *l,
+				const RT_Lamp *o, 
+				const RT_Result *r);
+
+inline float PDF(const RT_Lamp *o);
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -344,8 +427,10 @@ inline RT_Vec3f HitPoint(const RT_Ray *r, const float t);
  * Method for collision verification between the rays and objects
  *
  *----------------------------------------------------------------------------------------------*/
-RT_Result Hit(__global const RT_Primitive *objects, 
-			  const int numObj, const RT_Ray *ray);
+RT_Result Hit(__global const RT_Lamp *lamps,
+			  __global const RT_Primitive *objects, 
+			  const int numLamps, const int numObj, 
+			  const RT_Ray *ray);
 bool ShadowHit(__global const RT_Primitive *objects, 
 			   const int numObj, const RT_Ray *ray, 
 			   float tmin);
@@ -362,10 +447,27 @@ bool ShadowHit(__global const RT_Primitive *objects,
  * Method for the Tracer
  *
  *----------------------------------------------------------------------------------------------*/
-RT_Vec3f TraceRay(__global const RT_Light *lights,
-				  __global const RT_Primitive *objects,
-				  __global const RT_DataScene *world, 
-				  const RT_Ray *ray);
+RT_Vec3f Raycasting_TraceRay(__global const RT_Light *lights,
+							 __global const RT_Lamp *lamps,
+							 __global const RT_Primitive *objects,
+							 __global const RT_DataScene *world, 
+							 const RT_Ray *ray);
+
+RT_Vec3f AreaLighting_TraceRay(__global const RT_Light *lights,
+							   __global const RT_Lamp *lamps,
+							   __global const RT_Primitive *objects,
+							   __global const RT_DataScene *world, 
+							   const RT_Ray *ray,
+							   const int sampleIndex,
+							   uint *seed);
+
+RT_Vec3f Tracer(__global const RT_Light *lights,
+				__global const RT_Lamp *lamps,
+				__global const RT_Primitive *objects,
+				__global const RT_DataScene *world, 
+				const RT_Ray *ray,
+				const int sampleIndex,
+				uint *seed);
 
 uint RandIndex(uint *seed,
 			   const int numSamples,

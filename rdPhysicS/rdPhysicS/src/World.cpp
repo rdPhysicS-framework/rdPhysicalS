@@ -31,6 +31,7 @@ ObjectDispatcher *World::oDispatcher = nullptr;
 PackerObjects *World::packer = nullptr;
 Renderer *World::renderer = nullptr;
 Sampler *World::sampler = nullptr;
+byte World::flags = RAYCASTING;
 
 World::World()
 {}
@@ -76,6 +77,11 @@ PDCT PackerObjects *World::GetPackerObjects()
 	return packer;
 }
 
+byte World::GetFlags()
+{
+	return flags;
+}
+
 void World::SetApp(ApplicationCL *_app)
 {
 	if (!app)
@@ -96,8 +102,13 @@ void World::SetViewPlane(const int w, const int h)
 void World::Quality(const int r)
 {
 	sampler->SetNumSamples(r);
-	sampler->SetNumSets((r > 1) ? 83 : 1);
+	//sampler->SetNumSets((r > 1) ? 83 : 1);
 	sampler->SetupShuffledIndices();
+}
+
+void World::Enable(const byte _flags)
+{
+	flags = _flags;
 }
 
 void World::Init()
@@ -105,11 +116,12 @@ void World::Init()
 	srand(time(NULL));
 	app = ApplicationCLFactor::CreateApplicationUsersInput();
 	container = ContainerFactory::CreateContainer({ "world", "camera",
-												    "lights", "objects",
-												    "sampleShuffledIndices" },
+												    "lights", "lamps",
+													"objects","sampleShuffledIndices" },
 												    { new Package<RT_DataScene>(),
 												      new Package<RT_Camera>(),
 												      new Package<RT_Light>(),
+													  new Package<RT_Lamp>(),
 												      new Package<RT_Primitive>(),
 												      new Package<char>() });
 	manager = new ManagerObjects();

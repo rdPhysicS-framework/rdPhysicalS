@@ -6,7 +6,7 @@
 
 RDPS_BEGIN
 	FRWK_BEGIN
-		class GeometricObject;
+		class ObjectBase;
 		class Light;
 		class ViewPlane;
 		class Camera;
@@ -30,7 +30,7 @@ RDPS_BEGIN
 		class ObjectsHostPkg
 		{
 		private:
-			std::vector<FRWK GeometricObject*> objects;
+			std::vector<FRWK ObjectBase*> objects;
 			std::vector<FRWK Light*> lights;
 			FRWK ViewPlane *vp;
 			FRWK Camera *camera;
@@ -50,7 +50,7 @@ RDPS_BEGIN
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que retorna o pacote de objetos da cena
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			const std::vector<FRWK GeometricObject*> &GetObjects() const;
+			const std::vector<FRWK ObjectBase*> &GetObjects() const;
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que retorna o pacote de luzes da cena
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,7 +71,7 @@ RDPS_BEGIN
 			 * Funcao auxiliar que retorna um objeto do pacote de objetos.
 			 * Recebe como parametro o id referente no array.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			FRWK GeometricObject* GetObject(const size_t id) const;
+			FRWK ObjectBase* GetObject(const size_t id) const;
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que retorna um foco de luz do pacote de luzes.
 			 * Recebe como parametro o id referente no array.
@@ -84,7 +84,7 @@ RDPS_BEGIN
 			 * o objeto que sera adicionado.
 			 * Retorna um int que eh referente ao id do objeto na lista.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			const int AddObject(FRWK GeometricObject *object);
+			const int AddObject(FRWK ObjectBase *object);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que remove um objeto da lista pelo seu id;
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/

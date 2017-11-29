@@ -90,13 +90,16 @@ CommmandQueueComponent &CommmandQueueComponent::ReadBuffer(const MemObjectCompon
 
 CommmandQueueComponent &CommmandQueueComponent::WriteBuffer(const MemObjectComponent &memObj, const size_t size, void *data)
 {
-	int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE,
-									  0, size, (const void*)data,
-									  0, nullptr, nullptr);
-
-	if (status != CL_SUCCESS)
+	if (memObj())
 	{
-		Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));
+		int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE,
+			0, size, (const void*)data,
+			0, nullptr, nullptr);
+
+		if (status != CL_SUCCESS)
+		{
+			Logger::Log("clEnqueueWriteBuffer ERROR: " + std::to_string(status));
+		}
 	}
 
 	return (*this);

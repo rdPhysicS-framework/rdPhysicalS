@@ -101,7 +101,7 @@ RDPS_BEGIN
 			}
 
 			packages[id]->AddElement(&element);
-
+			
 			return (*this);
 		}
 

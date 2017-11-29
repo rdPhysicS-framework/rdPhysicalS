@@ -42,7 +42,7 @@ RDPS_BEGIN
 			 * o objeto que sera adicionado.
 			 * Retorna um int que eh referente ao id do objeto na lista.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			const int AddObject(FRWK GeometricObject *object);
+			const int AddObject(FRWK ObjectBase *object);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que remove um objeto da lista pelo seu id;
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/

@@ -14,6 +14,7 @@
 
 #define EPSILON 0.01f
 
+#define COLORMAX 0xFF
 #define RMASK 0x000000FF
 #define GMASK 0x0000FF00
 #define BMASK 0x00FF0000
@@ -62,6 +63,18 @@ typedef enum
 	RT_JITTERED,
 	RT_REGULAR
 } RT_TypeSampler;
+
+typedef enum
+{ 
+	CIRCULAR,
+	RECTANGULAR
+} RT_TypeLamp;
+
+typedef enum
+{ 
+	RT_AREA_LIGHTING,
+	RT_RAYCASTING
+} RT_TypeTracer;
 
 inline float toRadians(const float d)
 {
@@ -588,6 +601,13 @@ inline RT_Vec3f _clamp(const RT_Vec3f *v, const float minimum, const float maxim
 inline void Saturate(RT_Vec3f *c)
 { 
 	*c = _clamp(c, 0, 1);
+}
+
+inline float sizeSqr(const RT_Vec3f v)
+{ 
+	return ((v.x * v.x) + 
+			(v.y * v.y) + 
+			(v.z * v.z)  );
 }
 
 /*----------------------------------------------------------------------------------------------

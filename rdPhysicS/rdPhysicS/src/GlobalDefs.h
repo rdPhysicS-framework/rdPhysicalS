@@ -57,6 +57,19 @@
 
 #define ARRAY_WITHOUT_INDEX -1
 
+#define RMASK 0x000000FF
+#define GMASK 0x0000FF00
+#define BMASK 0x00FF0000
+#define AMASK 0xFF000000
+
+#define RSHIFT 0
+#define GSHIFT 8
+#define BSHIFT 16
+#define ASHIFT 24
+
+#define RAYCASTING	  (1 << 1)
+#define AREA_LIGHTING (1 << 2)
+
 /*ERROR MESSAGE */
 #define ERROR_MSG_EMPTY_ERROR_MESSAGE ""
 #define ERROR_MSG_PLATFORM_INVALID_VALUE     "CL_INVALID_VALUE: any of the parameters may be wrong."
@@ -151,9 +164,9 @@ enum TypeBRDF
 enum TypeObject
 {
 	CUBE,
+	EMISSIVE_OBJECT,
 	MESH,
 	PLANE,
-	RECTANGLE,
 	SPHERE
 };
 
@@ -189,6 +202,13 @@ enum TypeSampler
 	MULTIJITTERED
 };
 
+enum TypeObjectEmissive
+{
+	CIRCULAR,
+	RECTANGULAR
+};
+
 typedef unsigned int uint;
 typedef unsigned __int64 ulong;
+typedef unsigned char byte;
 #endif//__GLOBAL_DEFS_H__

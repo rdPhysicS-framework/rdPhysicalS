@@ -7,6 +7,7 @@ inline RT_Result CreateResult()
 { 
 	RT_Result r;
 	r.hit = false;
+	
 	return r;
 }
 
@@ -278,9 +279,9 @@ bool Box_ShadowHit(const RT_Primitive *b,
 		{
 			ip[i] = o + d * t[i];
 
-			if ((ip[i].x > (b->p.x - 0.01f)) && (ip[i].x < (s.x + 0.01f)) &&
-				(ip[i].y > (b->p.y - 0.01f)) && (ip[i].y < (s.y + 0.01f)) &&
-				(ip[i].z > (b->p.z - 0.01f)) && (ip[i].z < (s.z + 0.01f)))
+			if ((ip[i].x > (b->p.x - 0.001f)) && (ip[i].x < (s.x + 0.001f)) &&
+				(ip[i].y > (b->p.y - 0.001f)) && (ip[i].y < (s.y + 0.001f)) &&
+				(ip[i].z > (b->p.z - 0.001f)) && (ip[i].z < (s.z + 0.001f)))
 			{
 				if(t[i] < *tmin)
 				{
@@ -293,6 +294,63 @@ bool Box_ShadowHit(const RT_Primitive *b,
 
 	return hit;
 }
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Methods to verify intercession with the lamp rectangular
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Rect_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r)
+{ 
+	float t = dot((l->p - ray->o), l->normal) /
+			  dot(ray->d, l->normal);
+
+	if(t <= 0.1f)
+		return false;
+
+	RT_Vec3f _p = HitPoint(ray, t);
+	RT_Vec3f d = _p - l->p;
+
+	float dDotA = dot(d, l->a);
+	if(dDotA < 0.0f || dDotA > sizeSqr(l->a))
+		return false;
+
+	float dDotB = dot(d, l->b);
+	if(dDotB < 0.0f || dDotB > sizeSqr(l->b))
+		return false;
+
+	//*tmin = t;
+	r->lhitPoint = _p;
+	r->normal = l->normal;
+
+	return true;
+}
+
+RT_Vec3f Rect_Sample(__global const RT_DataScene *world,
+					 const RT_Lamp *l,
+					 const int index,
+					 uint *seed)
+{ 
+	RT_Vec2f point;
+
+	switch(world->type)
+	{ 
+		case RT_HAMMERSLEY:
+		break;
+		case RT_JITTERED:
+			point = JitteredGenerateSampler(seed, sqrt((float)world->numSamples), index);
+		break;
+		case RT_REGULAR:
+			point = RegularGenerateSampler(sqrt((float)world->numSamples), index);
+		break;
+	}
+
+
+	return (l->p + point.x * l->a + point.y * l->b);
+}
+
 
 /*----------------------------------------------------------------------------------------------
  *

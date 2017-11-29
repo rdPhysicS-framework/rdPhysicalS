@@ -226,6 +226,72 @@ RDPS_BEGIN
 			}
 		};
 
+		class RT_Emissive
+		{
+		public:
+			int   RDPS_ALIGN(4) color;
+			float RDPS_ALIGN(4) ls;
+
+		public:
+			RT_Emissive() : color(0), ls(0.0f) {}
+
+			RT_Emissive(const int _color, 
+						const float _ls) : 
+				color(_color),
+				ls(_ls)
+			{}
+
+			RT_Emissive(const RT_Emissive &other) :
+				color(other.color),
+				ls(other.ls)
+			{}
+		};
+
+		typedef enum
+		{
+			RT_CIRCULAR,
+			RT_RECTANGULAR
+		} RT_TypeLamp;
+
+		class RT_Lamp
+		{
+		public:
+			RT::Vec4f RDPS_ALIGN(16) p;
+			RT::Vec4f RDPS_ALIGN(16) a;
+			RT::Vec4f RDPS_ALIGN(16) b;
+			RT::Vec4f RDPS_ALIGN(16) normal;
+
+			RT_Emissive material;
+
+			RT_TypeLamp RDPS_ALIGN(sizeof(RT_TypeLamp)) type;
+
+		public:
+			RT_Lamp() {}
+
+			RT_Lamp(const RT::Vec3f &_p,
+					const RT::Vec3f &_a,
+					const RT::Vec3f &_b,
+					const RT::Vec3f &_normal,
+					const RT_Emissive &_material,
+					const RT_TypeLamp _type) :
+				p(_p),
+				a(_a),
+				b(_b),
+				normal(_normal),
+				material(_material),
+				type(_type)
+			{}
+
+			RT_Lamp(const RT_Lamp &other) :
+				p(other.p),
+				a(other.a),
+				b(other.b),
+				normal(other.normal),
+				material(other.material),
+				type(other.type)
+			{}
+		};
+
 		typedef enum
 		{
 			RT_AMBIENT_LIGHT,
@@ -236,32 +302,36 @@ RDPS_BEGIN
 		class RT_Light
 		{
 		public:
-			RT_Vec3f RDPS_ALIGN(16) position;
-			RT_Vec3f RDPS_ALIGN(16) color;
+			RT_Vec3f RDPS_ALIGN(16) point;
+			RT_Vec3f RDPS_ALIGN(16) c_wi;
+			
 			float RDPS_ALIGN(4) ls;
 			float RDPS_ALIGN(4) ex;
+			int RDPS_ALIGN(4) index;
 
 			RT_TypeLight RDPS_ALIGN(sizeof(RT_TypeLight)) type;
 
 		public:
 			RT_Light() {}
 
-			RT_Light(const RT_Vec3f &_position,
-				const RT_Vec3f &_color,
-				const float _ls,
-				const float _ex,
-				const RT_TypeLight _type) :
-				position(_position),
-				color(_color),
+			RT_Light(const RT_Vec3f &_point,
+					 const RT_Vec3f &_c_wi,
+					 const float _ls,
+					 const float _ex,
+					 const int _index,
+					 const RT_TypeLight _type) :
+				point(_point),
+				c_wi(_c_wi),
 				ls(_ls),
 				ex(_ex),
+				index(_index),
 				type(_type)
 			{}
 
 			RT_Light &operator=(const RT_Light &other)
 			{
-				position = other.position;
-				color = other.color;
+				point = other.point;
+				c_wi = other.c_wi;
 				ls = other.ls;
 				ex = other.ex;
 				type = other.type;
@@ -276,8 +346,8 @@ RDPS_BEGIN
 					out << "RT_POINT_LIGHT" << std::endl;
 
 
-				out << "position: " << l.position.x << " - " << l.position.y << " - " << l.position.z << std::endl;
-				out << "color: " << l.color.x << " - " << l.color.y << " - " << l.color.z << std::endl;
+				out << "position: " << l.point.x << " - " << l.point.y << " - " << l.point.z << std::endl;
+				out << "color: " << l.c_wi.x << " - " << l.c_wi.y << " - " << l.c_wi.z << std::endl;
 				out << "ls: " << l.ls << std::endl;
 				out << "ex: " << l.ex << std::endl << std::endl;
 				out << "type: " << l.type << std::endl;
@@ -364,6 +434,12 @@ RDPS_BEGIN
 			RT_REGULAR
 		} RT_TypeSampler;
 
+		typedef enum
+		{
+			RT_AREA_LIGHTING,
+			RT_RAYCASTING
+		} RT_TypeTracer;
+
 		class RT_DataScene
 		{
 		public:
@@ -379,6 +455,9 @@ RDPS_BEGIN
 			/*data of the lights*/
 			int RDPS_ALIGN(4) numLights;
 
+			/*data of the lights*/
+			int RDPS_ALIGN(4) numLamps;
+
 			/*data of the objects*/
 			int RDPS_ALIGN(4) numObjects;
 
@@ -392,6 +471,8 @@ RDPS_BEGIN
 			uint RDPS_ALIGN(4) seed;
 
 			RT_TypeSampler RDPS_ALIGN(sizeof(RT_TypeSampler)) type;
+			RT_TypeTracer  RDPS_ALIGN(sizeof(RT_TypeTracer)) typeTracer;
+
 		public:
 			RT_DataScene() :
 				vp(),
@@ -404,19 +485,23 @@ RDPS_BEGIN
 			{}
 
 			RT_DataScene(const RT_ViewPlane &_vp,
-				const RT_Vec3f &_background,
-				const int _numLights,
-				const int _numObjects,
-				const int _numSamples,
-				const int _numSets,
-				RT_TypeSampler _type,
-				const uint _seed) :
+						 const RT_Vec3f &_background,
+						 const int _numLights,
+						 const int _numLamps,
+						 const int _numObjects,
+						 const int _numSamples,
+						 const int _numSets,
+						 RT_TypeSampler _type,
+						 RT_TypeTracer _typeTracer,
+						 const uint _seed) :
 				vp(_vp), background(_background),
 				numLights(_numLights),
+				numLamps(_numLamps),
 				numObjects(_numObjects),
 				numSamples(_numSamples),
 				numSets(_numSets),
 				type(_type),
+				typeTracer(_typeTracer),
 				seed(_seed)
 			{}
 

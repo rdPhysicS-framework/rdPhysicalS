@@ -26,12 +26,12 @@ ManagerObjects::~ManagerObjects()
 		delete package;
 }
 
-const ObjectsHostPkg * ManagerObjects::GetPackage() const
+const ObjectsHostPkg *ManagerObjects::GetPackage() const
 {
 	return package;
 }
 
-const int ManagerObjects::AddObject(FRWK GeometricObject * object)
+const int ManagerObjects::AddObject(FRWK ObjectBase * object)
 {
 	return package->AddObject(object);
 }

@@ -5,13 +5,13 @@ USING_RDPS
 USING_FRWK
 
 PhongMaterial::PhongMaterial() :
-			   Material(PHONG_MATERIAL)
+	MaterialBase(PHONG_MATERIAL)
 {}
 
 PhongMaterial::PhongMaterial(BRDF *_ambient,
 							 BRDF *_diffuse, 
 							 GlossySpecular *_specular) :
-			   Material(_ambient, PHONG_MATERIAL),
+			   MaterialBase(_ambient, PHONG_MATERIAL),
 			   diffuse(_diffuse),
 			   specular(_specular)
 {}
@@ -21,13 +21,13 @@ PhongMaterial::PhongMaterial(const RT::Vec3f &color,
 							 const float _diffuse, 
 							 const float _specular, 
 							 const float _intensity) :
-				Material(new BRDF(color, _ambient, AMBIENT), PHONG_MATERIAL),
+			    MaterialBase(new BRDF(color, _ambient, AMBIENT), PHONG_MATERIAL),
 				diffuse(new BRDF(color, _diffuse, DIFFUSE)),
 				specular(new GlossySpecular(color, _specular, _intensity))
 {}
 
 PhongMaterial::PhongMaterial(const PhongMaterial &other) :
-			   Material(other),
+			   MaterialBase(other),
 			   diffuse(other.diffuse->Clone()),
 			   specular(other.specular->Clone())
 {}

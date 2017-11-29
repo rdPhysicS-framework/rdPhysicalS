@@ -41,6 +41,7 @@ RDPS_BEGIN
 
 			Package<T> &operator=(const Package<T> &other);
 
+			virtual size_t Size() const;
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar para adicionar um elemento no array
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -97,6 +98,12 @@ RDPS_BEGIN
 			elements = other.elements;
 			buffer = other.buffer;
 			return (*this);
+		}
+
+		template<class T>
+		inline size_t Package<T>::Size() const
+		{
+			return elements.size();
 		}
 
 		template<class T>

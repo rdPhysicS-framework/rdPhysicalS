@@ -7,20 +7,22 @@ RDPS_BEGIN
 	
 	FRWK_BEGIN
 		class Light;
-		class GeometricObject;
+		class ObjectBase;
 		class Camera;
 		class ViewPlane;
 		class Material;
 		class Sampler;
+		class EmissiveObject;
 	FRWK_END
 
 	PKG_BEGIN 
 		class Container; 
-		struct RT_Material;
+		class RT_Material;
+		class RT_Emissive;
 	PKG_END
 
 	PDCT_BEGIN
-
+		class ObjectsHostPkg;
 		class PackerObjects;
 
 		/********************************************************************************************************************************************
@@ -50,21 +52,31 @@ RDPS_BEGIN
 			 * luzes da cena para as luzes do pacote do container
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			void ToPackLightData(const FRWK Light *light, 
-								 const PackerObjects &c);
+								 const PackerObjects &c,
+								 const ObjectsHostPkg &pkg);
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar para converter e empacotar os dados dos
 			 * objetos da cena para os objetos do pacote do container
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			void ToPackObjectData(const FRWK GeometricObject *object,
+			void ToPackObjectData(const FRWK ObjectBase *object,
 								  const PackerObjects &c);
+
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar para converter e empacotar os dados dos
+			 * objetos emissivos da cena para os objetos emissivos do pacote do container
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
+			int ToPackObjectEmissiveData(const FRWK ObjectBase *object,
+										 const PackerObjects &c);
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar para converter e empacotar os dados do
 			 * do material dos objetos da cena para o material dos objetos 
 			 * do pacote do container
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			PKG RT_Material ToPackMaterialData(const FRWK Material *object);
+			PKG RT_Material ToPackMaterialData(const FRWK Material *material);
+
+			PKG RT_Emissive ToPackEmissiveData(const FRWK Material *material);
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar para converter e empacotar os dados do
@@ -83,7 +95,7 @@ RDPS_BEGIN
 			 * Funcao auxiliar para converter e empacotar os dados do
 			 * sampler para definir a qualidade da cena ray Tracing
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			void ToPackDataSampler(const const PackerObjects &c);
+			void ToPackDataSampler(const PackerObjects &c);
 
 		public:
 			/*---------------------------------------------------------------------------------------------------------------------------------------

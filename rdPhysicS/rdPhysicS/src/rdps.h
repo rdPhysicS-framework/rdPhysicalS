@@ -11,10 +11,13 @@
 RDPS_BEGIN typedef FRWK SceneBase				SceneBase;				 RDPS_END
 RDPS_BEGIN typedef FRWK Cube					Cube;					 RDPS_END
 RDPS_BEGIN typedef FRWK Plane					Plane;					 RDPS_END
+RDPS_BEGIN typedef FRWK Rectangle				Rectangle;				 RDPS_END
 RDPS_BEGIN typedef FRWK Sphere					Sphere;					 RDPS_END
 RDPS_BEGIN typedef FRWK AmbientLight			AmbientLight;			 RDPS_END
 RDPS_BEGIN typedef FRWK PointLight				PointLight;				 RDPS_END
+RDPS_BEGIN typedef FRWK AreaLight				AreaLight;				 RDPS_END
 RDPS_BEGIN typedef FRWK Camera					Camera;					 RDPS_END
+RDPS_BEGIN typedef FRWK EmissiveMaterial		EmissiveMaterial;		 RDPS_END
 RDPS_BEGIN typedef FRWK PhongMaterial			PhongMaterial;			 RDPS_END
 RDPS_BEGIN typedef FRWK SimpleMaterial			SimpleMaterial;			 RDPS_END
 RDPS_BEGIN typedef FRWK Actor					Actor;					 RDPS_END

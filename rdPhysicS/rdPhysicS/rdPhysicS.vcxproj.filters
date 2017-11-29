@@ -81,9 +81,6 @@
     <ClCompile Include="src\rdps-frwk\material\brdf\GlossySpecular.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\rdps-frwk\base\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\rdps-frwk\base\Actor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -120,12 +117,90 @@
     <ClCompile Include="src\rdps-frwk\lights\AmbientLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rdps-production\base\Collaborator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\collaborators\ManagerObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\collaborators\PackerObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\Util\ViewPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\base\SceneBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\msg\Message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\msg\MessageDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-packages\output\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\Util\ObjectsHostPkg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\collaborators\ObjectDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-deliverer\ToSendObjectsForPack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-deliverer\ToSendObjectsForTheDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-global\ToRest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-packer\ToPackObjectsForDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-packer\ToPackObjectsInParts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\StateMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\collaborators\GeneralManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-production\states\state-manager\ToProcessObjectsToPack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\Util\Sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\primitives\Rectangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\base\EmissiveObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\base\MaterialBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\base\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\material\EmissiveMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rdps-frwk\lights\AreaLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\SceneTestAreaLight .cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\rdps-CL\Application\ClConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rdps-CL\ClGlobalDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rdps-CL\Application\BaseClComponent.h">
@@ -176,9 +251,6 @@
     <ClInclude Include="src\rdps-packages\DataCopy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rdps-packages\PkgGlobalDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\rdps-packages\input\Package.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,9 +264,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rdps-packages\output\FinalProduct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rdps-packages\object-CL\ObjectsPackage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rdps-packages\input\ContainerFactory.h">
@@ -219,9 +288,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rdps-frwk\material\brdf\GlossySpecular.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rdps-frwk\base\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\rdps-frwk\base\Actor.h">
@@ -263,6 +329,111 @@
     <ClInclude Include="src\rdps-production\base\Collaborator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\rdps-production\base\State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\collaborators\ManagerObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\collaborators\PackerObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-packages\object-CL\ObjectsPackage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\Util\ViewPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\msg\Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\base\SceneBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\msg\MessageDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\base\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-packages\output\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\Util\ObjectsHostPkg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\collaborators\ObjectDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-deliverer\ToSendObjectsForPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-deliverer\ToSendObjectsForTheDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-global\ToRest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-packer\ToPackObjectsForDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-packer\ToPackObjectsInParts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\StateMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\includes_frwk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\includes_states.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\collaborators\GeneralManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\states\state-manager\ToProcessObjectsToPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\Test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\Util\Sampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-CL\includes_appCL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-packages\includes_pkg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-production\includes_pdct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\primitives\Rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\base\EmissiveObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\base\MaterialBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\base\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\material\EmissiveMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rdps-frwk\lights\AreaLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\SceneTestAreaLight .h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\rtGeometricObject.cl" />
@@ -272,6 +443,6 @@
     <None Include="resource\rtStructs.cl" />
     <None Include="resource\rtUtil.cl" />
     <None Include="resource\rtWorld.cl" />
-    <None Include="resource\Test.cl" />
+    <None Include="resource\rtSamples.cl" />
   </ItemGroup>
 </Project>

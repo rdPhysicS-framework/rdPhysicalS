@@ -1,6 +1,6 @@
 #include "SceneBase.h"
 #include "..\camera\Camera.h"
-#include "GeometricObject.h"
+#include "ObjectBase.h"
 #include "Light.h"
 #include "..\lights\AmbientLight.h"
 #include "..\..\World.h"
@@ -23,16 +23,16 @@ SceneBase::SceneBase() :
 	World::GetManager()->AddLight(ambient);
 }
 
-int SceneBase::AddObject(GeometricObject *obj)
+int SceneBase::AddObject(ObjectBase *obj)
 {
 	World::GetManager()->AddObject(obj);
-	return World::GetManager()->GetPackage()->GetObjects().size() - 1;
+	return (int)World::GetManager()->GetPackage()->GetObjects().size() - 1;
 }
 
 int SceneBase::AddLight(Light *light)
 {
 	World::GetManager()->AddLight(light);
-	return World::GetManager()->GetPackage()->GetLights().size() - 1;
+	return (int)World::GetManager()->GetPackage()->GetLights().size() - 1;
 }
 
 int SceneBase::CreateCube(const RT::Vec3f &initPoint, 
@@ -63,7 +63,20 @@ int SceneBase::CreatePointLight(const RT::Vec3f &point,
 	return AddLight(new PointLight(point, color, 1.0f));
 }
 
-GeometricObject *SceneBase::GetObject(const size_t id) const
+int SceneBase::CreatePointLight(EmissiveObject *lamp, 
+								const RT::Vec3f &point, 
+								const RT::Vec3f &color,
+							    const float exp)
+{
+	return AddLight(new PointLight(point, color, 1.0f, AddObject(lamp)));
+}
+
+int SceneBase::CreateAreaLight(EmissiveObject *lamp)
+{
+	return AddLight(new AreaLight(AddObject(lamp)));
+}
+
+ObjectBase *SceneBase::GetObject(const size_t id) const
 {
 	return World::GetManager()->GetPackage()->GetObject(id);
 }

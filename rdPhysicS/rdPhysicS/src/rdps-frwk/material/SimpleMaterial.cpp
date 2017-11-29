@@ -5,19 +5,19 @@ USING_RDPS
 USING_FRWK
 
 SimpleMaterial::SimpleMaterial() :
-			    Material(SIMPLE_MATERIAL)
+				MaterialBase(SIMPLE_MATERIAL)
 {}
 
 SimpleMaterial::SimpleMaterial(BRDF *_ambient, 
 							   BRDF *_diffuse) :
-			    Material(_ambient, SIMPLE_MATERIAL),
+				MaterialBase(_ambient, SIMPLE_MATERIAL),
 				diffuse(_diffuse)
 {}
 
 SimpleMaterial::SimpleMaterial(const RT::Vec3f &color, 
 							   const float ambient, 
 							   const float diffuse) :
-				Material(new BRDF(color, 
+				MaterialBase(new BRDF(color,
 								  ambient, 
 								  AMBIENT), 
 						 SIMPLE_MATERIAL),
@@ -28,7 +28,7 @@ SimpleMaterial::SimpleMaterial(const RT::Vec3f &color,
 {}
 
 SimpleMaterial::SimpleMaterial(const SimpleMaterial &other) :
-			    Material(other),
+				MaterialBase(other),
 				diffuse(other.diffuse->Clone())
 {}
 

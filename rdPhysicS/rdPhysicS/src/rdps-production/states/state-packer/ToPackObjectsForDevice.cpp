@@ -9,6 +9,7 @@
 #include "..\StateMachine.h"
 #include "..\..\collaborators\GeneralManager.h"
 #include "..\state-global\ToRest.h"
+#include "..\..\..\World.h"
 
 USING_RDPS
 USING_PDCT
@@ -25,7 +26,8 @@ ToPackObjectsForDevice::~ToPackObjectsForDevice()
 {}
 
 void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light, 
-											 const PackerObjects &c)
+											 const PackerObjects &c,
+											 const ObjectsHostPkg &pkg)
 {
 	switch (light->GetType())
 	{
@@ -35,7 +37,7 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 
 			RT_Light l({ 0.0f, 0.0f, 0.0f, 0.0f },
 					   { a->GetColor().x, a->GetColor().z, a->GetColor().z, 0.0f },
-				       1.0f, 0.0f, RT_AMBIENT_LIGHT);
+				       1.0f, 0.0f, -1, RT_AMBIENT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
@@ -46,15 +48,30 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 		}
 		case AREA_LIGHT:
 		{
+			const AreaLight *a = static_cast<const AreaLight*>(light);
+			
+			RT_Light l({0.0f, 0.0f, 0.0f}, 
+					   {0.0f, 0.0f, 0.0f}, 
+					   0, 0, 
+					   ToPackObjectEmissiveData(
+						   pkg.GetObject(a->GetIndexObject()), c),
+					   RT_AREA_LIGHT);
+
+			c.GetContainer()->AddElement("lights", l);
 			break;
 		}
 		case POINT_LIGHT:
 		{
 			const PointLight *p = static_cast<const PointLight*>(light);
+			int index = p->GetIndexObject();
+			index = (index >= 0) ? 
+					ToPackObjectEmissiveData(
+					  pkg.GetObject(index), c) : 
+					-1;
 
 			RT_Light l({ p->GetPosition().x, p->GetPosition().y, p->GetPosition().z, 0.0f },
-						  { p->GetColor().x, p->GetColor().y, p->GetColor().z, 0.0f },
-						  1.0f, 0.0f, RT_POINT_LIGHT);
+					   { p->GetColor().x, p->GetColor().y, p->GetColor().z, 0.0f },
+					   1.0f, 0.0f, index, RT_POINT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
@@ -62,7 +79,7 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 	}
 }
 
-void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object, 
+void ToPackObjectsForDevice::ToPackObjectData(const FRWK ObjectBase *object,
 											  const PackerObjects &c)
 {
 	switch (object->GetType())
@@ -118,10 +135,6 @@ void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object
 
 			return;
 		}
-		case RECTANGLE:
-		{
-			return;
-		}
 		case SPHERE:
 		{
 			const Sphere *s = static_cast<const Sphere*>(object);
@@ -147,14 +160,38 @@ void ToPackObjectsForDevice::ToPackObjectData(const FRWK GeometricObject *object
 	}
 }
 
+int ToPackObjectsForDevice::ToPackObjectEmissiveData(const FRWK ObjectBase *object, 
+													 const PackerObjects &c)
+{
+	if(object->GetType() == EMISSIVE_OBJECT)
+	{
+		const EmissiveObject *eo = static_cast<const EmissiveObject*>(object);
+		switch (eo->GetType())
+		{
+		case CIRCULAR:
+			break;
+		case RECTANGULAR:
+			const Rectangle *rect = static_cast<const Rectangle*>(eo);
+
+			RT_Lamp lamp(rect->GetP(),
+						 rect->GetA(),
+						 rect->GetB(),
+						 rect->GetNormal(),
+						 ToPackEmissiveData(rect->GetMaterial()),
+						 RT_RECTANGULAR);
+
+			c.GetContainer()->AddElement("lamps", lamp);
+			break;
+		}
+	}
+
+	return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
+}
+
 PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *material)
 {
 	switch (material->GetType())
 	{
-		case EMISSIVE_MATERIAL:
-		{
-			return{};
-		}
 		case SIMPLE_MATERIAL:
 		{
 			const SimpleMaterial *m = static_cast<const SimpleMaterial*>(material);
@@ -195,6 +232,25 @@ PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *
 	return RT_Material();
 }
 
+PKG RT_Emissive ToPackObjectsForDevice::ToPackEmissiveData(const FRWK Material *material)
+{
+	if (material->GetType() != EMISSIVE_MATERIAL)
+	{
+		Logger::Log("incompatible material the function expects an EmissiveMaterial");
+	}
+
+	const EmissiveMaterial *e = static_cast<const EmissiveMaterial*>(material);
+
+	RT::Vec3f c = e->GetColor();
+
+	int color = ((int)(c.x * 255) & 0xFF) << RSHIFT |
+				((int)(c.y * 255) & 0xFF) << GSHIFT |
+				((int)(c.z * 255) & 0xFF) << BSHIFT |
+				255 << ASHIFT;
+
+	return PKG RT_Emissive(color, e->GetLs());
+}
+
 void ToPackObjectsForDevice::ToPackCameraData(const FRWK Camera *camera,
 											  const PackerObjects &c)
 {
@@ -227,15 +283,29 @@ void ToPackObjectsForDevice::ToPackWordData(const PackerObjects &c)
 	default:
 		break;
 	}
+	
+	RT_TypeTracer typeTracer;
+
+	switch (World::GetFlags())
+	{
+	case RAYCASTING:
+		typeTracer = RT_RAYCASTING;
+		break;
+	case AREA_LIGHTING:
+		typeTracer = RT_AREA_LIGHTING;
+		break;
+	}
+
 
 	RT_DataScene world(RT_ViewPlane(vp->GetWidth(), vp->GetHeight(),
 									{ vp->GetSizePixel().x, vp->GetSizePixel().y }),
 									{ 0.0f, 0.0f, 0.0f, 1.0f },
-					   static_cast<int>(c.GetPackage()->GetLights().size()),
-					   static_cast<int>(c.GetPackage()->GetObjects().size()),
+					   static_cast<int>(c.GetContainer()->GetPackage("lights")->Size()),
+					   static_cast<int>(c.GetContainer()->GetPackage("lamps")->Size()),
+					   static_cast<int>(c.GetContainer()->GetPackage("objects")->Size()),
 					   c.GetPackage()->GetSampler()->GetNumSamples(),
 					   c.GetPackage()->GetSampler()->GetNumSets(), 
-					   type, rand());
+					   type, typeTracer, rand());
 
 	c.GetContainer()->AddElement("world", world);
 }
@@ -267,7 +337,7 @@ void ToPackObjectsForDevice::Execute(const PackerObjects &c)
 
 	for (auto i : pkg->GetLights())
 	{
-		ToPackLightData(i, c.GetContainer());
+		ToPackLightData(i, c.GetContainer(), *pkg);
 	}
 
 	for (auto i : pkg->GetObjects())

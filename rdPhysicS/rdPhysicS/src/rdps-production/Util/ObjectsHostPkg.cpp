@@ -1,5 +1,5 @@
 #include "ObjectsHostPkg.h"
-#include "..\..\rdps-frwk\base\GeometricObject.h"
+#include "..\..\rdps-frwk\base\ObjectBase.h"
 #include "..\..\rdps-frwk\base\Light.h"
 #include "..\..\rdps-frwk\Util\ViewPlane.h"
 #include "..\..\rdps-frwk\camera\Camera.h"
@@ -43,7 +43,7 @@ ObjectsHostPkg::~ObjectsHostPkg()
 		delete sampler;
 }
 
-const std::vector<FRWK GeometricObject*> &ObjectsHostPkg::GetObjects() const
+const std::vector<FRWK ObjectBase*> &ObjectsHostPkg::GetObjects() const
 {
 	return objects;
 }
@@ -68,7 +68,7 @@ const FRWK Sampler *ObjectsHostPkg::GetSampler() const
 	return sampler;
 }
 
-FRWK GeometricObject *ObjectsHostPkg::GetObject(const size_t id) const
+FRWK ObjectBase *ObjectsHostPkg::GetObject(const size_t id) const
 {
 	return objects[id];
 }
@@ -78,7 +78,7 @@ FRWK Light *ObjectsHostPkg::GetLight(const size_t id) const
 	return lights[id];
 }
 
-const int ObjectsHostPkg::AddObject(FRWK GeometricObject *object)
+const int ObjectsHostPkg::AddObject(FRWK ObjectBase *object)
 {
 	objects.push_back(object);
 	return static_cast<int>(objects.size() - 1);

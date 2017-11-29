@@ -35,7 +35,7 @@ RDPS_BEGIN
 
 			virtual ObjectBase *Clone() const = 0;
 			ObjectBase &operator=(const ObjectBase &other);
-			virtual inline Material *GetMaterial() const = 0;
+			virtual Material *GetMaterial() const = 0;
 			virtual ObjectBase &SetMaterial(const Material &_material) = 0;
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------

@@ -296,13 +296,13 @@ void rdps::Logger::TestPrim(const PKG RT_Primitive &p)
 
 void rdps::Logger::TestLight(const PKG RT_Light &l)
 {
-	std::cout << "pos: " << l.position.x << " - ";
-	std::cout << l.position.x << " - ";
-	std::cout << l.position.x << std::endl;
+	std::cout << "pos: " << l.point.x << " - ";
+	std::cout << l.point.x << " - ";
+	std::cout << l.point.x << std::endl;
 	
-	std::cout << "color: " << l.color.x << " - ";
-	std::cout << l.color.x << " - ";
-	std::cout << l.color.x << std::endl;
+	std::cout << "color: " << l.c_wi.x << " - ";
+	std::cout << l.c_wi.x << " - ";
+	std::cout << l.c_wi.x << std::endl;
 
 	std::cout << l.ex << std::endl;
 	std::cout << l.ls << std::endl;

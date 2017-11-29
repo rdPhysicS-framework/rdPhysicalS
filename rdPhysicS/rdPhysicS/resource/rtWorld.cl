@@ -35,8 +35,10 @@ inline RT_Vec3f HitPoint(const RT_Ray *r, const float t)
 	return (r->o + (r->d * t));
 }
 
-RT_Result Hit(__global const RT_Primitive *objects, 
-			  const int numObj, const RT_Ray *ray)
+RT_Result Hit(__global const RT_Lamp *lamps,
+			  __global const RT_Primitive *objects, 
+			  const int numLamps, const int numObj, 
+			  const RT_Ray *ray)
 {
 	RT_Result r = CreateResult();
 	RT_Vec3f normal;
@@ -51,46 +53,28 @@ RT_Result Hit(__global const RT_Primitive *objects,
 		if(Instance_Hit(&o, ray, &t, &r) && t < tmin)
 		{ 
 			r.hit = true;
+			r.type = 0;
 			r.material = o.material;
 			tmin = t;
 			normal = r.normal;
 			hp = r.lhitPoint;
 		}
-		/*switch(o.type)
-		{ 
-			case RT_BOX:
-				if(Box_Hit(&o, ray, &t, &r) && t < tmin)
-				{
-					r.hit = true;
-					r.material = o.material;
-					tmin = t;
-					normal = r.normal;
-					hp = r.lhitPoint;
-				}	
-			break;
-			case RT_PLANE:
-				if(Plane_Hit(&o, ray, &t, &r) && t < tmin)
-				{
-					r.hit = true;
-					r.material = o.material;
-					tmin = t;
-					normal = r.normal;
-					hp = r.lhitPoint;
-				}	
-			break;
-			case RT_SPHERE:
-				if(Sphere_Hit(&o, ray, &t, &r) && t < tmin)
-				{
-					r.hit = true;
-					r.material = o.material;
-					tmin = t;
-					normal = r.normal;
-					hp = r.lhitPoint;
-				}	
-			break;
-
-		}*/
 	}
+
+	for(int i = 0; i < numLamps; i++)
+	{ 
+		RT_Lamp l = lamps[i];
+		if(Rect_Hit(&l, ray, &t, &r))
+		{ 
+			r.hit = true;
+			r.type = 1;
+			r.emissiveMaterial = l.material;
+			tmin = t;
+			normal = l.normal;
+			hp = r.lhitPoint;
+		}
+	}
+
 	if(r.hit)
 	{ 
 		r.t = tmin;
@@ -113,40 +97,62 @@ bool ShadowHit(__global const RT_Primitive *objects,
 		{
 			return true;
 		}
-		/*switch(o.type)
-		{ 
-			case RT_BOX:
-				if(Box_ShadowHit(&o, ray, &t) && t < tmin)
-				{
-					return true;
-				}	
-			break;
-			case RT_PLANE:
-				if(Plane_ShadowHit(&o, ray, &t) && t < tmin)
-				{
-					return true;
-				}	
-			break;
-			case RT_SPHERE:
-				if(Sphere_ShadowHit(&o, ray, &t) && t < tmin)
-				{
-					return true;
-				}	
-			break;
-
-		}*/
 	}
 
 	return false;
 }
 
-RT_Vec3f TraceRay(__global const RT_Light *lights,
-				  __global const RT_Primitive *objects,
-				  __global const RT_DataScene *world, 
-				  const RT_Ray *ray)
+RT_Vec3f Raycasting_TraceRay(__global const RT_Light *lights,
+							 __global const RT_Lamp *lamps,
+							 __global const RT_Primitive *objects,
+							 __global const RT_DataScene *world, 
+							 const RT_Ray *ray)
 {
-	RT_Result r = Hit(objects, world->numObjects, ray);
-	return r.hit? Shade(lights, objects, world, ray, &r) 
-				: world->background;
+	RT_Result r = Hit(lamps, objects, world->numLamps, world->numObjects, ray);
+
+	if(r.hit)
+	{ 
+		return (r.type == 0)? Shade(lights, objects, world, ray, &r)
+							: Emissive_Shade(ray, &r);
+	}
+
+	return world->background;
 }
 
+RT_Vec3f AreaLighting_TraceRay(__global const RT_Light *lights,
+							   __global const RT_Lamp *lamps,
+							   __global const RT_Primitive *objects,
+							   __global const RT_DataScene *world, 
+							   const RT_Ray *ray,
+							   const int sampleIndex,
+							   uint *seed)
+{ 
+	RT_Result r = Hit(lamps, objects, world->numLamps, world->numObjects, ray);
+
+	if(r.hit)
+	{ 
+		return (r.type == 0)? AreaLight_Shade(lights, lamps, objects, world,
+											  ray, &r, sampleIndex, seed)
+							: Emissive_Shade(ray, &r);
+	}
+
+	return world->background;
+}
+
+RT_Vec3f Tracer(__global const RT_Light *lights,
+				__global const RT_Lamp *lamps,
+				__global const RT_Primitive *objects,
+				__global const RT_DataScene *world, 
+				const RT_Ray *ray,
+				const int sampleIndex,
+				uint *seed)
+{ 
+	switch(world->typeTracer)
+	{ 
+	case RT_AREA_LIGHTING:
+		return AreaLighting_TraceRay(lights, lamps, objects, 
+									 world, ray, sampleIndex, seed);
+	case RT_RAYCASTING:
+		return Raycasting_TraceRay(lights, lamps, objects, world, ray);
+	}
+}

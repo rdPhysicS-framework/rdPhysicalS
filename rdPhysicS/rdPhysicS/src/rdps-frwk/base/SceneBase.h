@@ -11,11 +11,11 @@ RDPS_BEGIN
 	FRWK_BEGIN
 		
 		class Camera;
-		class GeometricObject;
+		class ObjectBase;
 		class Light;
 		class AmbientLight;
 		class Material;
-
+		class EmissiveObject;
 		/********************************************************************************************************************************************
 		 *
 		 * Classe base para todas as cenas.
@@ -39,7 +39,7 @@ RDPS_BEGIN
 			 * o objeto que sera adicionado.
 			 * Retorna um int que eh referente ao id do objeto na lista.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			int AddObject(GeometricObject *obj);
+			int AddObject(ObjectBase *obj);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que adiciona um foco de luz no pacote de luzes da cena.
 			 * Recebe como parametro uma Light* que é um ponteiro para
@@ -91,11 +91,29 @@ RDPS_BEGIN
 			int CreatePointLight(const RT::Vec3f &point, 
 								 const RT::Vec3f &color, 
 								 const float exp);
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar que cria uma foco de luz simples posicional.
+			 * Recebe como parametro um objeto Emissivo(EmissiveObject) referente a lampada,
+			 * const RT::Vec3f &point que eh a posicao da luz,
+			 * const RT::Vec3f &color que eh a cor da luz,
+			 * const float exp que eh a porcentagem do efeito de luz que sera aplicada nos objetos.
+			 * Retorna um int que eh referente ao id desta luz na lista.
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
+			int CreatePointLight(EmissiveObject *lamp, 
+								 const RT::Vec3f &point,
+								 const RT::Vec3f &color, 
+								 const float exp);
+
+			/*---------------------------------------------------------------------------------------------------------------------------------------
+			 * Funcao auxiliar que cria uma foco de iluminacao em area.
+			 * Recebe como parametro um objeto Emissivo(EmissiveObject) referente a lampada.
+			 *---------------------------------------------------------------------------------------------------------------------------------------*/
+			int CreateAreaLight(EmissiveObject *lamp);
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que retorna o objeto pelo seu id referente no array
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			GeometricObject *GetObject(const size_t id) const;
+			ObjectBase *GetObject(const size_t id) const;
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que retorna o foco de luz pelo seu id referente no array
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
