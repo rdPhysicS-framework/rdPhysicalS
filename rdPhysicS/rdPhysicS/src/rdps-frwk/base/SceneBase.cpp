@@ -60,7 +60,7 @@ int SceneBase::CreatePointLight(const RT::Vec3f &point,
 								const RT::Vec3f &color, 
 								const float exp)
 {
-	return AddLight(new PointLight(point, color, 1.0f));
+	return AddLight(new PointLight(point, color, exp));
 }
 
 int SceneBase::CreatePointLight(EmissiveObject *lamp, 
@@ -68,7 +68,7 @@ int SceneBase::CreatePointLight(EmissiveObject *lamp,
 								const RT::Vec3f &color,
 							    const float exp)
 {
-	return AddLight(new PointLight(point, color, 1.0f, AddObject(lamp)));
+	return AddLight(new PointLight(point, color, exp, AddObject(lamp)));
 }
 
 int SceneBase::CreateAreaLight(EmissiveObject *lamp)

@@ -260,10 +260,10 @@ RDPS_BEGIN
 			RT::Vec4f RDPS_ALIGN(16) a;
 			RT::Vec4f RDPS_ALIGN(16) b;
 			RT::Vec4f RDPS_ALIGN(16) normal;
+			float RDPS_ALIGN(4) radius;
+			RT_Emissive  material;
 
-			RT_Emissive material;
-
-			RT_TypeLamp RDPS_ALIGN(sizeof(RT_TypeLamp)) type;
+			RT_TypeLamp RDPS_ALIGN(4) type;
 
 		public:
 			RT_Lamp() {}
@@ -272,12 +272,14 @@ RDPS_BEGIN
 					const RT::Vec3f &_a,
 					const RT::Vec3f &_b,
 					const RT::Vec3f &_normal,
+					const float _radius,
 					const RT_Emissive &_material,
 					const RT_TypeLamp _type) :
 				p(_p),
 				a(_a),
 				b(_b),
 				normal(_normal),
+				radius(_radius),
 				material(_material),
 				type(_type)
 			{}
@@ -287,9 +289,23 @@ RDPS_BEGIN
 				a(other.a),
 				b(other.b),
 				normal(other.normal),
+				radius(other.radius),
 				material(other.material),
 				type(other.type)
 			{}
+
+			RT_Lamp &operator=(const RT_Lamp &other)
+			{
+				p = other.p;
+				a = other.a;
+				b = other.b;
+				normal = other.normal;
+				radius = other.radius;
+				material = other.material;
+				type = other.type;
+
+				return (*this);
+			}
 		};
 
 		typedef enum

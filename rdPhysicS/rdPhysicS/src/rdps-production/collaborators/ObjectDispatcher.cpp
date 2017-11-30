@@ -28,6 +28,12 @@ PKG Container *ObjectDispatcher::GetContainer() const
 	return container;
 }
 
+ObjectDispatcher &ObjectDispatcher::SetContainer(PKG Container *_container)
+{
+	container = _container;
+	return (*this);
+}
+
 Collaborator *ObjectDispatcher::Clone()
 {
 	return new ObjectDispatcher(*this);

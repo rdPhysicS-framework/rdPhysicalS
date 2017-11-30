@@ -66,8 +66,8 @@ typedef enum
 
 typedef enum
 { 
-	CIRCULAR,
-	RECTANGULAR
+	RT_CIRCULAR,
+	RT_RECTANGULAR
 } RT_TypeLamp;
 
 typedef enum

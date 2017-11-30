@@ -18,6 +18,8 @@ RDPS_BEGIN
 			EmissiveObject(const EmissiveObject &other);
 			virtual ~EmissiveObject();
 
+			TypeObjectEmissive GetTypeTypeObjectEmissive() const;
+
 			virtual ObjectBase *Clone() const = 0;
 			EmissiveObject &operator=(const EmissiveObject &other);
 			virtual Material *GetMaterial() const;

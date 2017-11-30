@@ -1,12 +1,14 @@
 #include "Test.h"
 #include "..\rdps-frwk\includes_frwk.h"
+#include "..\system\Keyboard.h"
+#include <SDL.h>
 
 USING_RDPS
 
 Test::Test() :
 	SceneBase()
 {
-	Init();
+	//();
 }
 
 Test::~Test()
@@ -15,24 +17,29 @@ Test::~Test()
 
 void Test::Init()
 {
+	World::Quality(ULTRA);
 	GetCamera()->Configure(RT::Vec3f(-702.0f, -108.0f, -270.0f), 
 						   RT::Vec3f(-540.0f, -100.0f, 0.0f), 
 						   RT::Vec3f(0.0f, 1.0f, 0.0f), 
 						   800.0f, 1.5f);
-	/*Adiciona as luzes*/
-	CreatePointLight(new Rectangle(RT::Vec3f(864, 756, -216), 
-								   RT::Vec3f(216, 0, 0),
-								   RT::Vec3f(0, 0, 216),
-								   RT::Vec3f(0, -1, 0), 
-								   new EmissiveMaterial(WHITE, 50.0f)),
-					 RT::Vec3f(972, 756.0f, -108.0f), WHITE, 1.0f);
 
-	CreatePointLight(new Rectangle(RT::Vec3f(864, 756, 1296), 
+	/*GetCamera()->Configure(RT::Vec3f(0.0f, 0.0f, -270.0f), 
+						    RT::Vec3f(), 
+						    RT::Vec3f(0.0f, 1.0f, 0.0f), 
+						    400.0f, 1.0f);*/
+	/*Adiciona as luzes*/
+
+	/*CreatePointLight(new Rectangle(RT::Vec3f(864, 756, 1296), 
 								  RT::Vec3f(216, 0, 0),
 								   RT::Vec3f(0, 0, 216),
 								   RT::Vec3f(0, -1, 0),
 								   new EmissiveMaterial(WHITE, 50.0f)), 
-					  RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);
+					  RT::Vec3f(972.0f, 756.0f, 1404.0f), WHITE, 1.0f);*/
+
+	CreatePointLight(new Disk(RT::Vec3f(864.0f, 756.0f, 1296.0f),
+							  RT::Vec3f(0.0f, -1.0f, 0.0f), 
+							  200.0f, new EmissiveMaterial(WHITE, 50.0f)),
+					 RT::Vec3f(864.0f, 756.0f, 1296.0f), WHITE, 1.0f);
 
 	CreatePointLight(new Rectangle(RT::Vec3f(-1296, 756, -216), 
 								   RT::Vec3f(216, 0, 0),
@@ -74,14 +81,34 @@ void Test::Init()
 				new PhongMaterial(RT::Vec3f(0.7f, 0.7f, 0.7f),
 								  0.2f, 0.7f, 0.5f, 1.0f));
 
+	id1 = CreateSphere(RT::Vec3f(), 216.0f,
+		new PhongMaterial(RT::Vec3f(0.6f, 0.6f, 0.6f),
+			0.2f, 0.7f, 0.8f, 1.0f));
+
+	Sphere *s = (Sphere*)GetObject(id1);
+	s->GetTransform()->Translate(162.0f, 54.0f, 432.0f);
+
+	id2 = CreateSphere(RT::Vec3f(), 270.0f,
+		new PhongMaterial(RT::Vec3f(0.7f, 0.7f, 1.0f),
+			0.2f, 0.7f, 0.8f, 1.0f));
+
+	s = (Sphere*)GetObject(id2);
+	s->GetTransform()->Translate(-540.0f, -86.0f, 432.0f);
+
 	/*Adiciona as esferas*/
-	CreateSphere(RT::Vec3f(162.0f, 54.0f, 432.0f), 216.0f,
+	/*id1 = CreateSphere(RT::Vec3f(), 100.0f,
 				 new PhongMaterial(RT::Vec3f(0.6f, 0.6f, 0.6f),
 								   0.2f, 0.7f, 0.8f, 1.0f));
 
-	id = CreateSphere(RT::Vec3f(-540.0f, -86.0f, 432.0f), 270.0f,
+	Sphere *s = (Sphere*)GetObject(id1);
+	s->GetTransform()->Translate(120.0f, 0.0f, 0.0f);
+
+	id2 = CreateSphere(RT::Vec3f(), 100.0f,
 					  new PhongMaterial(RT::Vec3f(0.7f, 0.7f, 1.0f),
 										0.2f, 0.7f, 0.8f, 1.0f));
+
+	s = (Sphere*)GetObject(id2);
+	s->GetTransform()->Translate(-120.0f, 0.0f, 0.0f);*/
 
 	/*Adiciona o Cubo*/
 	CreateCube(RT::Vec3f(0.0f, -324.0f, 270.0f), 
@@ -92,5 +119,21 @@ void Test::Init()
 
 void Test::Update(const float secs)
 {
-	//GetObject(id)->GetTransform()->Translate(10.0f, -200.0f, 400.0f);
+	/*Sphere *s = (Sphere*)GetObject(id1);
+	s->GetTransform()->RotateY(15 * secs);
+
+	s = (Sphere*)GetObject(id2);
+	s->GetTransform()->RotateY(15 * secs);*/
+
+	Camera *c = GetCamera();
+	float x = c->GetLookAt().x;
+
+	if (Keyboard::GetInstance()->IsDown(SDLK_a))
+	{
+		c->SetLookAt(RT::Vec3f(x - 100.0f * secs, c->GetLookAt().y, c->GetLookAt().z));
+	}
+	else if (Keyboard::GetInstance()->IsDown(SDLK_d))
+	{
+		c->SetLookAt(RT::Vec3f(x + 100.0f * secs, c->GetLookAt().y, c->GetLookAt().z));
+	}
 }

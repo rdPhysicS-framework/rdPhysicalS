@@ -328,22 +328,72 @@ bool Rect_Hit(const RT_Lamp *l,
 	return true;
 }
 
-RT_Vec3f Rect_Sample(__global const RT_DataScene *world,
+/*----------------------------------------------------------------------------------------------
+ *
+ * Methods to verify intercession with the lamp disk
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Disk_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r)
+{ 
+	float t = dot((l->p - ray->o), l->normal) /
+			  dot(ray->d, l->normal);
+	
+	if(t <= 0.1f)
+		return false;
+
+	RT_Vec3f p = HitPoint(ray, t);
+
+	if(sizeSqr(l->p - p) >= l->r * l->r)
+		return false;
+
+	*tmin = t;
+	r->lhitPoint = p;
+	r->normal = l->normal;
+
+	return true;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method to verify intercession with the lamp
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Lamp_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r)
+{ 
+	if(l->type == RT_CIRCULAR)
+		return Disk_Hit(l, ray, tmin, r);
+	else if(l->type == RT_RECTANGULAR)
+		return Rect_Hit(l, ray, tmin, r);
+
+	return false;
+}
+
+RT_Vec3f Lamp_Sample(__global const RT_DataScene *world,
 					 const RT_Lamp *l,
 					 const int index,
 					 uint *seed)
 { 
 	RT_Vec2f point;
-
+	
 	switch(world->type)
 	{ 
 		case RT_HAMMERSLEY:
 		break;
 		case RT_JITTERED:
 			point = JitteredGenerateSampler(seed, sqrt((float)world->numSamples), index);
+			
+			if(l->type == RT_CIRCULAR)
+				MapSampleToUnitDisk(&point);
 		break;
 		case RT_REGULAR:
 			point = RegularGenerateSampler(sqrt((float)world->numSamples), index);
+			
+			if(l->type == RT_CIRCULAR)
+				MapSampleToUnitDisk(&point);
 		break;
 	}
 

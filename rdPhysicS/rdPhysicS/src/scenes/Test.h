@@ -8,7 +8,8 @@
 class Test : public rdps::SceneBase
 {
 private:
-	int id;
+	int id1;
+	int id2;
 
 public:
 	Test();

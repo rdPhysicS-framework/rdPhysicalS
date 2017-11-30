@@ -26,9 +26,9 @@ USING_PDCT
 
 ApplicationCL *World::app = nullptr;
 Container *World::container = nullptr;
-ManagerObjects *World::manager = nullptr;
-ObjectDispatcher *World::oDispatcher = nullptr;
-PackerObjects *World::packer = nullptr;
+ManagerObjects *World::manager = new ManagerObjects();
+ObjectDispatcher *World::oDispatcher = new ObjectDispatcher();
+PackerObjects *World::packer = new PackerObjects();
 Renderer *World::renderer = nullptr;
 Sampler *World::sampler = nullptr;
 byte World::flags = RAYCASTING;
@@ -111,6 +111,16 @@ void World::Enable(const byte _flags)
 	flags = _flags;
 }
 
+void World::EnableAreaLight()
+{
+	Enable(AREA_LIGHTING);
+}
+
+void World::DisableAreaLight()
+{
+	Enable(RAYCASTING);
+}
+
 void World::Init()
 {
 	srand(time(NULL));
@@ -124,9 +134,8 @@ void World::Init()
 													  new Package<RT_Lamp>(),
 												      new Package<RT_Primitive>(),
 												      new Package<char>() });
-	manager = new ManagerObjects();
-	oDispatcher = new ObjectDispatcher(container);
-	packer = new PackerObjects(container);
+	oDispatcher->SetContainer(container);
+	packer->SetContainer(container);
 	packer->SetPackage(manager->GetPackage());
 
 	GeneralManager::Get()->AddCollaborator(MANAGER_OF_OBJECTS, manager);

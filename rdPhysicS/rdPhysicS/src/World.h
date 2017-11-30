@@ -44,6 +44,8 @@ RDPS_BEGIN
 		static void SetViewPlane(const int w, const int h);
 		static void Quality(const int r);
 		static void Enable(const byte _flags);
+		static void EnableAreaLight();
+		static void DisableAreaLight();
 
 		static void Init();
 		static void Update();

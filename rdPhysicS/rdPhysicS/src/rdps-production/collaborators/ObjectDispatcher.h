@@ -27,7 +27,7 @@ RDPS_BEGIN
 			 * Construtor
 			 * Recebe como parametro o container de pacotes que será enviado.
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
-			ObjectDispatcher(PKG Container *_container);
+			ObjectDispatcher(PKG Container *_container = nullptr);
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Construtor de copia
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
@@ -40,6 +40,8 @@ RDPS_BEGIN
 			 * Funcao auxiliar que retorna o container de pacotes
 			 *---------------------------------------------------------------------------------------------------------------------------------------*/
 			PKG Container *GetContainer() const;
+
+			ObjectDispatcher &SetContainer(PKG Container *_container);
 
 			/*---------------------------------------------------------------------------------------------------------------------------------------
 			 * Funcao auxiliar que gera uma copia do objeto.

@@ -64,7 +64,7 @@ RT_Result Hit(__global const RT_Lamp *lamps,
 	for(int i = 0; i < numLamps; i++)
 	{ 
 		RT_Lamp l = lamps[i];
-		if(Rect_Hit(&l, ray, &t, &r))
+		if(Lamp_Hit(&l, ray, &t, &r))
 		{ 
 			r.hit = true;
 			r.type = 1;

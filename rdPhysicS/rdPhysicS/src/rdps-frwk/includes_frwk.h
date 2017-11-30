@@ -13,6 +13,7 @@
 #include "primitives\Plane.h"
 #include "primitives\Sphere.h"
 #include "primitives\Rectangle.h"
+#include "primitives\Disk.h"
 #include "Util\Sampler.h"
 #include "Util\Transform.h"
 #include "Util\ViewPlane.h"

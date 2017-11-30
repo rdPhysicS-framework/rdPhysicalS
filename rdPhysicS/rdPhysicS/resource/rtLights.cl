@@ -27,7 +27,7 @@ inline RT_Vec3f Direction(__global const RT_DataScene *world,
 		}
 		case RT_AREA_LIGHT:
 		{
-			l->point = Rect_Sample(world, o, index, seed);
+			l->point = Lamp_Sample(world, o, index, seed);
 			l->c_wi = normalize(l->point - r->lhitPoint);
 			return l->c_wi;
 		}
@@ -116,5 +116,10 @@ bool InShadow(const RT_Light *l,
 
 inline float PDF(const RT_Lamp *o)
 { 
-	return (1.0f / (length(o->a) * length(o->b)));
+	if(o->type == RT_CIRCULAR)
+		return 1.0f / (PI * o->r * o->r);
+	else if(o->type == RT_RECTANGULAR)
+		return (1.0f / o->r);//(length(o->a) * length(o->b)));
+	
+	return 0.0f;
 }

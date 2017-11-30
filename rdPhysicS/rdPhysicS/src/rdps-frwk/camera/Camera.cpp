@@ -94,6 +94,24 @@ float Camera::GetViewPlaneDistance() const
 	return viewPlaneDistance;
 }
 
+Camera &Camera::SetEye(const RT::Vec3f & _eye)
+{
+	eye = _eye;
+	return (*this);
+}
+
+Camera &Camera::SetLookAt(const RT::Vec3f &_lookAt)
+{
+	lookAt = _lookAt;
+	return (*this);
+}
+
+Camera &Camera::SetUp(const RT::Vec3f &_up)
+{
+	up = _up;
+	return (*this);
+}
+
 Camera & Camera::SetZoom(const float _zoom)
 {
 	zoom = _zoom;

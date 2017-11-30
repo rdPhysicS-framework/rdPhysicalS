@@ -90,7 +90,7 @@ typedef struct
 	RT_Vec3f a;
 	RT_Vec3f b;
 	RT_Vec3f normal;
-
+	float r;
 	RT_Emissive material;
 
 	RT_TypeLamp type;
@@ -334,7 +334,29 @@ bool Rect_ShadowHit(const RT_Lamp *l,
 					const RT_Ray *ray,
 					float *tmin);
 
-RT_Vec3f Rect_Sample(__global const RT_DataScene *world,
+/*----------------------------------------------------------------------------------------------
+ *
+ * Methods to verify intercession with the lamp disk
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Disk_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r);
+
+bool Disk_ShadowHit(const RT_Lamp *l, 
+					const RT_Ray *ray,
+					float *tmin);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Method to verify intercession with the lamp
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Lamp_Hit(const RT_Lamp *l, 
+			  const RT_Ray *ray,
+              float *tmin, RT_Result *r);
+
+RT_Vec3f Lamp_Sample(__global const RT_DataScene *world,
 					 const RT_Lamp *l,
 					 const int index,
 					 uint *seed);
@@ -516,4 +538,6 @@ float Phi(int index);
  RT_Vec2f MultiJitteredGenerateSampler(uint *seed,
 									   const int numSamples,
 									   const int id);
+
+void MapSampleToUnitDisk(RT_Vec2f *d);
 

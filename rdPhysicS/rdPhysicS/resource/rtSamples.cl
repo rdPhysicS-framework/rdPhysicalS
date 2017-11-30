@@ -62,3 +62,43 @@ float Phi(int index)
 
 	return x;
 }
+
+void MapSampleToUnitDisk(RT_Vec2f *d)
+{ 
+	float x, y, r, phi;
+
+	x = 2 * d->x - 1.0f;
+	y = 2 * d->y - 1.0f;
+
+	if(x > -y)
+	{ 
+		if(x > y)
+		{ 
+			r = x;
+			phi = y / x;
+		}
+		else
+		{ 
+			r = y;
+			phi = 2 - x / y;
+		}
+	}
+	else
+	{ 
+		if(x < y)
+		{ 
+			r = -x;
+			phi = 4 + y / x;
+		}
+		else
+		{ 
+			r = -y;
+			phi = (y != 0.0f) ? 6 - x / y : 0.0f;
+		}
+	}
+
+	phi *= PI / 4.0f;
+
+	d->x = r * cos(phi);
+	d->y = r * sin(phi);
+}

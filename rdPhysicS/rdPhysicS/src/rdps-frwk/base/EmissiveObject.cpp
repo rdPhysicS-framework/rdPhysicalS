@@ -23,6 +23,11 @@ EmissiveObject::~EmissiveObject()
 		delete material;
 }
 
+TypeObjectEmissive EmissiveObject::GetTypeTypeObjectEmissive() const
+{
+	return typeOE;
+}
+
 EmissiveObject &EmissiveObject::operator=(const EmissiveObject & other)
 {
 	ObjectBase::operator=(other);

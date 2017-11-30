@@ -166,26 +166,42 @@ int ToPackObjectsForDevice::ToPackObjectEmissiveData(const FRWK ObjectBase *obje
 	if(object->GetType() == EMISSIVE_OBJECT)
 	{
 		const EmissiveObject *eo = static_cast<const EmissiveObject*>(object);
-		switch (eo->GetType())
+		switch (eo->GetTypeTypeObjectEmissive())
 		{
-		case CIRCULAR:
-			break;
-		case RECTANGULAR:
-			const Rectangle *rect = static_cast<const Rectangle*>(eo);
+			case CIRCULAR:
+			{
+				const Disk *disk = static_cast<const Disk*>(eo);
 
-			RT_Lamp lamp(rect->GetP(),
-						 rect->GetA(),
-						 rect->GetB(),
-						 rect->GetNormal(),
-						 ToPackEmissiveData(rect->GetMaterial()),
-						 RT_RECTANGULAR);
+				RT_Lamp lamp(disk->GetCenter(),
+							 RT::Vec3f(),
+							 RT::Vec3f(),
+							 disk->GetNormal(),
+							 disk->GetRadius(),
+							 ToPackEmissiveData(disk->GetMaterial()),
+							 RT_CIRCULAR);
 
-			c.GetContainer()->AddElement("lamps", lamp);
-			break;
+				c.GetContainer()->AddElement("lamps", lamp);
+				return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
+			}
+			case RECTANGULAR:
+			{
+				const Rectangle *rect = static_cast<const Rectangle*>(eo);
+
+				RT_Lamp lamp(rect->GetP(),
+							 rect->GetA(),
+							 rect->GetB(),
+							 rect->GetNormal(),
+							 (rect->GetA().Size() * rect->GetB().Size()),
+							 ToPackEmissiveData(rect->GetMaterial()),
+							 RT_RECTANGULAR);
+
+				c.GetContainer()->AddElement("lamps", lamp);
+				return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
+			}
 		}
 	}
 
-	return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
+	return -1;
 }
 
 PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *material)

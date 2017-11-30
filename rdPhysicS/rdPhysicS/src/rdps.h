@@ -1,17 +1,22 @@
 #ifndef	__RDPS_H__
 #define	__RDPS_H__
 
+#include "Util\LogError.h"
+#include "rdps-packages\output\FinalProduct.h"
+#include "rdps-packages\output\Renderer.h"
 #include "rdps-frwk\base\SceneBase.h"
 #include "rdps-frwk\includes_frwk.h"
 #include "rdps-production\base\Entity.h"
 #include "rdps-production\base\State.h"
 #include "rdps-production\states\StateMachine.h"
 #include "rdps-CL\includes_appCL.h"
+#include "World.h"
 
 RDPS_BEGIN typedef FRWK SceneBase				SceneBase;				 RDPS_END
 RDPS_BEGIN typedef FRWK Cube					Cube;					 RDPS_END
 RDPS_BEGIN typedef FRWK Plane					Plane;					 RDPS_END
 RDPS_BEGIN typedef FRWK Rectangle				Rectangle;				 RDPS_END
+RDPS_BEGIN typedef FRWK Disk				    Disk;				     RDPS_END
 RDPS_BEGIN typedef FRWK Sphere					Sphere;					 RDPS_END
 RDPS_BEGIN typedef FRWK AmbientLight			AmbientLight;			 RDPS_END
 RDPS_BEGIN typedef FRWK PointLight				PointLight;				 RDPS_END
@@ -40,6 +45,8 @@ RDPS_BEGIN typedef CL   ItensWorkGroupComponent	ItensWorkGroupComponent; RDPS_EN
 RDPS_BEGIN typedef CL   ApplicationCLBuilder    ApplicationCLBuilder;    RDPS_END
 RDPS_BEGIN typedef CL   ApplicationCL			ApplicationCL;			 RDPS_END
 RDPS_BEGIN typedef CL   ApplicationCLFactor     ApplicationCLFactor;     RDPS_END
+
+RDPS_BEGIN typedef PKG  Renderer                Renderer;                RDPS_END
 
 
 #endif//__RDPS_H__
