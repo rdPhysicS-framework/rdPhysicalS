@@ -79,7 +79,7 @@ Exemplo:
 	}
 ```
 	
-As funções Init() e Update(const float secs) é obrigatório ser sobreescrito.
+As funções Init() e Update(const float secs) devem ser obrigatoriamente sobreescritas.
 
 * Init: Local para ser inicializado todos os objetos internos;
 * Update: Local onde será atualizado todos os dados necessários.
@@ -123,7 +123,7 @@ Exemplo:
  (RT::Vec3f color;) referente a cor e um ponto flutuante (float ls;) que é o percentual da iluminação
  da luz ambiente.
 
-SceneBase também possui uma função para adicionar objetos na cena, uma para cada tipo de objetos
+SceneBase também possui uma função para adicionar objetos na cena, uma para cada tipo de objeto
 e também uma função para adicionar a iluiminação, uma para cada tipo. Todas essas funções retornam um
 id (int) referente a posição do objeto na lista.
 
@@ -196,7 +196,7 @@ Tipo de retorno int, que é o id da iluminação na lista de luzes.
 
 # Referente ao Material
 
-Os materiais por padrão herdão de um material base. Esse material base possui um componente BRDF que é referente 
+Os materiais por padrão herdam de um material base. Esse material base possui um componente BRDF que é referente 
 o efeito (cor) do componente Ambient do material. Então todos os materiais possuirão uma cor ambiente.
 
 * BRDF: é um component do material que simplesmente possui um vector (RT::Vec3f color;) referente a
