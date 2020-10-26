@@ -16,7 +16,7 @@ Sampler::Sampler(int _numSamples,
 				 TypeSampler _type) :
 		 numSamples(_numSamples),
 		 numSets(_numSets),
-		 type(_numSamples >= 16? JITTERED : _type)
+		 type(_numSamples >= HIGH ? JITTERED : _type)
 {
 	SetupShuffledIndices();
 }
@@ -28,7 +28,7 @@ Sampler::~Sampler()
 void Sampler::SetNumSamples(const int _numSamples)
 {
 	numSamples = _numSamples;
-	type = (numSamples < 16/* || numSamples == ULTRA*/) ?
+	type = (numSamples < HIGH/* || numSamples == ULTRA*/) ?
 			REGULAR : JITTERED;
 }
 

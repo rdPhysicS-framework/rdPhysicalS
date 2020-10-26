@@ -1,3 +1,5 @@
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+
 #define ANGLE 180.0f
 
 #define PI 3.14159265358979f
@@ -5,10 +7,10 @@
 #define INVPI 1 / PI
 
 #define RANDMAX 0x7FFF
-#define RAND_MASK 4294883355U
+#define RAND_MASK 4294883355L
 #define INFINITE 10000000.0f
 
-#define MULTIPLIER 0x5DEECE66DU
+#define MULTIPLIER 0x5DEECE66DL
 #define ADDEND 0xBL
 #define MASK (1L << 48) - 1
 
@@ -39,7 +41,15 @@ typedef enum
 
 typedef enum
 { 
+	RT_PHONG_MATERIAL,
+	RT_REFLECTIVE_MATERIAL,
+	RT_SIMPLE_MATERIAL
+} RT_TypeMaterial;
+
+typedef enum
+{ 
 	RT_AMBIENT_LIGHT,
+	RT_AMBIENT_OCCLUDER_LIGHT,
 	RT_AREA_LIGHT,
 	RT_POINT_LIGHT
 } RT_TypeLight;
@@ -67,7 +77,8 @@ typedef enum
 typedef enum
 { 
 	RT_CIRCULAR,
-	RT_RECTANGULAR
+	RT_RECTANGULAR,
+	RT_SPHERICAL
 } RT_TypeLamp;
 
 typedef enum
@@ -90,26 +101,6 @@ inline float _absf(float x)
 { 
 	return (x < 0)? (x * -1) : x;
 }
-
-
-/*uint rand(uint2 *state)
-{ 
-	enum { A=4294883355U };
-	uint x = (*state).x;
-	uint c = (*state).y;
-	uint r = x ^ c;
-	uint hi = mul_hi(x, A);
-	x = x * A + c;
-	c = hi + (x < c);
-	*state = (uint2)(x, c);
-
-	return r;
-}
-
-float rand_float(uint2 *state)
-{ 
-	return (float)rand(state) / UINT_MAX;
-}*/
 
 int next(uint *seed, int bits)
 {

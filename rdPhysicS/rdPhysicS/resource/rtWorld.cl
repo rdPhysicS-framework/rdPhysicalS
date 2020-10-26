@@ -47,20 +47,6 @@ RT_Result Hit(__global const RT_Lamp *lamps,
 	float tmin = INFINITE;
 	float t;
 
-	for(int i = 0; i < numObj; i++)
-	{
-		RT_Primitive o = objects[i];
-		if(Instance_Hit(&o, ray, &t, &r) && t < tmin)
-		{ 
-			r.hit = true;
-			r.type = 0;
-			r.material = o.material;
-			tmin = t;
-			normal = r.normal;
-			hp = r.lhitPoint;
-		}
-	}
-
 	for(int i = 0; i < numLamps; i++)
 	{ 
 		RT_Lamp l = lamps[i];
@@ -71,6 +57,20 @@ RT_Result Hit(__global const RT_Lamp *lamps,
 			r.emissiveMaterial = l.material;
 			tmin = t;
 			normal = l.normal;
+			hp = r.lhitPoint;
+		}
+	}
+
+	for(int i = 0; i < numObj; i++)
+	{
+		RT_Primitive o = objects[i];
+		if(Instance_Hit(&o, ray, &t, &r) && t < tmin)
+		{ 
+			r.hit = true;
+			r.type = 0;
+			r.material = o.material;
+			tmin = t;
+			normal = r.normal;
 			hp = r.lhitPoint;
 		}
 	}
@@ -112,8 +112,21 @@ RT_Vec3f Raycasting_TraceRay(__global const RT_Light *lights,
 
 	if(r.hit)
 	{ 
-		return (r.type == 0)? Shade(lights, objects, world, ray, &r)
-							: Emissive_Shade(ray, &r);
+		if(r.type == 0)
+		{ 
+			switch(r.material.type)
+			{ 
+				case RT_PHONG_MATERIAL:
+				case RT_SIMPLE_MATERIAL:
+					return Shade(lights, objects, world, ray, &r);
+				case RT_REFLECTIVE_MATERIAL:
+					return Reflective_Shade(lights, lamps, objects,
+											world, ray, &r);
+			}
+
+		}
+
+		return Emissive_Shade(ray, &r);
 	}
 
 	return world->background;
@@ -131,9 +144,23 @@ RT_Vec3f AreaLighting_TraceRay(__global const RT_Light *lights,
 
 	if(r.hit)
 	{ 
-		return (r.type == 0)? AreaLight_Shade(lights, lamps, objects, world,
-											  ray, &r, sampleIndex, seed)
-							: Emissive_Shade(ray, &r);
+		if(r.type == 0)
+		{ 
+			switch(r.material.type)
+			{ 
+				case RT_PHONG_MATERIAL:
+				case RT_SIMPLE_MATERIAL:
+					return AreaLight_Shade(lights, lamps, objects, world,
+										   ray, &r, sampleIndex, seed);
+				case RT_REFLECTIVE_MATERIAL:
+					return Reflective_AreaLight_Shade(lights, lamps, objects,
+													  world, ray, &r,
+													  sampleIndex, seed);
+			}
+
+		}
+
+		return Emissive_Shade(ray, &r);
 	}
 
 	return world->background;

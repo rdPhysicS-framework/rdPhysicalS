@@ -1,12 +1,10 @@
 #include <iostream>
 #include <SDL.h>
-#include "src\rdps-CL\includes_appCL.h"
-#include "src\Util\LogError.h"
-#include "src\rdps-packages\output\FinalProduct.h"
-#include "src\rdps-packages\output\Renderer.h"
-#include "src\World.h"
+#include "src\rdps.h"
+#include "src\system\Window.h"
 #include "src\scenes\Test.h"
-#include "src\scenes\SceneTestAreaLight .h"
+#include "src\scenes\SceneTestAreaLight.h"
+#include "src\scenes\RealTime.h"
 #include <SDL_image.h>
 
 int Save(const int *image, const int w, const int h)
@@ -38,10 +36,12 @@ int main(int argc, char **argv)
 	{
 		rdps::World::Init();
 		rdps::World::SetViewPlane(1920, 1080);
-		rdps::World::Quality(VERY_HIGH);
 		//Test t;
+		//t.Init();
 		//t.Draw();
-		SceneTestAreaLight().Draw();
+		SceneTestAreaLight s; 
+		s.Init();
+		s.Draw();
 
 		Save(rdps::World::GetRenderer()->GetData(), 1920, 1080);
 
@@ -54,6 +54,8 @@ int main(int argc, char **argv)
 	{
 		std::cout << e.what() << std::endl;
 	}
+
+	//rdps::Window(new RealTime(), "TESTE", 1920, 1080).Show();
 
 	system("pause");
 	return 0;

@@ -95,6 +95,13 @@ RDPS_BEGIN
 			}
 		};
 
+		typedef enum
+		{
+			RT_PHONG_MATERIAL,
+			RT_REFLECTIVE_MATERIAL,
+			RT_SIMPLE_MATERIAL
+		} RT_TypeMaterial;
+
 		class RT_Material
 		{
 		public:
@@ -109,17 +116,21 @@ RDPS_BEGIN
 			RT_BRDF specular;
 			RT_BRDF refl;
 
+			RT_TypeMaterial RDPS_ALIGN(sizeof(RT_TypeMaterial)) type;
+
 		public:
 			RT_Material() {}
 
 			RT_Material(const RT_BRDF &_ambient,
-				const RT_BRDF &_diffuse,
-				const RT_BRDF &_specular,
-				const RT_BRDF &_refl) :
+					    const RT_BRDF &_diffuse,
+					    const RT_BRDF &_specular,
+					    const RT_BRDF &_refl,
+						const RT_TypeMaterial _type) :
 				ambient(_ambient),
 				diffuse(_diffuse),
 				specular(_specular),
-				refl(_refl)
+				refl(_refl),
+				type(_type)
 			{}
 
 			friend std::ostream &operator<<(std::ostream &out, const RT_Material &m)
@@ -250,7 +261,8 @@ RDPS_BEGIN
 		typedef enum
 		{
 			RT_CIRCULAR,
-			RT_RECTANGULAR
+			RT_RECTANGULAR,
+			RT_SPHERICAL
 		} RT_TypeLamp;
 
 		class RT_Lamp
@@ -311,6 +323,7 @@ RDPS_BEGIN
 		typedef enum
 		{
 			RT_AMBIENT_LIGHT,
+			RT_AMBIENT_OCCLUDER_LIGHT,
 			RT_AREA_LIGHT,
 			RT_POINT_LIGHT
 		} RT_TypeLight;
@@ -486,6 +499,8 @@ RDPS_BEGIN
 			/*seed random*/
 			uint RDPS_ALIGN(4) seed;
 
+			uint RDPS_ALIGN(4) depth;
+
 			RT_TypeSampler RDPS_ALIGN(sizeof(RT_TypeSampler)) type;
 			RT_TypeTracer  RDPS_ALIGN(sizeof(RT_TypeTracer)) typeTracer;
 
@@ -497,7 +512,8 @@ RDPS_BEGIN
 				numObjects(0),
 				numSamples(0),
 				numSets(0),
-				seed(0)
+				seed(0),
+				depth(1)
 			{}
 
 			RT_DataScene(const RT_ViewPlane &_vp,
@@ -509,7 +525,8 @@ RDPS_BEGIN
 						 const int _numSets,
 						 RT_TypeSampler _type,
 						 RT_TypeTracer _typeTracer,
-						 const uint _seed) :
+						 const uint _seed,
+						 const uint _depth) :
 				vp(_vp), background(_background),
 				numLights(_numLights),
 				numLamps(_numLamps),
@@ -518,7 +535,8 @@ RDPS_BEGIN
 				numSets(_numSets),
 				type(_type),
 				typeTracer(_typeTracer),
-				seed(_seed)
+				seed(_seed),
+				depth(_depth)
 			{}
 
 			/*friend std::ostream &operator<<(std::ostream &out, RT_DataScene &ds)

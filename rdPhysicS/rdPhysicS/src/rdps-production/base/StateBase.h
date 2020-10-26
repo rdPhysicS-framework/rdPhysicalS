@@ -14,7 +14,7 @@ RDPS_BEGIN
 
 			virtual void Enter(const Collaborator &c) {}
 			virtual void Execute(const Collaborator &c) {};
-			virtual void Esit(const Collaborator &c) {};
+			virtual void Exit(const Collaborator &c) {};
 		};
 
 	PDCT_END

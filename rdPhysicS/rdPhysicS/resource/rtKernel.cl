@@ -79,6 +79,11 @@ RT_Vec3f Sampler_Render(__global const RT_DataScene *world,
 	return pc;
 }
 
+typedef struct
+{ 
+	float x, y, z;
+}vec3;
+
 __kernel void render(__global const RT_DataScene *world,
 					 __global const RT_Camera *camera,
 					 __global const RT_Light *lights,

@@ -33,6 +33,9 @@ typedef struct
 	RT_BRDF diffuse;
 	RT_BRDF specular;
 	RT_BRDF refl;
+
+	RT_TypeMaterial type;
+
 } RT_Material;
 
 typedef struct
@@ -207,6 +210,8 @@ typedef struct
 	/*seed random*/
 	uint seed;
 
+	uint depth;
+
 	RT_TypeSampler type;
 	RT_TypeTracer typeTracer;
 
@@ -278,6 +283,26 @@ inline RT_Vec3f Emissive_Color(const RT_Emissive *m);
 
 /*----------------------------------------------------------------------------------------------
  *
+ * it calculates the effects of the reflection
+ * 
+ *----------------------------------------------------------------------------------------------*/
+RT_Vec3f Reflective_Shade(__global const RT_Light *lights,
+						  __global const RT_Lamp *lamps,
+						  __global const RT_Primitive *objects,
+						  __global const RT_DataScene *world,
+						  const RT_Ray *ray,
+						  const RT_Result *r);
+
+RT_Vec3f Reflective_AreaLight_Shade(__global const RT_Light *lights,
+									__global const RT_Lamp *lamps,
+									__global const RT_Primitive *objects,
+									__global const RT_DataScene *world,
+									const RT_Ray *ray,
+									const RT_Result *r,
+									const int sampleIndex,
+									uint *seed);
+/*----------------------------------------------------------------------------------------------
+ *
  * Bounding Box
  * 
  *----------------------------------------------------------------------------------------------*/
@@ -289,10 +314,12 @@ inline bool Inside(const RT_BBox *bb, const RT_Vec3f *p);
  * Methods to verify intercession with the sphere
  *
  *----------------------------------------------------------------------------------------------*/
-bool Sphere_Hit(const RT_Primitive *s, 
+bool Sphere_Hit(const RT_Vec3f *center,
+				const float *radius, 
 				const RT_Ray *ray, 
 				float *tmin, RT_Result *r);
-bool Sphere_ShadowHit(const RT_Primitive *s, 
+bool Sphere_ShadowHit(const RT_Vec3f *center,
+					  const float *radius,  
 					  const RT_Ray *ray, float *tmin);
 
 /*----------------------------------------------------------------------------------------------
@@ -346,6 +373,19 @@ bool Disk_Hit(const RT_Lamp *l,
 bool Disk_ShadowHit(const RT_Lamp *l, 
 					const RT_Ray *ray,
 					float *tmin);
+
+/*----------------------------------------------------------------------------------------------
+ *
+ * Methods to verify intercession with the lamp spherical
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Spherical_Hit(RT_Lamp *l, 
+				   const RT_Ray *ray,
+				   float *tmin, RT_Result *r);
+
+bool Spherical_ShadowHit(RT_Lamp *l, 
+						 const RT_Ray *ray,
+						 float *tmin);
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -410,8 +450,12 @@ inline RT_Vec3f Direction(__global const RT_DataScene *world,
 						  uint *seed);
 
 inline RT_Vec3f Color(const RT_Light *l,
-					  const RT_Lamp *o, 
-					  const RT_Result *r);
+					  const RT_Lamp *o,
+					  __global const RT_Primitive *objects,
+					  __global const RT_DataScene *world,
+					  const RT_Result *r,
+					  const int index,
+					  uint *seed);
 
 bool InShadow(const RT_Light *l, 
 			  __global const RT_Primitive *objects,
@@ -541,3 +585,9 @@ float Phi(int index);
 
 void MapSampleToUnitDisk(RT_Vec2f *d);
 
+RT_Vec3f MapSampleToSphere(RT_Vec2f *d);
+
+RT_Vec3f MapSampleToHemisphere(RT_Vec2f *d, const float e);
+
+inline void computeUVW(RT_Vec3f *u, RT_Vec3f *v, 
+					   RT_Vec3f *w, const RT_Result *r);

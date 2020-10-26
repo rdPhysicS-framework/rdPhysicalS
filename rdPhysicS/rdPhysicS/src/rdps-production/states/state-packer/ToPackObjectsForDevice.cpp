@@ -34,16 +34,24 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 		case AMBIENT_LIGHT:
 		{
 			const AmbientLight *a = static_cast<const AmbientLight*>(light);
-
+			
 			RT_Light l({ 0.0f, 0.0f, 0.0f, 0.0f },
-					   { a->GetColor().x, a->GetColor().z, a->GetColor().z, 0.0f },
+					   { a->GetColor().x, a->GetColor().y, a->GetColor().z, 0.0f },
 				       1.0f, 0.0f, -1, RT_AMBIENT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
 		}
-		case AMBIENT_OCLUDER_LIGHT:
+		case AMBIENT_OCCLUDER_LIGHT:
 		{
+			const AmbientOccluder *a = static_cast<const AmbientOccluder*>(light);
+
+			RT_Light l({ 0.0f, 0.0f, 0.0f, 0.0f },
+					   { a->GetColor().x, a->GetColor().y, a->GetColor().z, 0.0f },
+						a->GetLs(), a->GetMinAmount(), -1, 
+					    RT_AMBIENT_LIGHT);
+
+			c.GetContainer()->AddElement("lights", l);
 			break;
 		}
 		case AREA_LIGHT:
@@ -71,7 +79,7 @@ void ToPackObjectsForDevice::ToPackLightData(const FRWK Light *light,
 
 			RT_Light l({ p->GetPosition().x, p->GetPosition().y, p->GetPosition().z, 0.0f },
 					   { p->GetColor().x, p->GetColor().y, p->GetColor().z, 0.0f },
-					   1.0f, 0.0f, index, RT_POINT_LIGHT);
+					   p->GetLs(), 0.0f, index, RT_POINT_LIGHT);
 
 			c.GetContainer()->AddElement("lights", l);
 			break;
@@ -172,9 +180,30 @@ int ToPackObjectsForDevice::ToPackObjectEmissiveData(const FRWK ObjectBase *obje
 			{
 				const Disk *disk = static_cast<const Disk*>(eo);
 
+				RT::Vec3f u, v, w = disk->GetNormal(), 
+					      up = RT::Vec3f(0.0f, 1.0f, 0.0f);
+				
+				u = RT::vc3::Cross(up, w);
+				u.Normalize();
+
+				v = RT::vc3::Cross(w, u);
+
+				if (w == up)
+				{
+					u.Set(0.0f, 0.0f, 1.0f);
+					v.Set(1.0f, 0.0f, 0.0f);
+					w.Set(0.0f, 1.0f, 0.0f);
+				}
+				else if (w.x == up.x && w.y == -up.y && w.z == up.z)
+				{
+					u.Set(1.0f,  0.0f, 0.0f);
+					v.Set(0.0f,  0.0f, 1.0f);
+					w.Set(0.0f, -1.0f, 0.0f);
+				}
+
 				RT_Lamp lamp(disk->GetCenter(),
-							 RT::Vec3f(),
-							 RT::Vec3f(),
+							 u,
+							 v,
 							 disk->GetNormal(),
 							 disk->GetRadius(),
 							 ToPackEmissiveData(disk->GetMaterial()),
@@ -194,6 +223,21 @@ int ToPackObjectsForDevice::ToPackObjectEmissiveData(const FRWK ObjectBase *obje
 							 (rect->GetA().Size() * rect->GetB().Size()),
 							 ToPackEmissiveData(rect->GetMaterial()),
 							 RT_RECTANGULAR);
+
+				c.GetContainer()->AddElement("lamps", lamp);
+				return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
+			}
+			case SPHERICAL:
+			{
+				const SphericalLamp *s = static_cast<const SphericalLamp*>(eo);
+
+				RT_Lamp lamp(s->GetCenter(), 
+							 RT::Vec3f(), 
+							 RT::Vec3f(), 
+							 RT::Vec3f(0.0f, -1.0f, 0.0f), 
+							 s->GetRadius(), 
+							 ToPackEmissiveData(s->GetMaterial()), 
+							 RT_SPHERICAL);
 
 				c.GetContainer()->AddElement("lamps", lamp);
 				return (int)c.GetContainer()->GetPackage("lamps")->Size() - 1;
@@ -218,7 +262,8 @@ PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *
 			return{ { { a->GetColor().x, a->GetColor().y, a->GetColor().z, 1.0f}, a->GetK(), 0.0f, RT_LAMBERTIAN},
 				    { { d->GetColor().x, d->GetColor().y, d->GetColor().z, 1.0f}, d->GetK(), 0.0f, RT_LAMBERTIAN},
 					{ { 0.0f, 0.0f, 0.0f, 0.0f }, 0.0f, 0.0f, RT_GLOSSY_SPECULAR },
-					{ { 0.0f, 0.0f, 0.0f, 0.0f }, 0.0f, 0.0f, RT_PERFECT_SPECULAR }
+					{ { 0.0f, 0.0f, 0.0f, 0.0f }, 0.0f, 0.0f, RT_PERFECT_SPECULAR },
+					RT_SIMPLE_MATERIAL
 				  };
 		}
 		case PHONG_MATERIAL:
@@ -231,14 +276,27 @@ PKG RT_Material ToPackObjectsForDevice::ToPackMaterialData(const FRWK Material *
 			RT_Material material = { { { a->GetColor().x, a->GetColor().y, a->GetColor().z, 1.0f }, a->GetK(), 0.0f, RT_LAMBERTIAN },
 									 { { d->GetColor().x, d->GetColor().y, d->GetColor().z, 1.0f }, d->GetK(), 0.0f, RT_LAMBERTIAN },
 									 { { s->GetColor().x, s->GetColor().y, s->GetColor().z, 1.0f }, s->GetK(), s->GetExp(), RT_GLOSSY_SPECULAR },
-									 { { 0.0f, 0.0f, 0.0f, 0.0f }, 0.0f, 0.0f, RT_PERFECT_SPECULAR }
+									 { { 0.0f, 0.0f, 0.0f, 0.0f }, 0.0f, 0.0f, RT_PERFECT_SPECULAR }, RT_PHONG_MATERIAL
 								    };
 
 			return material;
 		}
 		case REFLECT_MATERIAL:
 		{
-			return RT_Material();
+			const ReflectiveMaterial *refl = static_cast<const ReflectiveMaterial*>(material);
+			BRDF *a = refl->GetAmbient();
+			BRDF *d = refl->GetDiffuse();
+			GlossySpecular *s = refl->GetSpecular();
+			BRDF *r = refl->GetReflect();
+
+			RT_Material material = { { { a->GetColor().x, a->GetColor().y, a->GetColor().z, 1.0f }, a->GetK(), 0.0f, RT_LAMBERTIAN },
+									 { { d->GetColor().x, d->GetColor().y, d->GetColor().z, 1.0f }, d->GetK(), 0.0f, RT_LAMBERTIAN },
+									 { { s->GetColor().x, s->GetColor().y, s->GetColor().z, 1.0f }, s->GetK(), s->GetExp(), RT_GLOSSY_SPECULAR },
+									 { { r->GetColor().x, r->GetColor().y, r->GetColor().z, 1.0f }, r->GetK(), 0.0f, RT_PERFECT_SPECULAR }, 
+									 RT_REFLECTIVE_MATERIAL
+									};
+
+			return material;
 		}
 		case TRANSPARENT_MATERIAL:
 		{
@@ -321,7 +379,7 @@ void ToPackObjectsForDevice::ToPackWordData(const PackerObjects &c)
 					   static_cast<int>(c.GetContainer()->GetPackage("objects")->Size()),
 					   c.GetPackage()->GetSampler()->GetNumSamples(),
 					   c.GetPackage()->GetSampler()->GetNumSets(), 
-					   type, typeTracer, rand());
+					   type, typeTracer, rand(), 4);
 
 	c.GetContainer()->AddElement("world", world);
 }

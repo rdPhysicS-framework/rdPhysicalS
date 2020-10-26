@@ -93,8 +93,8 @@ CommmandQueueComponent &CommmandQueueComponent::WriteBuffer(const MemObjectCompo
 	if (memObj())
 	{
 		int status = clEnqueueWriteBuffer(object, memObj(), CL_TRUE,
-			0, size, (const void*)data,
-			0, nullptr, nullptr);
+										  0, size, (const void*)data,
+										  0, nullptr, nullptr);
 
 		if (status != CL_SUCCESS)
 		{

@@ -102,13 +102,16 @@ inline bool Inside(const RT_BBox *bb, const RT_Vec3f *p)
  * Methods to verify intercession with the sphere
  *
  *----------------------------------------------------------------------------------------------*/
-
-bool Sphere_Hit(const RT_Primitive *s, const RT_Ray *ray, float *tmin, RT_Result *r)
+bool Sphere_Hit(const RT_Vec3f *center,
+				const float *radius, 
+				const RT_Ray *ray, 
+				float *tmin, 
+				RT_Result *r)
 {
-	if(Sphere_ShadowHit(s, ray, tmin))
+	if(Sphere_ShadowHit(center, radius, ray, tmin))
 	{
-		RT_Vec3f temp = ray->o - s->p;
-		r->normal = (temp + (ray->d * *tmin)) / s->r;
+		RT_Vec3f temp = ray->o - *center;
+		r->normal = (temp + (ray->d * *tmin)) / *radius;
 		r->lhitPoint = HitPoint(ray, *tmin);
 		return true;
 	}
@@ -116,15 +119,18 @@ bool Sphere_Hit(const RT_Primitive *s, const RT_Ray *ray, float *tmin, RT_Result
 	return false;
 }
 
-bool Sphere_ShadowHit(const RT_Primitive *s, const RT_Ray *ray, float *tmin)
+bool Sphere_ShadowHit(const RT_Vec3f *center,
+					  const float *radius, 
+					  const RT_Ray *ray, 
+					  float *tmin)
 {
 	/*if(!BBox_Hit(&s->bbox, ray))
 		return false;*/
 
-	RT_Vec3f temp = ray->o - s->p;
+	RT_Vec3f temp = ray->o - *center;
 	float a = dot(ray->d, ray->d);
 	float b = 2.0f * dot(temp, ray->d);
-	float c = dot(temp, temp) - (s->r * s->r);
+	float c = dot(temp, temp) - (*radius * *radius);
 	float disc = b * b - 4.0f * a * c;
 
 	if(disc < 0.0f)
@@ -321,7 +327,7 @@ bool Rect_Hit(const RT_Lamp *l,
 	if(dDotB < 0.0f || dDotB > sizeSqr(l->b))
 		return false;
 
-	//*tmin = t;
+	*tmin = t;
 	r->lhitPoint = _p;
 	r->normal = l->normal;
 
@@ -357,6 +363,53 @@ bool Disk_Hit(const RT_Lamp *l,
 
 /*----------------------------------------------------------------------------------------------
  *
+ * Methods to verify intercession with the lamp spherical
+ *
+ *----------------------------------------------------------------------------------------------*/
+bool Spherical_Hit(RT_Lamp *l, 
+				   const RT_Ray *ray,
+				   float *tmin, RT_Result *r)
+{ 
+	RT_Vec3f temp = ray->o - l->p;
+	float a = dot(ray->d, ray->d);
+	float b = 2.0f * dot(temp, ray->d);
+	float c = dot(temp, temp) - (l->r * l->r);
+	float disc = b * b - 4.0f * a * c;
+
+	if(disc < 0.0f)
+		return false;
+
+	float e = sqrt(disc);
+	float denom = 2.0f * a;
+	float t = (-b - e) / denom;
+
+	if(t > 0.1f)
+	{
+		*tmin = t;
+		RT_Vec3f temp = ray->o - l->p;
+		r->lhitPoint = HitPoint(ray, *tmin);
+		r->normal = (temp + (ray->d * *tmin)) / l->r;
+		l->normal = r->normal;
+		return true;
+	}
+
+	t = (-b + e) / denom;
+
+	if(t > 0.1f)
+	{
+		*tmin = t;
+		RT_Vec3f temp = ray->o - l->p;
+		r->lhitPoint = HitPoint(ray, *tmin);
+		r->normal = (temp + (ray->d * *tmin)) / l->r;
+		l->normal = r->normal;
+		return true;
+	}
+
+	return false;
+}
+
+/*----------------------------------------------------------------------------------------------
+ *
  * Method to verify intercession with the lamp
  *
  *----------------------------------------------------------------------------------------------*/
@@ -368,6 +421,8 @@ bool Lamp_Hit(const RT_Lamp *l,
 		return Disk_Hit(l, ray, tmin, r);
 	else if(l->type == RT_RECTANGULAR)
 		return Rect_Hit(l, ray, tmin, r);
+	else if(l->type == RT_SPHERICAL)
+		return Sphere_Hit(&l->p, &l->r, ray, tmin, r);
 
 	return false;
 }
@@ -388,19 +443,32 @@ RT_Vec3f Lamp_Sample(__global const RT_DataScene *world,
 			
 			if(l->type == RT_CIRCULAR)
 				MapSampleToUnitDisk(&point);
+			else if(l->type == RT_SPHERICAL)
+			{ 
+				//efeito
+				return MapSampleToSphere(&point) * l->r + l->p;
+				//return point3 * l->r + l->p;
+			}
 		break;
 		case RT_REGULAR:
 			point = RegularGenerateSampler(sqrt((float)world->numSamples), index);
 			
 			if(l->type == RT_CIRCULAR)
 				MapSampleToUnitDisk(&point);
+			else if(l->type == RT_SPHERICAL)
+			{ 
+				//efeito
+				return MapSampleToSphere(&point) * l->r + l->p;
+				//return point3 * l->r + l->p;
+			}
 		break;
 	}
 
+	if(l->type == RT_CIRCULAR)
+		point *= l->r;
 
 	return (l->p + point.x * l->a + point.y * l->b);
 }
-
 
 /*----------------------------------------------------------------------------------------------
  *
@@ -418,7 +486,7 @@ bool Instance_Hit(const RT_Primitive *object,
 								  TransformDirection(&object->invMatrix, &ray->d));
 
 		if(Box_Hit(object, &invRay, tmin, r) ||
-		   Sphere_Hit(object, &invRay, tmin, r))
+		   Sphere_Hit(&object->p, &object->r, &invRay, tmin, r))
 		{ 
 			RT_Mat4f matrix = inverse(&matrix);
 			r->lhitPoint = TransformPoint(&object->invMatrix, &r->lhitPoint);
@@ -446,7 +514,7 @@ bool Instance_ShadowHit(const RT_Primitive *object,
 		RT_Ray invRay = CreateRay(TransformPoint(&object->invMatrix, &ray->o),
 								  TransformDirection(&object->invMatrix, &ray->d));
 		if(Box_ShadowHit(object, &invRay, tmin) ||
-		   Sphere_ShadowHit(object, &invRay, tmin))
+		   Sphere_ShadowHit(&object->p, &object->r, &invRay, tmin))
 			return true;
 	}
 	else

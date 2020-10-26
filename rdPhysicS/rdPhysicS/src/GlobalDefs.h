@@ -182,7 +182,7 @@ enum TypeMaterial
 enum TypeLight
 {
 	AMBIENT_LIGHT,
-	AMBIENT_OCLUDER_LIGHT,
+	AMBIENT_OCCLUDER_LIGHT,
 	AREA_LIGHT,
 	POINT_LIGHT
 };
@@ -205,7 +205,8 @@ enum TypeSampler
 enum TypeObjectEmissive
 {
 	CIRCULAR,
-	RECTANGULAR
+	RECTANGULAR,
+	SPHERICAL
 };
 
 typedef unsigned int uint;

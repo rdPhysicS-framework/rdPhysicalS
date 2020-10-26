@@ -86,6 +86,15 @@ Light *SceneBase::GetLight(const size_t id) const
 	return World::GetManager()->GetPackage()->GetLight(id);
 }
 
+SceneBase &SceneBase::SetAmbient(Light *_ambient)
+{
+	if (ambient)
+		delete ambient;
+	ambient = _ambient;
+
+	return (*this);
+}
+
 SceneBase::~SceneBase()
 {}
 
